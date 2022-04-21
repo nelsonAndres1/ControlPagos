@@ -1,0 +1,59 @@
+<h2>Agregar o Modificar Tipos de Pago</h2>
+<br>
+
+<div class="alert alert-success" *ngIf="status == 'success'">
+    ¡El registro del pago se ha completado correctamente!<a [routerLink]="['/principal']"></a>
+</div>
+
+<div class="alert alert-danger" *ngIf="status == 'error'">
+    ¡El registro no se ha completado!
+</div>
+
+
+
+<form class="col-md-4 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6> Tipo de Pago </h6>
+            </label>
+ 
+            <input type="text" placeholder="Tipo de Pago" for="detclas" (input)="getTPagos($event)" class="form-control" #detclas="ngModel"
+                [(ngModel)]="teso10.detclas" name="detclas" required pattern="[a-zA-Z]+"><!-- numero -->
+            <small *ngIf="!detclas.valid && detclas.touched" class="invalid-feedback d-block">
+                Este Campo es Requerido
+            </small>
+        </div>
+
+        <div *ngFor="let result of data" (click)="getDetailPage(result)">
+            <div class = "card card-body mb-1">
+                <h6>Pago: {{result.detclas}}.</h6>
+                <small class="text-primary">estado: {{result.estado}}.</small>
+                <div class="row">
+                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codclas, result.detclas, result.estado)" style="cursor: pointer;">Modificar</button>
+                </div>
+                <br>
+                <div class="row">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codclas)" style=" cursor: pointer;">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label for="estado">
+                <h6>Seleccione Estado del Tipo de Pago </h6>
+            </label>
+
+            <select for="estado" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.estado" name="estado"
+                required>
+                <option>Activo</option>
+                <option>Inactivo</option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div>
+        <input type="submit" value="Enviar" class="btn btn-success" />
+    </div>
+</form>

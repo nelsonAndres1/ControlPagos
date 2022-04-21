@@ -1,0 +1,31 @@
+<div class="wrapper fadeInDown">
+  <h1>Control de Pagos</h1>
+    <div id="formContent">
+      <!-- Tabs Titles -->
+  
+      <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="./assets/login.png" id="icon"/>
+        </div>
+      <!-- Login Form -->
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+            <div class="form-group">    
+                <input type="text" class="form-control"  placeholder="Usuario"  #usuario="ngModel" [(ngModel)]="gener02.usuario" name="usuario" required>
+                <small *ngIf="!usuario.valid && usuario.touched" class="invalid-feedback d-block">
+                    ¡El usuario es requerido!
+                </small>
+                <input type="password"  class="form-control"  placeholder="Contraseña" #clave="ngModel" [(ngModel)]="gener02.clave" name="clave" required>
+                <small *ngIf="!clave.valid && clave.touched" class="invalid-feedback d-block">
+                    ¡La clave es requerida!
+                </small>
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </div>
+        </form>
+      <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" >Olvido la Contraseña?</a>
+        </div>  
+    </div>
+  </div>
+
+

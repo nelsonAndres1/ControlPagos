@@ -1,0 +1,19 @@
+<h4>Otorgar Permisos</h4>
+
+<form class="col-md-5 ml-0 pl-0">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6>Buscar Usuario</h6>
+            </label>
+            <input type="text" placeholder="Buscar Usuario" (input)="getUsuarios($event)" required><!-- numero -->
+        </div>
+        <div *ngFor="let result of data" (click)="getDetailPage(result)" style="cursor: pointer;">
+            <div class="card card-body mb-1">
+                <h6>Usuario: {{result.usuario}}</h6>
+                <h6>Nombre: {{result.nombre}}</h6>
+                <h6>Cedula: {{result.cedtra}}</h6>
+            </div>
+        </div>
+    </div>
+</form>

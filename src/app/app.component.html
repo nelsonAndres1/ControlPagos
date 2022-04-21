@@ -1,0 +1,124 @@
+<html>
+
+<body>
+    <div class="area"></div>
+    <nav class="main-menu" *ngIf="identity!= null">
+
+        <a class="navbar-brand" routerLink="principal">
+            <img src="./assets/logo.png" alt="" width="60" height="60">
+            
+                Control de Pagos 
+            
+        </a>
+        <ul>
+            <div *ngIf="permisos != null">
+                <li *ngFor="let a of arrayPermisos">
+                    <a routerLink="teso10" *ngIf=" a == 'RA' || a == 'AD'">
+                        <i class="fa fa-home fa-2x"></i>
+                        <span class="nav-text">
+                            Inicie el Pago
+                        </span>
+                    </a>
+
+                </li>
+            </div>
+            <li class="has-subnav" routerLink="teso15">
+                <a>
+                    <i class="fa fa-folder-open fa-2x"></i>
+                    <span class="nav-text">
+                        Consultar estado del Pago
+                    </span>
+                </a>
+
+            </li>
+            <li class="has-subnav" routerLink="teso17">
+                <a>
+                    <i class="fa fa-bar-chart-o fa-2x"></i>
+                    <span class="nav-text">
+                        Modificar Estado de Pago
+                    </span>
+                </a>
+
+            </li>
+            <li class="has-subnav"  routerLink="teso110">
+                <a>
+                    <i class="fa fa-book fa-fw"></i>
+                    <span class="nav-text">
+                        Tipos de Pago
+                    </span>
+                </a>
+
+            </li>
+
+            <li>
+                <a routerLink="teso112">
+                    <i class="fa fa-pencil fa-fw"></i>
+                    <span class="nav-text">
+                        Tipos de Soportes
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="teso14">
+                    <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                    <span class="nav-text">
+                        Vincular Pagos y Soportes
+                    </span>
+                </a>
+            </li>
+
+            <div *ngIf="permisos != null">
+                <li *ngFor="let a of arrayPermisos" >
+                    <a (click)="opciones()" *ngIf=" a == 'AD'">
+                        <i class="fa fa-terminal fa-stack-1x fa-inverse"></i>
+                        <span class="nav-text">
+                            Administrador
+                        </span>
+                    </a>
+                </li>
+            </div>
+            <!-- 
+            <li>
+                <a href="#">
+                    <i class="fa fa-table fa-2x"></i>
+                    <span class="nav-text">
+                        Tables
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-map-marker fa-2x"></i>
+                    <span class="nav-text">
+                        Maps
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-info fa-2x"></i>
+                    <span class="nav-text">
+                        Documentation
+                    </span>
+                </a>
+            </li>
+        -->
+        </ul>
+
+        <ul class="logout">
+            <li>
+                <a [routerLink]="['/logout/1']">
+                    <i class="fa fa-power-off fa-2x"></i>
+                    <span class="nav-text">
+                        Salir
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+</body>
+
+</html>

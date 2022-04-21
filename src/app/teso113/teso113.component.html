@@ -1,0 +1,91 @@
+
+<form id="myData" #myData *ngIf="data != null">
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <td class="tg-0pky" colspan="2" rowspan="3"><img src="../../../../assets/logo.png"></td>
+        <td class="tg-0pky" rowspan="3"><h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO<br>SISTEMA DE GESTIÓN<br>FORMATO PARA REQUISITOS PAGO CUENTA INDIVIDUAL</h6></td>
+      </tr>
+      <tr>
+        <ejs-barcodegenerator style="display: block;"  #barcode id="barcode" width="200px" height="150px" mode="SVG" type="Codabar" value={{data.codclas+data.numero}}></ejs-barcodegenerator>
+      </tr>
+    </thead>
+</table>
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="tg-0pky" colspan="3"><b align="center">Fecha de Diligenciamiento</b></th>
+        <th class="tg-0pky" colspan="2"><b>N° de Factura/Nota de Contabilidad a Pagar</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-0pky"><b align="center">AÑO</b></td>
+        <td class="tg-0pky"><b align="center">MES</b></td>
+        <td class="tg-0pky"><b align="center">DIA</b></td>
+        <td class="tg-0pky" colspan="2" rowspan="2">{{data.numfac}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0pky" colspan="4">{{data.fecrad}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0pky" colspan="4"><b>Nombre de Empresa / Persona a quien se Paga: </b></td>
+        <td class="tg-0pky">Club Colombia</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>NIT o Cedula de Ciudadania: </b></td>
+        <td class="tg-0lax">{{data.nit}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Tipo de Pago: </b></td>
+        <td class="tg-0lax">{{data.codclas}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Valor: </b></td>
+        <td class="tg-0lax">${{data.valor}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Centro de Costo: </b></td>
+        <td class="tg-0lax">{{data.codcen}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Codigo de Dependencia: </b></td>
+        <td class="tg-0lax">{{data.coddep}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax"><b>Detalle</b></td>
+        <td class="tg-0lax" colspan="4">{{data.detalle}}</td>
+      </tr>
+    </tbody>
+    </table>
+    <br>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="tg-0pky"><b align="center">Liquidado por</b></th>
+          <th class="tg-0pky"><b align="center"></b>Revisado por</th>
+          <th class="tg-0pky"><b align="center">Autorizado por</b></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tg-0pky"><b>Nombre:</b> <br>{{identity1}}</td>
+          <td class="tg-0pky"><b>Nombre:</b> <br></td>
+          <td class="tg-0pky"><b>Nombre:</b> <br></td>
+        </tr>
+        <tr>
+          <td class="tg-0pky"><b>Firma:</b> <br></td>
+          <td class="tg-0pky"><b>Firma:</b> <br></td>
+          <td class="tg-0pky"><b>Firma:</b> <br></td>
+        </tr>
+        <tr>
+          <td class="tg-0pky"><b>Fecha:</b> {{data.fecrad}}</td>
+          <td class="tg-0pky"><b>Fecha:</b> ____ /__ /__</td>
+          <td class="tg-0pky"><b>Fecha:</b> ____ /__ /__</td>
+        </tr>
+      </tbody>
+      </table>
+</form>
+
+
+

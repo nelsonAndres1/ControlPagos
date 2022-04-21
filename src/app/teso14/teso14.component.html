@@ -1,0 +1,18 @@
+<h2>Vincular Pagos y Soportes</h2>
+
+<form class="col-md-5 ml-0 pl-0">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6>Codigo del Tipo Pago</h6>
+            </label>
+            <input type="text" placeholder="Buscar Tipo de pago" (input)="getTPagos($event)" required><!-- numero -->
+        </div>
+    </div>
+</form>
+<div *ngFor="let result of data" (click)="getDetailPage(result)" style="cursor: pointer;">
+    <div class = "card card-body mb-1">
+        <h6>Pago: {{result.detclas}}.</h6>
+        <small class="text-primary">estado: {{result.estado}}.</small>
+    </div>
+</div>

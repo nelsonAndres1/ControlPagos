@@ -1,0 +1,69 @@
+
+<h2>Tipos de Soporte</h2>
+
+<div class="alert alert-success" *ngIf="status == 'success'">
+    ¡El registro del soporte se ha completado correctamente!<a [routerLink]="['/principal']"></a>
+</div>
+
+<div class="alert alert-danger" *ngIf="status == 'error'">
+    ¡El registro del soporte no se ha completado!
+</div>
+
+
+
+<form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6> Tipo de Soporte</h6>
+            </label>
+
+            <input type="text" placeholder="Buscar o Agregar Soporte" for="detsop" class="form-control" (input)="getTSoportes($event)" #detsop="ngModel"
+                [(ngModel)]="teso12.detsop" name="detsop" required pattern="[a-zA-Z]+"><!-- numero -->
+            <small *ngIf="!detsop.valid && detsop.touched" class="invalid-feedback d-block">
+                Este Campo es Requerido
+            </small>
+        </div>
+        <div *ngFor="let result of data" (click)="getDetailPage(result)">
+            <div class = "card card-body mb-1">
+                <h6>Pago: {{result.detsop}}.</h6>
+                <div class="row">
+                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codsop)" style="cursor: pointer;">Modificar</button>
+                </div>
+                <br>
+                <div class="row">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codsop)" style=" cursor: pointer;">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <div>
+        <input type="submit" value="Agregar Tipo de Soporte" class="btn btn-success"/>
+        <!-- <button type="submit" class="btn btn-success">Enviar</button> -->
+    </div>
+</form>
+
+<!-- <form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6> Detalle del Soporte </h6>
+            </label>
+
+            <input type="text" placeholder="Soporte" for="detsop" class="form-control" #detsop="ngModel"
+                [(ngModel)]="teso12.detsop" name="detsop" required pattern="[a-zA-Z]+"><!-- numero -->
+     <!--        <small *ngIf="!detsop.valid && detsop.touched" class="invalid-feedback d-block">
+                Este Campo es Requerido
+            </small> -->
+        <!-- </div>
+    </div>
+    <br>
+    <br>
+    <div>
+        <input type="submit" value="Enviar" class="btn btn-success" [disabled]="registerForm.invalid" /> -->
+        <!-- <button type="submit" class="btn btn-success">Enviar</button> -->
+ <!--    </div>
+</form> --> -->

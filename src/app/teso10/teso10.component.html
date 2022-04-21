@@ -1,0 +1,19 @@
+<br>
+<br>
+<div class="div1">
+    <form  [formGroup]="formGroup" class="row g-3">
+        <div class="col-md-4">
+            <h3>Seleccione la Clase de Pago</h3>
+            <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
+            <select  [(ngModel)]="opcionSeleccionado" (change)="capturar()" id="inputState" formControlName="n1" class="form-select">
+                <option selected>Seleccione</option>
+                <option *ngFor="let dt of identity">{{dt.detclas}}</option>
+            </select> 
+            <br>
+            <!-- <button type="submit" class="btn btn-success" [routerLink]="['/teso12']">Continuar</button> -->   
+        </div> 
+    </form>
+</div>
+
+
+

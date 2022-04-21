@@ -1,0 +1,21 @@
+
+<h2>Consultar Estado del Pago</h2>
+
+<form class="col-md-5 ml-0 pl-0">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6>Buscar Estado del Pago</h6>
+            </label>
+            <input type="text" placeholder="Buscar pago" (input)="getTpago($event)"   required pattern="[0-9]{1,6}"><!-- numero -->
+        </div>
+    </div>
+</form>
+<div *ngFor="let result2 of data" (click)="getDetailPage(result2, data1)" style="cursor: pointer;">
+    <div class = "card card-body mb-1">
+<!--         <h6>Pago: {{result[0].detclas}}{{result[0].numero}}.</h6> -->
+                <h6>{{result2.detclas}}</h6>
+        <small class="text-primary">estado: {{result2.estado}}.</small>
+    </div>
+</div> 
+

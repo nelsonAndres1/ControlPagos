@@ -1,0 +1,146 @@
+<h2>Formato de Pago</h2>
+
+<br>
+
+<div class="alert alert-success" *ngIf="status == 'success'">
+    ¡El registro del pago se ha completado correctamente!<a [routerLink]="['/principal']"></a>
+</div>
+
+<div class="alert alert-danger" *ngIf="status == 'error'">
+    ¡El registro no se ha completado!
+</div>
+
+<form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">Consecutivo</label>
+            <br>
+            <div class="col">
+                <input type="text" [value]=nconsecutivo ng-value="nconsecutivo" name="numero" class="form-control"
+                    placeholder="Consecutivo" #numero="ngModel" [(ngModel)]="teso13.numero" disabled><!-- numero -->
+            </div>
+        </div>
+        <div class="row">
+            <label for="name">Usuario</label>
+            <br>
+            <div class="col">
+                <input type="text" [value]=usu ng-value="usu" id="{{usu}}" name="usuela" class="form-control"
+                    placeholder="Usuario" #usuario="ngModel" [(ngModel)]="teso13.usuela" disabled>
+                <!-- Usuario que se logea(usurev->usuario que revisa) (usuaut->usuario que autoriza)-->
+            </div>
+        </div>
+        <div class="row">
+            <label for="name">Tipo de Pago</label>
+            <br>
+            <div class="col">
+                <input type="text" [value]=tpago ng-value="tpago" name="codclas" class="form-control"
+                    placeholder="Tipo de Pago" #codclas="ngModel" [(ngModel)]="teso13.codclas" disabled>
+                <!-- Usuario que se logea(usurev->usuario que revisa) (usuaut->usuario que autoriza)-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="name">Fecha de Radicado</label>
+            </div>
+            <div class="col">
+                <input type="date" class="form-control" id="start" name="fecrad" value="today" min="2018-01-01"
+                    max="2030-12-31" placeholder="Fecha de Radicado" #fecrad="ngModel" [(ngModel)]="teso13.fecrad"
+                    required>
+            </div>
+            <small *ngIf="!fecrad.valid && fecrad.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" name="codcen" placeholder="Centro de Costo" #codcen="ngModel"
+                    [(ngModel)]="teso13.codcen" required>
+            </div>
+            <small *ngIf="!codcen.valid && codcen.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+            <div class="col">
+                <input type="text" class="form-control" name="coddep" placeholder="Codigo Dependencia" #coddep="ngModel"
+                    [(ngModel)]="teso13.coddep" required>
+            </div>
+            <small *ngIf="!coddep.valid && coddep.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+            <div class="col">
+                <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura" #numfac="ngModel"
+                    [(ngModel)]="teso13.numfac" required>
+            </div>
+            <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+            
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="name">Fecha de Facturación</label>
+            </div>
+            <div class="col">
+                <input type="date" class="form-control" id="start" name="fecfac" value="today" min="2018-01-01"
+                    max="2030-12-31" placeholder="Fecha de Radicado" #fecfac="ngModel" [(ngModel)]="teso13.fecfac"
+                    required>
+            </div>
+            <small *ngIf="!fecfac.valid && fecfac.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <input type="text" class="form-control" name="perfac" placeholder="Periodo Facturación"
+                    #perfac="ngModel" [(ngModel)]="teso13.perfac" required>
+            </div>
+            <small *ngIf="!perfac.valid && perfac.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+            <div class="col">
+                <input type="text" class="form-control" name="numcuo" placeholder="Numero Cuotas" #numcuo="ngModel"
+                    [(ngModel)]="teso13.numcuo" required>
+            </div>
+            <small *ngIf="!numcuo.valid && numcuo.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+            <div class="col">
+                <input type="text" class="form-control" name="nit" placeholder="nit" #nit="ngModel"
+                    [(ngModel)]="teso13.nit" required>
+            </div>
+            <small *ngIf="!nit.valid && nit.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="name">Valor</label>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="valor" placeholder="Valor del Pago" #valor="ngModel"
+                    [(ngModel)]="teso13.valor" required>
+            </div>
+            <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+        </div>
+        <div class="row">
+            <div class="input-group">
+                <span class="input-group-text">Detalle</span>
+                <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
+                    [(ngModel)]="teso13.detalle" required></textarea>
+            </div>
+            <small *ngIf="!detalle.valid && detalle.touched" class="invalid-feedback d-block">
+                Este Campo es requerido
+            </small>
+        </div>
+        <br>
+        <br>
+        <br>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-success" disable="registerForm.invalid">Enviar</button>
+    </div>
+    <br>
+    <br>
+</form>

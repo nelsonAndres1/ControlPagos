@@ -1,0 +1,51 @@
+<form class="formato">
+    <h2>Estado del Pago</h2>
+    <br>
+    <br>
+    <form>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Consecutivo</th>
+                    <th scope="col">Tipo de Pago</th>
+                    <th scope="col">Detalle</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Numero de Factura</th>
+                    <th scope="col">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <tr *ngFor="let r of item1">
+                    <td>{{item1[0].numero}}</td>
+                    <td>{{item2.detclas}}</td>
+                    <td>{{data.detalle}}</td>
+                    <td>{{r.estado}}</td>
+                    <td><a (click)="nombreUsuario(r.usuario)" style="cursor: pointer;">{{r.usuario}}</a></td>
+                    <td>{{item1[0].numfac}}</td>
+                    <td>{{r.fecha}}</td>
+                </tr>
+                <!-- 
+          <tr *ngFor="let n of arrayN"></tr>
+               -->
+            </tbody>
+        </table>
+    </form>
+</form>
+
+<form class="formato2">
+    
+        <h2>Cambiar Estado del Pago</h2>
+        <div>
+            <div class="form-check form-check-inline" *ngFor="let n of arraySalida">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" (change)="cambioEstado(n)">
+                <label class="form-check-label" for="inlineRadio1"> {{n}} </label>
+            </div>
+            <br>
+            <br>
+        </div>
+        <button type="button" class="btn btn-success" (click)="submit()" >Enviar</button>
+    
+</form>
