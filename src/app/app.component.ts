@@ -79,8 +79,21 @@ DoCheck {
         this.permisos = localStorage.getItem('permisos');
         if (this.permisos != null) {
             this.arrayPermisos = this.permisos.split(',');
+        
         }
     }
+
+    permisosNuevoPago(){
+        var bandera = false;
+        for (let index = 0; index < this.arrayPermisos.length; index++) {
+            if(this.arrayPermisos[index]=='AD'){
+                bandera = true;
+                break;
+            }   
+        }
+        return bandera;
+    }
+
 
     loadUser() {
         this.identity = this._gener02Service.getIdentity();

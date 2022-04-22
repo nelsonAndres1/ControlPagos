@@ -2,7 +2,7 @@
 
 <body>
     <div class="area"></div>
-    <nav class="main-menu" *ngIf="identity!= null">
+    <nav class="main-menu" *ngIf="identity != null">
 
         <a class="navbar-brand" routerLink="principal">
             <img src="./assets/logo.png" alt="" width="60" height="60">
@@ -68,8 +68,8 @@
             </li>
 
             <div *ngIf="permisos != null">
-                <li *ngFor="let a of arrayPermisos" >
-                    <a (click)="opciones()" *ngIf=" a == 'AD'">
+                <li>
+                    <a (click)="opciones()" *ngIf="permisosNuevoPago()">
                         <i class="fa fa-terminal fa-stack-1x fa-inverse"></i>
                         <span class="nav-text">
                             Administrador
