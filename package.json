@@ -1,4 +1,5 @@
 {
+  "deploy":"ng build --prod --base-href=/ControlPagos/",
   "name": "control-pagos",
   "version": "0.0.0",
   "scripts": {
