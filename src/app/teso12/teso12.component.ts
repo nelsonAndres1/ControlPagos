@@ -101,14 +101,9 @@ export class Teso12Component implements OnInit {
               this.consecutivo = this.identity2[this.index]['numero'];
               this.nconsecutivo = +this.consecutivo;
               this.nconsecutivo = this.nconsecutivo + 1;
-              
-              
-              console.log(this.tpago+' tp');
-              console.log(this.nconsecutivo+' nc');
-
-
-              console.log("confirmación");
-              console.log(this.original1);
+              this.tpago;
+              this.nconsecutivo;
+              this.original1;
 
               
               //Inicio afuconfig
@@ -278,7 +273,7 @@ export class Teso12Component implements OnInit {
               this.consecutivo = this.identity2[0]['numero'];
               this.nconsecutivo = +this.consecutivo;
               this.nconsecutivo = this.nconsecutivo + 1;
-              console.log(this.nconsecutivo+' *cs*');
+              
               cs = this.nconsecutivo;
             },
             error => {
@@ -310,8 +305,7 @@ export class Teso12Component implements OnInit {
             response => {
               this.iden1 = response;
               this.identity = response;
-              console.log(this.token);
-              console.log(this.identity);
+              
             },
             error => {
               this.status = 'error';
@@ -333,7 +327,6 @@ export class Teso12Component implements OnInit {
   checked($event){
     const isChecked = $event.target.checked;
     if(isChecked==true){
-      console.log("check");
       this.original='s';
     }else{
       this.original='n';

@@ -13,8 +13,6 @@ export class Teso117Service{
     updateTeso13RegisterTeso15(user: any): Observable<any>{
         let json = JSON.stringify(user);
         let params = 'json='+json;
-        console.log("Params");
-        console.log(params);
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url+'teso117/updateTeso13Revision',params,{headers:headers});
     
@@ -22,8 +20,6 @@ export class Teso117Service{
     updateTeso13RegisterTeso15AU(user: any): Observable<any>{
         let json = JSON.stringify(user);
         let params = 'json='+json;
-        console.log("Params");
-        console.log(params);
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url+'teso117/updateTeso13Autorizacion',params,{headers:headers});
     
@@ -31,8 +27,7 @@ export class Teso117Service{
     updateTeso13(user: any): Observable<any>{
         let json = JSON.stringify(user);
         let params = 'json='+json;
-        console.log("Params");
-        console.log(params);
+
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url+'teso117/updateTeso13',params,{headers:headers});
     }

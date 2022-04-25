@@ -35,8 +35,7 @@ export class Teso14Component implements OnInit {
     const search = this.service.getTPago(keyword).then(
       response => {
         this.data = response;
-        console.log(this.data);
-        console.log('ssss')
+     
       });
   }
   getDetailPage(result:any){

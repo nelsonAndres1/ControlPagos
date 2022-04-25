@@ -28,10 +28,10 @@ export class Teso114Component implements OnInit {
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
-            console.log(this.itemDetail.estado);
+            this.itemDetail.estado;
         });
         this.grupoSoportes = this.getTsoportes();
-        console.log(this.grupoSoportes);
+        
         this.grupoSoportes = fb.group({selected: new FormArray([])});
 
     }
@@ -49,7 +49,7 @@ export class Teso114Component implements OnInit {
     getTsoportes() {
         const sopor = this._teso14Service.getTsoportes({}).subscribe(response => {
             this.data = response;
-            console.log(this.data);
+        
         });
         return this.data;
     }
@@ -147,7 +147,7 @@ export class Teso114Component implements OnInit {
                     }
                 }
                 if (bandera != true) {
-                    console.log('paso!');
+        
                     this.array.push(result);
 
                     this.confirmacionesSO(this.ao, this.ap);
@@ -166,12 +166,6 @@ export class Teso114Component implements OnInit {
                 }
             }
         }
-        console.log('array');
-        console.log(this.array);
-        console.log('obli');
-        console.log(this.ao);
-        console.log('prvez');
-        console.log(this.ap);
     }
 
     getDetail(result : any) {
@@ -180,7 +174,6 @@ export class Teso114Component implements OnInit {
                 result: JSON.stringify(result)
             }
         }
-        console.log(result);
     }
 
     ngOnInit(): void {}
@@ -205,7 +198,7 @@ export class Teso114Component implements OnInit {
 
                     for (let index = 0; index < this.array.length; index++) {
                         
-                        console.log('array ' + index);
+         
                         this.teso112 = new teso112(this.itemDetail.codclas, this.array[index].codsop, this.ao[index], this.ap[index]);
                         this._teso14Service.setTeso12(this.teso112).subscribe(response => {
                             if (response.status == "success") {

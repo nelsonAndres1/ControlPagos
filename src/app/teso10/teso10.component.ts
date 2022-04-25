@@ -53,7 +53,7 @@ export class Teso10Component implements OnInit {
     
   }
   recibirTeso10(){
-    console.log("me presionaste");
+
     console.log(this.formGroup.value);
   }
 
@@ -66,10 +66,8 @@ export class Teso10Component implements OnInit {
           this._teso10Service.signup(this.teso10,this.v).subscribe(
             response => {
               this.identity = response;
-              console.log(this.token);
-              console.log('iden'+this.identity);
-
-             
+              this.token;
+              this.identity;
             },
             error =>{
               this.status = 'error';
@@ -111,8 +109,8 @@ export class Teso10Component implements OnInit {
             response => {
               this.identity = response;
 
-              console.log(this.token);
-              console.log(this.identity);
+              this.token;
+              this.identity;
 
               localStorage.setItem('tpa',JSON.stringify(this.identity));
             },
@@ -143,8 +141,8 @@ export class Teso10Component implements OnInit {
             response => {
               this.identity = response;
 
-              console.log(this.token);
-              console.log(this.identity);
+              this.token;
+              this.identity;
 
               localStorage.setItem('token1',this.token);
               localStorage.setItem('identity1', JSON.stringify(this.identity));

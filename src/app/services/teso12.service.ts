@@ -22,7 +22,6 @@ export class Teso12Service{
         let json = JSON.stringify(user);
         let params = 'json='+json;
         localStorage.setItem('tpago',json);
-        console.log(params);
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
         return this._http.post(this.url+'teso11',params,{headers:headers});
@@ -69,7 +68,6 @@ export class Teso12Service{
         }
         let json = JSON.stringify(user);
         let params = 'json='+json;
-        console.log(params);
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         
         return this._http.post(this.url+'teso12/traerDatosArchivo', params,{headers:headers});

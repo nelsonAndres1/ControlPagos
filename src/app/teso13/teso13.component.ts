@@ -59,7 +59,7 @@ export class Teso13Component implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this._userService.test());
+    this._userService.test();
   }
 
   onSubmit(form: any) {
@@ -83,10 +83,6 @@ export class Teso13Component implements OnInit {
           response => {
             if (response.status == "success") {
               this.status = response.status;
-              
-              /* this.download();
-              this._router.navigate(['principal']);
-              form.reset(); */
 
               var arrayD=[];
               arrayD.push(this.num, this.tpago);
@@ -111,12 +107,11 @@ export class Teso13Component implements OnInit {
           }
         );
 
-        console.log('yes');
         Swal.fire('Listo!', 'Pago Enviado', 'success');
 
       } else {
 
-        console.log('yes');
+
         Swal.fire('Cancelado!', 'Pago No Enviado', 'error');
 
       }

@@ -145,8 +145,5 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
 
             }
         }
-        console.log("Array");
-        console.log(this.array);
-
     }
 }

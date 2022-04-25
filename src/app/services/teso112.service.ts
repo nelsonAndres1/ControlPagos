@@ -20,7 +20,7 @@ export class Teso112Service {
               data => {
                 resolve(data);
               }, err =>{
-                console.log(err);
+
               });
         });
         return response;
@@ -30,8 +30,7 @@ export class Teso112Service {
       let json = JSON.stringify(user);
       let params = 'json='+json;
       let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-      console.log("Parametros");
-      console.log(params);
+
       return this.http.post(this.url+'teso14/Exists', params, {headers: headers});
 
     }

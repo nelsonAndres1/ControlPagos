@@ -55,8 +55,7 @@ export class LoginComponent implements OnInit {
                     for (let index = 0; index < permis.length; index++) {
                       //console.log(this.permis[index]['estche']);
                       this.arrayN.push(permis[index]['estche']);
-                      console.log('nnnnn');
-                      console.log(this.arrayN);
+                      this.arrayN;
                     }
                     localStorage.setItem('permisos',this.arrayN);
 
@@ -67,7 +66,6 @@ export class LoginComponent implements OnInit {
                 
             } else {
                 this.status = 'error';
-                console.log('Errrorr')
             }
         }, error => {
             this.status = 'error';
@@ -90,8 +88,8 @@ export class LoginComponent implements OnInit {
             response => {
               this.identity = response;
 
-              console.log(this.token);
-              console.log(this.identity);
+              this.token
+              this.identity;
 
               //persistir los datos del usuario
               localStorage.setItem('token',this.token);
@@ -111,7 +109,7 @@ export class LoginComponent implements OnInit {
         } else {
           /* this.status = 'error'; */
           Swal.fire(
-            '¡Usuario Incorrecto!',
+            '¡Usuario o Contraseña Incorrectos!',
             'Vuelva a ingresar sus datos',
             'error'
           )

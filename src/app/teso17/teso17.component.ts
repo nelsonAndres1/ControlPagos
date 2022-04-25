@@ -32,11 +32,9 @@ export class Teso17Component implements OnInit {
 
         },
         error=>{
-          console.log("No encontrado");
         }
       )
     }else{
-      console.log("Datos No corresponden");
     }
   }
 

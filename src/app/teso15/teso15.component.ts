@@ -32,16 +32,15 @@ export class Teso15Component implements OnInit {
         response => {
           this.data = response[1];
           this.data1 = response;
-          console.log('sss');
-          console.log(this.data);
+
    
         },
         error=>{
-          console.log('No encontrado!');
+          
         }
         )
     }else{
-      console.log("Datos No Corresponden!");
+     
     }
   }
 

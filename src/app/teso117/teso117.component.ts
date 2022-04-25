@@ -43,7 +43,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         'Devuelto Radicado',
         'Anulado'
     ];
-
+    public btn = false;
     public data : any = '';
     public arraySalida = [];
     itemDetail : any = [];
@@ -196,6 +196,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'RV' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array1;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -208,6 +209,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'AU' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array2;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -220,6 +222,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'FI' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array3;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -231,6 +234,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'CT' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array4;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -242,6 +246,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'PC' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array5;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -254,6 +259,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'RT' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array6;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -266,6 +272,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'RP' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array7;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -277,6 +284,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     if (this.arrayPermisos[index] == 'P' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array8;
                         bandera = true;
+                        this.btn = true;
                     }
                 }
                 if (bandera != true) {
@@ -290,11 +298,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     submit() {
         var datoU = JSON.parse(localStorage.getItem('identity'));
 
-        console.log(datoU['sub']);
-        console.log("Boton");
-        console.log(this.itemF['numfac']); // actual
-        console.log(this.estadoA);
-        console.log(this.estadoActual);
+        datoU['sub'];
+
+        this.itemF['numfac']; // actual
+
         this.teso13teso15 = new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, datoU['sub'], '', '');
         Swal.fire({
             title: "¿Estas Seguro?",
@@ -307,7 +314,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         }).then(result => {
             if (result.value) {
                 if (this.estadoA == 'RA') {
-                    console.log("entra1111");
+
                     this._teso117Service.updateTeso13RegisterTeso15(this.teso13teso15).subscribe(response => {
                         if (response.status == "success") {
                             this.status = response.status;
@@ -319,11 +326,11 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         this.status = 'error';
                         console.log(< any > error);
                     });
-                    console.log('yes');
+
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
                     this._router.navigate(['teso17']);
                 } else if (this.estadoA == 'RV') {
-                    console.log("rev");
+
                     this._teso117Service.updateTeso13RegisterTeso15AU(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', datoU['sub'], '')).subscribe(response => {
                         if (response.status == "success") {
                             this.status = response.status;
@@ -335,12 +342,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         this.status = 'error';
                         console.log(< any > error);
                     });
-                    console.log('yes');
+
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
                     this._router.navigate(['teso17']);
                 } else {
 
-                    console.log("rev");
+
                     this._teso117Service.updateTeso13(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', '', datoU['sub'])).subscribe(response => {
                         if (response.status == "success") {
                             this.status = response.status;
@@ -352,12 +359,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         this.status = 'error';
                         console.log(< any > error);
                     });
-                    console.log('yes');
+
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
                     this._router.navigate(['teso17']);
                 }
             } else {
-                console.log('No!');
+
                 Swal.fire('Cancelado', 'Estado de pago No actualizado', 'error');
             }
 

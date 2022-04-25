@@ -31,27 +31,25 @@ export class Teso16Component implements OnInit {
             
             this.item1 = this.itemDetail[0];
             this.item2 = this.itemDetail[1][0];
-            console.log("2");
+           
             for (let index = 0; index < this.item1.length; index++) {
-                console.log(this.item1[index]['usuario']);
-                console.log('usu')
-                console.log(this.getUsuario(this.item1[index]['usuario']));
-                console.log("arrayNom")
-                console.log(this.arrayN);
+                this.item1[index]['usuario'];
+                this.getUsuario(this.item1[index]['usuario']);
+                this.arrayN;
             }
         })
-        /* this.item1[index]['usuario'] */
+
     }
 
     ngOnInit(): void {}
 
 
     nombreUsuario(user: any){
-        console.log("Buscando..")
+
         for (let index = 0; index < this.arrayN.length; index++) {
           if(this.arrayN[index]==user){
-            console.log(this.arrayN[index]);
-            console.log(this.arrayN[index+1]);
+            this.arrayN[index];
+            this.arrayN[index+1];
             Swal.fire(
               'Usuario encontrado',
               this.arrayN[index+1],
@@ -59,7 +57,7 @@ export class Teso16Component implements OnInit {
             )
             break;
           }else{
-            console.log("No encontrado!");
+
           }
         }
     } 
@@ -77,19 +75,13 @@ export class Teso16Component implements OnInit {
               response => {
                
                 this.identity = response;
-                console.log("response");
-                console.log(this.identity);
+                this.identity;
                 this.identity1 = this.identity[0]['nombre'];
                 this.identity12 = this.identity[0]['usuario'];
-                console.log("Nombre");
-                console.log(this.identity[0]['nombre']);
-                console.log("usuario");
-                console.log(this.identity[0]['usuario']);
+                this.identity[0]['nombre'];
+                this.identity[0]['usuario'];
                 
                 this.arrayN.push(this.identity[0]['usuario'],this.identity[0]['nombre']);
-                
-
-
               },
               error => {
                 this.status = 'error';
@@ -99,7 +91,6 @@ export class Teso16Component implements OnInit {
 
           }else{
             this.status = 'error';
-            console.log('errrorrr')
           }
         },
         error=>{

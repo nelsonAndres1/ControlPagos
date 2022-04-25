@@ -32,8 +32,8 @@ export class Teso110Component implements OnInit {
         const keyword = pclave.target.value;
         const search = this._teso14Service.getTPago(keyword).then(response => {
             this.data = response;
-            console.log(this.data);
-            console.log('sss')
+            this.data;
+
 
         });
     }
@@ -78,7 +78,7 @@ export class Teso110Component implements OnInit {
                             this.status2 = 'error';
                             console.log(< any > error);
                         });
-                        console.log(cd, result.value, es);
+                        
                     } else {
                         Swal.fire('Cancelado!', '', 'error');
                     }
@@ -115,7 +115,7 @@ export class Teso110Component implements OnInit {
                             this.status2 = 'error';
                             console.log(< any > error);
                         });
-                        console.log(cd, es, r);
+                        
                     } else {
                         Swal.fire('Cancelado!', '', 'error');
                     }

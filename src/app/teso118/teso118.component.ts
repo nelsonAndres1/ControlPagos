@@ -138,7 +138,5 @@ export class Teso118Component implements OnInit {
         
       }
     }
-    console.log("Array");
-    console.log(this.array);
   }
 }

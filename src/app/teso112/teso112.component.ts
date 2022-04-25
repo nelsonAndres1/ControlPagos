@@ -33,8 +33,6 @@ export class Teso112Component implements OnInit {
         const keyword = pclave.target.value;
         const search = this._teso112Service.getTsoportes(keyword).then(response => {
             this.data = response;
-            console.log(this.data);
-            console.log('sss');
         });
     }
     getDetailPage(result : any) {
@@ -115,7 +113,6 @@ export class Teso112Component implements OnInit {
                         this.status2 = 'error';
                         console.log(<any>error);
                     });
-                    console.log(v1, "eliminado");
               swalWithBootstrapButtons.fire(
                 'Eliminado!',
                 'El soporte '+v1+' ha sido eliminado',

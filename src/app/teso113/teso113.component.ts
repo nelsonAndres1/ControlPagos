@@ -22,26 +22,17 @@ export class Teso113Component implements OnInit {
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
-            console.log('ut');
-            console.log(this.itemDetail);
             this.numero = this.itemDetail[0];
             this.codclas = this.itemDetail[1];
-            console.log(this.numero);
-            console.log(this.codclas);
-            /*       this.getAllTeso13(this.codclas, this.numero);
-      console.log(this.data); */
-            // traer datos de la teso13
-
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
                 this.data = response;
-                console.log('jujuju');
-                console.log(this.data);
-                console.log(this.data['usuela']);
+
+                this.data['usuela'];
 
                 this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
                     this.identity = response;
                     this.identity1 = this.identity[0]['nombre'];
-                    console.log(this.identity1);
+                    
                     let timerInterval
                     Swal.fire({
                         title: 'Generando PDF...',
@@ -74,17 +65,6 @@ export class Teso113Component implements OnInit {
 
         });
     }
-
-    /* getAllTeso13(codclas: any, numero: any){
-    this._teso15Service.getAllTeso13(new Teso113(codclas,numero)).subscribe(
-      response =>{
-        this.data = response;
-        console.log('ayayayya');
-        console.log(this.data);
-      }
-    )
-
-  } */
 
 
     setPdf() {

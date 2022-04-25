@@ -27,8 +27,6 @@ export class Teso16Service {
   registerTeso16(user: any): Observable<any>{
     let json = JSON.stringify(user);
     let params = 'json='+json;
-    console.log("Parametros");
-    console.log(params);
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.post(this.url+'teso16/setTeso16', params, {headers: headers});
   }

@@ -46,6 +46,6 @@
             <br>
             <br>
         </div>
-        <button type="button" class="btn btn-success" (click)="submit()" >Enviar</button>
+        <button *ngIf="btn==true" type="button" class="btn btn-success" (click)="submit()" >Enviar</button>
     
 </form>
