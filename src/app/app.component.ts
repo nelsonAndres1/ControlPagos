@@ -77,7 +77,6 @@ DoCheck {
         this.permisos = localStorage.getItem('permisos');
         if (this.permisos != null) {
             this.arrayPermisos = this.permisos.split(',');
-        
         }
     }
 
