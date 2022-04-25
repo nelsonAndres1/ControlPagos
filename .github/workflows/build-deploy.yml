@@ -30,7 +30,7 @@ jobs:
     - name: NPM build Angular Production
       run: ng build --prod
     - name: Delete Existing Files0
-      run: sudo sshpass -p ${{ c0mf42022 }} -v ssh -o StrictHostKeyChecking=no ${{ comfa }}@${{ 192.168.6.34 }} 'rm -rf /home/comfa/ControlPagos/*'
+      run: sudo sshpass -p ${{ secrets.SSH_PASS }} -v ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'rm -rf /home/comfa/ControlPagos/*'
 
     - name: Compress and Copy New Files to server
       run: |
@@ -38,8 +38,8 @@ jobs:
         tar -czvf ../../ControlPagos.tar.gz ./
         cd ..
         cd ..
-        sudo sshpass -p ${{ c0mf42022 }} scp -v -o StrictHostKeyChecking=no -r app.tar.gz ${{ comfa }}@${{ 192.168.6.34 }}:/home/comfa/ControlPagos
+        sudo sshpass -p ${{ secrets.SSH_PASS }} scp -v -o StrictHostKeyChecking=no -r app.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/comfa/ControlPagos
     - name: Uncompress new Files
-      run: sudo sshpass -p ${{ c0mf42022 }} -v ssh -o StrictHostKeyChecking=no $${{ comfa }}@${{ 192.168.6.34 }} 'cd /home/comfa/ControlPagos/ && tar -xzvf ControlPagos.tar.gz && rm ControlPagos.tar.gz'
+      run: sudo sshpass -p ${{ secrets.SSH_PASS }} -v ssh -o StrictHostKeyChecking=no $${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'cd /home/comfa/ControlPagos/ && tar -xzvf ControlPagos.tar.gz && rm ControlPagos.tar.gz'
 
         
