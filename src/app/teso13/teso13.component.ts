@@ -155,9 +155,9 @@ export class Teso13Component implements OnInit {
               this.codclas = this.tpago;
               this.teso13.codclas = this.codclas;
 
-              console.log('tp ' + this.tpago)
-              console.log(this.nconsecutivo);
-              console.log(Object.keys(identity));
+              this.tpago;
+              this.nconsecutivo;
+              Object.keys(identity);
 
             },
             error => {
