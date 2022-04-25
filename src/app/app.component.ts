@@ -70,8 +70,6 @@ DoCheck {
                 
             }
         })
-
-
     }
 
     ngDoCheck(): void {
