@@ -34,6 +34,9 @@ export class LoginComponent implements OnInit {
     //se ejecuta siempre y cierra sesion solo cuando le llega el parametro sure por la url
     this.logout();
   }
+  olvidoC(){
+    Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con sistemas.','question');
+  }
 
 
 
@@ -74,6 +77,7 @@ export class LoginComponent implements OnInit {
     }
     return this.arrayN;
 }
+
 
   onSubmit(form: any) {
     var permisos;

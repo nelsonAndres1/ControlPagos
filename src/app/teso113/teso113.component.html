@@ -6,10 +6,10 @@
         <td class="tg-0pky" colspan="2" rowspan="3"><img src="../../../../assets/logo.png"></td>
       </tr>
       <tr>
-        <td class="tg-0pky" rowspan="2"><h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO<br>SISTEMA DE GESTIÓN<br>FORMATO PARA REQUISITOS PAGO CUENTA INDIVIDUAL</h6></td>
+        <td class="tg-0pky" rowspan="2"><h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO.<br>SISTEMA DE GESTIÓN.<br>FORMATO PARA REQUISITOS PAGO CUENTA<br>INDIVIDUAL.</h6></td>
       </tr>
       <tr class="tg-0pky"  rowspan="2">
-        <td class="tg-0pky" colspan="2" rowspan="3"><img src="../../../../assets/logo.png"></td>
+        <ejs-barcodegenerator style="display: block;"  #barcode id="barcode" width="250px" height="80px" mode="SVG" type="Codabar" value={{data.codclas+data.numero}}></ejs-barcodegenerator>
       </tr>
     </thead>
 </table>
@@ -88,7 +88,7 @@
       </tbody>
       </table>
       
-      <ejs-barcodegenerator style="display: block;"  #barcode id="barcode" width="250px" height="180px" mode="SVG" type="Codabar" value={{data.codclas+data.numero}}></ejs-barcodegenerator>
+      
 </form>
 
 

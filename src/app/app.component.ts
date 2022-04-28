@@ -42,6 +42,10 @@ DoCheck {
         console.log("Web cargada correctamente");
     }
 
+    inp(){
+        this.router.navigate(['teso10'])
+    }
+
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -78,6 +82,17 @@ DoCheck {
         if (this.permisos != null) {
             this.arrayPermisos = this.permisos.split(',');
         }
+    }
+
+    permisosPago(){
+        var ban = false;
+        for (let index = 0; index < this.arrayPermisos.length; index++) {
+            if(this.arrayPermisos[index]=='AD' || this.arrayPermisos[index]=='RA'){
+                ban = true;
+                break;
+            }
+        }
+        return ban;
     }
 
     permisosNuevoPago(){

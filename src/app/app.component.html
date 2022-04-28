@@ -12,8 +12,8 @@
         </a>
         <ul>
             <div *ngIf="permisos != null">
-                <li *ngFor="let a of arrayPermisos">
-                    <a routerLink="teso10" *ngIf=" a == 'RA' || a == 'AD'">
+                <li>
+                    <a (click)="inp()" *ngIf="permisosPago()">
                         <i class="fa fa-home fa-2x"></i>
                         <span class="nav-text">
                             Inicie el Pago
