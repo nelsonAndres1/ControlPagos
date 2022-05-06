@@ -7,8 +7,9 @@
             <label for="name">
                 <h6>Buscar Estado del Pago</h6>
             </label>
-            <input type="text" placeholder="Buscar pago" (input)="getTpago($event)"   required pattern="[0-9]{1,6}"><!-- numero -->
+            <input type="text" placeholder="Buscar pago" (input)="getTpago($event)" required pattern="[0-9]+"><!-- numero -->
         </div>
+
     </div>
 </form>
 <div *ngFor="let result2 of data" (click)="getDetailPage(result2, data1)" style="cursor: pointer;">

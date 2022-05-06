@@ -73,7 +73,7 @@
             <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
                 Este Campo es requerido
             </small>
-            
+
         </div>
         <div class="row">
             <div class="col">
@@ -90,13 +90,20 @@
         </div>
 
         <div class="row">
+            <label for="name">Periodo de Facturación</label>
+
             <div class="col">
-                <input type="text" class="form-control" name="perfac" placeholder="Periodo Facturación"
+                <select class="form-select col" id="inputGroupSelect01" name="perfac" placeholder="Periodo Facturación"
                     #perfac="ngModel" [(ngModel)]="teso13.perfac" required>
+                    <option *ngFor="let per of periodos">{{per}}</option>
+                </select>
             </div>
             <small *ngIf="!perfac.valid && perfac.touched" class="invalid-feedback d-block">
                 Este Campo es requerido
             </small>
+        </div>
+        <div class="row">
+            <label for="name">Numero de Cuotas</label>
             <div class="col">
                 <input type="text" class="form-control" name="numcuo" placeholder="Numero Cuotas" #numcuo="ngModel"
                     [(ngModel)]="teso13.numcuo" required>
@@ -104,6 +111,9 @@
             <small *ngIf="!numcuo.valid && numcuo.touched" class="invalid-feedback d-block">
                 Este Campo es requerido
             </small>
+        </div>
+        <div class="row">
+            <label for="name">NIT</label>
             <div class="col">
                 <input type="text" class="form-control" name="nit" placeholder="nit" #nit="ngModel"
                     [(ngModel)]="teso13.nit" required>
@@ -118,10 +128,10 @@
             </div>
             <div class="col">
                 <input type="text" class="form-control" name="valor" placeholder="Valor del Pago" #valor="ngModel"
-                    [(ngModel)]="teso13.valor" required>
+                    [(ngModel)]="teso13.valor" required pattern="[0-9]+">
             </div>
             <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
-                Este Campo es requerido
+                Solo Numeros
             </small>
         </div>
         <div class="row">
@@ -138,8 +148,8 @@
         <br>
         <br>
     </div>
-    <div>
-        <button type="submit" class="btn btn-success" disable="registerForm.invalid">Enviar</button>
+    <div >
+        <button type="submit" class="btn btn-success" disable="registerForm.invalid" [disabled]="registerForm.invalid">Enviar</button>
     </div>
     <br>
     <br>

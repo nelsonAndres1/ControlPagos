@@ -77,7 +77,7 @@ export class Teso12Component implements OnInit {
     
     this.nombres.numpago = this.nconsecutivo;
     this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
-
+    
     this.iden = this._gener02Service.getIdentity();
     console.log(this.datoSoportes);
     this.teso12 = new teso12('');
@@ -153,6 +153,7 @@ export class Teso12Component implements OnInit {
     this.random=this.randomIntFromInterval(1,999);
   }
   confirmacion(){
+    
     var con='';
     Swal.fire({
       title: '¿El soporte es Copia o Original?',
@@ -207,11 +208,15 @@ export class Teso12Component implements OnInit {
     this.identity = data_image;
    
   }
+  permisoContinuar(){
+    
+  }
 
   soporteUpload(dat: any, datos: any) {
     
     
     this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
+
     this.tpago = this.tpago[0]['codclas'];
     this.nombres.codclas = this.tpago;
     this.nombres.numpago = this.nconsecutivo;
