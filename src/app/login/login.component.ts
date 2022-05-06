@@ -31,15 +31,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //se ejecuta siempre y cierra sesion solo cuando le llega el parametro sure por la url
     this.logout();
   }
   olvidoC(){
     Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con sistemas.','question');
   }
 
-
-
+  
   permisos() {
     var user;
     var usuario;
