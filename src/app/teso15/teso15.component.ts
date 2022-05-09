@@ -20,11 +20,7 @@ export class Teso15Component implements OnInit {
     private _teso15Service: Teso15Service,
     private router: Router
   ) {
-    if(identity != null){
-      this.router.navigate(['login']);
-    }else{
-      
-    }
+
    }
 
   ngOnInit(): void {

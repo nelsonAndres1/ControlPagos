@@ -7,6 +7,7 @@ import {Gener02} from './models/gener02';
 import {ActivatedRoute} from '@angular/router';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { identity } from 'rxjs';
 
 @Component({
     selector: 'app-root',
