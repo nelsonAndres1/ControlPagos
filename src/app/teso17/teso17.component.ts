@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Teso15Service } from '../services/teso15.service';
 import { Teso15 } from '../models/teso15';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { identity } from 'rxjs';
 
 @Component({
   selector: 'app-teso17',
@@ -18,7 +19,9 @@ export class Teso17Component implements OnInit {
   constructor(
     private _teso15Service: Teso15Service,
     private router: Router
-  ) { }
+  ) { 
+
+  }
 
   ngOnInit(): void {
   }

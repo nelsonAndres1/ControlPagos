@@ -7,6 +7,7 @@ import {Gener02} from '../models/gener02';
 import {ThisReceiver} from '@angular/compiler';
 import {Teso113} from '../models/teso113';
 import {Teso13Teso15} from '../models/teso13teso15';
+import { identity } from 'rxjs';
 @Component({
     selector: 'app-teso117',
     templateUrl: './teso117.component.html',
@@ -65,7 +66,6 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
 
     constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _teso117Service : Teso117Service, private _router : Router) {
-
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);

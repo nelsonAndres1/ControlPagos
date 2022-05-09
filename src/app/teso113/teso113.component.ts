@@ -6,6 +6,7 @@ import {Teso113} from '../models/teso113';
 import {Teso15Service} from '../services/teso15.service';
 import {Gener02} from '../models/gener02';
 import Swal from 'sweetalert2';
+import { identity } from 'rxjs';
 @Component({selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service]})
 export class Teso113Component implements OnInit {
 
@@ -19,6 +20,7 @@ export class Teso113Component implements OnInit {
     public identity1 : any;
 
     constructor(private route : ActivatedRoute, private _router: Router, private _teso15Service : Teso15Service) {
+        
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;

@@ -4,6 +4,7 @@ import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {FormGroup, FormBuilder, FormArray, FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
 import {teso112} from '../models/teso112';
+import { identity } from 'rxjs';
 
 @Component({selector: 'app-teso114', 
             templateUrl: './teso114.component.html', 
@@ -25,6 +26,7 @@ export class Teso114Component implements OnInit {
                 fb : FormBuilder, 
                 private _router : Router
                 ) {
+
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;

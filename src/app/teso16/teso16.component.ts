@@ -4,6 +4,7 @@ import {FormGroup, FormBuilder, FormArray, FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
 import {Teso15Service} from '../services/teso15.service';
 import { Gener02 } from '../models/gener02';
+import { identity } from 'rxjs';
 
 @Component({selector: 'app-teso16', 
             templateUrl: './teso16.component.html', 
@@ -23,7 +24,8 @@ export class Teso16Component implements OnInit {
     v : any = true;
     public arrayN = Array();
     
-    constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service) {
+    constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _route : Router) {
+
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
             this.itemDetail = paramsData;

@@ -5,7 +5,7 @@ import { Teso14 } from '../models/teso14';
 import { Teso14Service } from '../services/teso14.service';
 import { Teso114Service } from '../services/teso114.service';
 import { Router, ActivatedRoute ,NavigationExtras } from '@angular/router';
-
+import { identity } from 'rxjs';
 @Component({
   selector: 'app-teso14',
   templateUrl: './teso14.component.html',
@@ -23,6 +23,7 @@ export class Teso14Component implements OnInit {
     private _teso14Service: Teso14Service,
     private router:Router
     ) {
+
       this.teso10 = new teso10('','','','');
      } 
 

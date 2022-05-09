@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {Teso112Service} from '../services/teso112.service';
 import {Teso11} from '../models/teso11';
-
+import { identity } from 'rxjs';
 
 @Component({
     selector: 'app-teso112',
@@ -23,6 +23,7 @@ export class Teso112Component implements OnInit {
 
     constructor(private _teso112Service : Teso112Service, private _teso12Service : Teso12Service, private _router : Router) {
         this.teso12 = new teso12('');
+
 
     }
 

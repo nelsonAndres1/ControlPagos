@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Teso16Service } from '../services/teso16.service';
 import { NavigationExtras, Router } from '@angular/router';
+import { identity } from 'rxjs';
 
 @Component({
   selector: 'app-teso1117',
@@ -11,7 +12,10 @@ import { NavigationExtras, Router } from '@angular/router';
 export class Teso1117Component implements OnInit {
   
   data : any;
-  constructor( private _teso16Service : Teso16Service, private router: Router) { }
+  constructor( private _teso16Service : Teso16Service, private router: Router) 
+  { 
+
+  }
 
   ngOnInit(): void {
   }

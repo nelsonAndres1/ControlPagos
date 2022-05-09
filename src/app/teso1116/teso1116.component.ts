@@ -3,6 +3,7 @@ import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import Swal from 'sweetalert2';
 import {Teso16Service} from '../services/teso16.service';
 import {Teso16} from '../models/teso16';
+import { identity } from 'rxjs';
 
 
 
@@ -36,6 +37,7 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
     array : any = [];
     status : any;
     constructor(private route : ActivatedRoute, private _route : Router, private _teso16Service : Teso16Service) {
+
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
