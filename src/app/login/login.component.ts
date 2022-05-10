@@ -95,6 +95,7 @@ export class LoginComponent implements OnInit {
 
               //persistir los datos del usuario
               localStorage.setItem('token',this.token);
+              console.log(this.token+'asdigaidsguyasidu');
               localStorage.setItem('identity', JSON.stringify(this.identity));
               //this.permisos();
               permisos = this.permisos();
