@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
 import { BarcodeGeneratorAllModule,QRCodeGeneratorAllModule,DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { Teso12Component } from './teso12/teso12.component';
 import { Teso13Component } from './teso13/teso13.component';
@@ -85,8 +86,10 @@ import { Teso118Component } from './teso118/teso118.component';
     SweetAlert2Module.forRoot(),
     routing
   ],
-   
-  providers: [appRoutingProviders],
+   //appRoutingProviders sin llaves y con corchetes
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
