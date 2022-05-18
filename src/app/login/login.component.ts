@@ -34,10 +34,9 @@ export class LoginComponent implements OnInit {
     this.logout();
   }
   olvidoC(){
-    Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con sistemas.','question');
+    Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con la oficina de Sistemas e Informatica.','question');
   }
 
-  
   permisos() {
     var user;
     var usuario;
