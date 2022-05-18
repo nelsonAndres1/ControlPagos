@@ -283,7 +283,7 @@ button {
 }
 
 .e-nav__link:after {
-  content: "Pagina Principal";
+  content: "Pagina Inicial";
 }
 
 .e-nav__link:hover:before {
