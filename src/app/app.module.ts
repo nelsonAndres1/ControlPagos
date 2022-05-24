@@ -39,8 +39,7 @@ import { Teso1117Component } from './teso1117/teso1117.component';
 import { Teso118Component } from './teso118/teso118.component';
 
 
-
-
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 @NgModule({
   declarations: [
@@ -81,6 +80,7 @@ import { Teso118Component } from './teso118/teso118.component';
     MatButtonModule,
     MatCheckboxModule,
     MatRadioModule,
+    NgxBarcodeModule,
     MatCardModule,    
     
     SweetAlert2Module.forRoot(),
