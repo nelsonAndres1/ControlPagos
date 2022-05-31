@@ -57,3 +57,22 @@
         <input type="submit" value="Enviar" class="btn btn-success" />
     </div>
 </form>
+
+<table class="table" id="tablaT10">
+    <thead>
+      <tr>
+        <th scope="col">Codclas</th>
+        <th scope="col">Detalle</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Numero de Pagos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dt of identity">
+        <th scope="row">{{dt.codclas}}</th>
+        <td>{{dt.detclas}}</td>
+        <td>{{dt.estado}}</td>
+        <td>{{dt.numero}}</td>
+      </tr>
+    </tbody>
+  </table>

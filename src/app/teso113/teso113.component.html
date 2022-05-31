@@ -9,7 +9,7 @@
         <td class="tg-0pky" rowspan="2"><h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO.<br>SISTEMA DE GESTIÓN.<br>FORMATO PARA REQUISITOS PAGO CUENTA<br>INDIVIDUAL.</h6></td>
       </tr>
       <tr class="tg-0pky"  rowspan="2">
-        <ejs-barcodegenerator style="display: block;"  #barcode id="barcode" width="250px" height="80px" mode="SVG" type="Codabar" value={{data.codclas+data.numero}}></ejs-barcodegenerator>
+        <ngx-barcode [bc-value]="data.codclas+data.numero" [bc-display-value]="true"></ngx-barcode>
       </tr>
     </thead>
 </table>
@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td class="tg-0pky" colspan="4"><b>Nombre de Empresa / Persona a quien se Paga: </b></td>
-        <td class="tg-0pky">Club Colombia</td>
+        <td class="tg-0pky">{{nit}}</td>
       </tr>
       <tr>
         <td class="tg-0lax" colspan="4"><b>NIT o Cedula de Ciudadania: </b></td>
@@ -40,7 +40,7 @@
       </tr>
       <tr>
         <td class="tg-0lax" colspan="4"><b>Tipo de Pago: </b></td>
-        <td class="tg-0lax">{{data.codclas}}</td>
+        <td class="tg-0lax">{{data.codclas}} - {{detalle}}</td>
       </tr>
       <tr>
         <td class="tg-0lax" colspan="4"><b>Valor: </b></td>
@@ -48,11 +48,11 @@
       </tr>
       <tr>
         <td class="tg-0lax" colspan="4"><b>Centro de Costo: </b></td>
-        <td class="tg-0lax">{{data.codcen}}</td>
+        <td class="tg-0lax">{{data.codcen}} - {{cc}}</td>
       </tr>
       <tr>
         <td class="tg-0lax" colspan="4"><b>Codigo de Dependencia: </b></td>
-        <td class="tg-0lax">{{data.coddep}}</td>
+        <td class="tg-0lax">{{data.coddep}} - {{depe}}</td>
       </tr>
       <tr>
         <td class="tg-0lax"><b>Detalle</b></td>
@@ -64,7 +64,7 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th class="tg-0pky"><b align="center">Liquidado por</b></th>
+          <th class="tg-0pky"><b align="center">Radicado/Liquidado por</b></th>
           <th class="tg-0pky"><b align="center"></b>Revisado por</th>
           <th class="tg-0pky"><b align="center">Autorizado por</b></th>
         </tr>

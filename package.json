@@ -1,5 +1,5 @@
 {
-  "deploy":"ng build --prod --base-href=/ControlPagos/",
+  "deploy": "ng build --prod --base-href=/ControlPagos/",
   "name": "control-pagos",
   "version": "0.0.0",
   "scripts": {
@@ -30,6 +30,7 @@
     "bootstrap": "^5.1.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "ngx-barcode": "^0.3.0",
     "ngx-barcode-scanner": "^0.3.0",
     "pdfmake": "^0.2.5",
     "rxjs": "~7.5.0",

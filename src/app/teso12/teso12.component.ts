@@ -51,8 +51,11 @@ export class Teso12Component implements OnInit {
   public original: string;
   public random:any;
   public original1: any;
-
-
+  public longSop : any = 0;
+  public permisos : any;
+  public banderaPermisos : any = true;
+  public contarPer : any = 0;
+  public confirPer : any = 0;
 
   constructor(
     public formulario: FormBuilder,
@@ -66,7 +69,7 @@ export class Teso12Component implements OnInit {
 
   ) {
      
-    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '');
+    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '','','',0);
     this.nconsecutivo = 0;
     this.traerConsecutivo();
     this.nombres = new Nombres('', 0, '');
@@ -79,7 +82,25 @@ export class Teso12Component implements OnInit {
     this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
     
     this.iden = this._gener02Service.getIdentity();
+    console.log("longitud");
+
+    this.permisos=this.datoSoportes[this.datoSoportes.length-1]['obliga'];//agre
+    
+    for (let index = 0; index < this.permisos.length; index++) {
+        this.datoSoportes[index]['per'] = this.permisos[index];  
+    }
+    for (let index = 0; index < this.permisos.length; index++) {
+        if(this.permisos[index] == 'S'){
+            this.banderaPermisos=false;
+            this.contarPer = this.contarPer+1;
+        }
+    }
+    
     console.log(this.datoSoportes);
+
+
+    
+    console.log(this.permisos);
     this.teso12 = new teso12('');
     
     this.usu = '1';
@@ -201,8 +222,18 @@ export class Teso12Component implements OnInit {
     });
   }
 
-  imagenes(datos: any) {
+  imagenes(datos: any, per: any) {
+    this.longSop = this.longSop+1;
+
+    if(per=='S'){
+      this.confirPer=this.confirPer+1;
+    }
+    if(this.confirPer==this.contarPer){
+      this.banderaPermisos=true;
+    }
     
+    console.log("longitud1111");
+    console.log(this.longSop);
     let data_image = datos.body;
     this.datoSoportes.image = data_image;
     this.identity = data_image;
@@ -212,7 +243,7 @@ export class Teso12Component implements OnInit {
     
   }
 
-  soporteUpload(dat: any, datos: any) {
+  soporteUpload(dat: any, per: any, datos: any) {
     
     
     this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
@@ -237,7 +268,7 @@ export class Teso12Component implements OnInit {
               this.identity = response;
 
               //inicio subir imagen  
-              this.imagenes(datos);
+              this.imagenes(datos,per);
 
               //Fin  subir imagen
             },

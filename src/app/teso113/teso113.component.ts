@@ -3,11 +3,14 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Teso113} from '../models/teso113';
+import { teso10 } from '../models/teso10';
+
 import {Teso15Service} from '../services/teso15.service';
+import {Teso13Service} from '../services/teso13.service';
 import {Gener02} from '../models/gener02';
 import Swal from 'sweetalert2';
 import { identity } from 'rxjs';
-@Component({selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service]})
+@Component({selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service]})
 export class Teso113Component implements OnInit {
 
     @ViewChild('myData')myData : ElementRef;
@@ -18,19 +21,33 @@ export class Teso113Component implements OnInit {
     public data : any;
     public identity : any;
     public identity1 : any;
+    public respuesta : any;
+    public nit : any;
+    public cc : any;
+    public depe : any;
+    public detalle : any;
+    public detalle2 : any;
 
-    constructor(private route : ActivatedRoute, private _router: Router, private _teso15Service : Teso15Service) {
+    constructor(private route : ActivatedRoute, private _router: Router, private _teso15Service : Teso15Service, private _teso13Service : Teso13Service) {
         
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
             this.numero = this.itemDetail[0];
             this.codclas = this.itemDetail[1];
+            this.nit = this.itemDetail[2].trim();
+            this.cc = this.itemDetail[3].trim();
+            this.depe = this.itemDetail[4].trim();
+
+            this.getTeso10(this.codclas);
+
+            console.log("sdoashdoiauhio");
+            console.log(this.nit,this.cc,this.depe);
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
                 this.data = response;
 
                 this.data['usuela'];
-
+            
                 this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
                     this.identity = response;
                     this.identity1 = this.identity[0]['nombre'];
@@ -84,6 +101,18 @@ export class Teso113Component implements OnInit {
         }, 500);
         this._router.navigate['/principal'];
     }
+    getTeso10(n:any){
+        this._teso13Service.name_teso10(new teso10(n,'','','')).subscribe(
+            response => {
+                this.detalle = response.detclas;
+                console.log(this.detalle);
+            },
+            error=>{
+                this.detalle = 'error';
+                console.log(<any>error);
+            });
+    }
+
 
     ngOnInit(): void {}
 

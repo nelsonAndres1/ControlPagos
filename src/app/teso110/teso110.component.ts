@@ -23,9 +23,13 @@ export class Teso110Component implements OnInit {
     public status : any;
     public status2 : any;
     data : any;
+    public identity : any;
+    public token : any;
+    public v : any = true;
     constructor(private _teso10Service : Teso10Service, private _router : Router, private _teso14Service : Teso14Service, private _teso110Service : Teso110Service) {
 
         this.teso10 = new teso10('', '', '', '');
+        this.datosTabla();
 
     }
 
@@ -220,5 +224,31 @@ export class Teso110Component implements OnInit {
         });
 
     }
+    datosTabla(){
+        this._teso10Service.signup(this.teso10).subscribe(
+          response =>{
+            if(response.status != 'error'){
+             
+              this.token = response;
+              this._teso10Service.signup(this.teso10,this.v).subscribe(
+                response => {
+                  this.identity = response;
+                  this.token;
+                  this.identity;
+                },
+                error =>{
+             
+                  console.log(<any>error);
+                }
+              );
+            }else{
+             
+            }
+          },
+          error =>{
+            console.log(<any>error);
+          }
+        );
+      }
 
 }

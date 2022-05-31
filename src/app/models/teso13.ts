@@ -24,7 +24,10 @@ export class Teso13{
         public numori: number,
         public numfot: number,
         public totfol: number,
-        public valor: string
+        public valor: string,
+        public cdp_marca: string,
+        public cdp_documento: string,
+        public cdp_ano: number
     ){
 
     }

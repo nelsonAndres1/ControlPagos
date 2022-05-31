@@ -1,4 +1,6 @@
 
+
+
 <h2>Soportes Solicitados</h2>
 
 <div class="div1">
@@ -10,27 +12,36 @@
             <th scope="col">Documento Solicitado</th>
             
             <th scope="col">Subir Documento</th>
+            <th scope="col">Obligatorio</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let dt of datoSoportes">
+          <tr *ngFor="let dt of datoSoportes" >
             <th scope="row">{{dt.codsop}}</th>
             <td>{{dt.detsop}}</td>
             <td>  
               <angular-file-uploader 
                   [resetUpload]=true
-                  (ApiResponse)="soporteUpload(dt.codsop,$event)"
+                  (ApiResponse)="soporteUpload(dt.codsop,dt.per,$event)"
                   [config]="afuConfig">
               </angular-file-uploader>
             </td>
-
+            <td>
+              {{dt.per}}
+            </td>
             <!-- <td><input accept=".pdf,.pptx,.docx" class="hidden" name="banner" type="file" id="banner"></td> -->
           </tr>
         </tbody>
     </table>
   </form>
-  <button type="submit" class="btn btn-success" [routerLink]="['/teso13']">Continuar</button>
+  <div *ngIf="banderaPermisos==true">
+    <button type="submit" class="btn btn-success" [routerLink]="['/teso13']">Continuar</button>
+    <br>
+    <p><small>Importante: Una ves subido los soportes debe continuar con el pago</small></p>
+  </div>
+<div *ngIf="datoSoportes.length != longSop">
+    <p><small>Importante: Debe de subir todos los soportes obligatorios para poder continuar</small></p>
+</div>
   <br>
   <br>
 </div>
-

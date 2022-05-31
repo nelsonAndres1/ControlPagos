@@ -13,3 +13,7 @@ form{
     justify-content: center;
     align-items: center;
 }
+small {
+    font-size: .7em;
+    color: red;
+}

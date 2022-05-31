@@ -18,6 +18,63 @@ export class Teso13Service{
         return "Service Run";
     }
 
+    getConta28(pclave: any){
+        const response = new Promise(resolve =>{
+            this._http.get(global.url+`teso13/searchConta28?search=${pclave}`).subscribe(
+              data => {
+                resolve(data);
+              }, err =>{
+                console.log(err);
+              });
+        });
+        return response;
+    }
+
+    getC71(pclave: any){
+        const response = new Promise( resolve =>{
+            this._http.get(global.url+`teso13/searchC71?search=${pclave}`).subscribe(
+                data => {
+                    resolve(data);
+
+                }, err =>{
+                    console.log(err);
+
+                });
+        });
+        return response;
+    }
+
+
+
+    getConta06(pclave: any){
+        const response = new Promise(resolve =>{
+            this._http.get(global.url+`teso13/search?search=${pclave}`).subscribe(
+              data => {
+                resolve(data);
+              }, err =>{
+                console.log(err);
+              });
+        });
+        return response;
+    }
+    getConta04(pclave: any){
+        const response = new Promise(resolve =>{
+            this._http.get(global.url+`teso13/searchConta04?search=${pclave}`).subscribe(
+                data => {
+                    resolve(data);
+                }, err =>{
+                    console.log(err);
+                });
+        });
+        return response;
+    }
+
+    name_teso10(user:any): Observable<any>{
+        let json = JSON.stringify(user);
+        let params = 'json='+json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url+'teso113/name_teso10',params,{headers: headers});
+    }
     
     register(user:any): Observable<any>{
         let json =JSON.stringify(user);
