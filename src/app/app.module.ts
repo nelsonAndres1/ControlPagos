@@ -40,8 +40,11 @@ import { Teso118Component } from './teso118/teso118.component';
 
 
 import { NgxBarcodeModule } from 'ngx-barcode';
+<<<<<<< HEAD
  
 
+=======
+>>>>>>> f033fb5512af83a03e17307cfecaed83e94d40a3
 
 @NgModule({
   declarations: [
