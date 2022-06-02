@@ -7,6 +7,7 @@ import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {Teso112Service} from '../services/teso112.service';
 import {Teso11} from '../models/teso11';
 import { identity } from 'rxjs';
+import {Teso14Service} from '../services/teso14.service';
 
 @Component({
     selector: 'app-teso112',
@@ -20,11 +21,21 @@ export class Teso112Component implements OnInit {
     public status : any;
     public status2 : any;
     public teso11 : Teso11;
+    public dataSoportes : any;
 
-    constructor(private _teso112Service : Teso112Service, private _teso12Service : Teso12Service, private _router : Router) {
+    constructor(private _teso112Service : Teso112Service, private _teso12Service : Teso12Service, private _router : Router, private _teso14Service : Teso14Service) {
         this.teso12 = new teso12('');
+        //this.getTSoportes1();
+        this.soportes1();
 
+    }
 
+    soportes1() {
+        const sopor = this._teso14Service.getTsoportes({}).subscribe(response => {
+            this.dataSoportes = response;
+        
+        });
+        return this.dataSoportes;
     }
 
 

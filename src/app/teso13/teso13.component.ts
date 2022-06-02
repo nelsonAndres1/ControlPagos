@@ -133,9 +133,11 @@ export class Teso13Component implements OnInit {
     }
     getC71(marca: any, documento : any){
         const keyword = [marca,documento];
+        
         const search = this._userService.getC71(keyword).then(
             response => {
-                this.data71 = response; 
+                this.data71 = response;
+                console.log(this.data71); 
             });
 
     }

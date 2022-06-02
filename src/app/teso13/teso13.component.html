@@ -75,7 +75,7 @@
                         <div class="row">
                             <label for="name">CDP_Documento</label>
                             <input type="text" class="form-control" name="cdp_documento" placeholder="cdp_documento" for="cdp_documento"
-                            #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7" (input)="getC71(teso13.cdp_marca,$event)" required>
+                            #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7" for="cdp_documento" (input)="getC71(teso13.cdp_marca,teso13.cdp_documento)" required>
                         </div>
                         <div class="row" *ngFor=" let result of data71" (click)="getDetailPageC71(result)" style="cursor: pointer; ">
                             <div class="card card-body mb-1">

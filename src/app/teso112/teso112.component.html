@@ -42,28 +42,21 @@
     <br>
     <div>
         <input type="submit" value="Agregar Tipo de Soporte" class="btn btn-success"/>
-        <!-- <button type="submit" class="btn btn-success">Enviar</button> -->
+        
     </div>
 </form>
 
-<!-- <form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
-    <div class="form-group col-md-12">
-        <div class="row">
-            <label for="name">
-                <h6> Detalle del Soporte </h6>
-            </label>
-
-            <input type="text" placeholder="Soporte" for="detsop" class="form-control" #detsop="ngModel"
-                [(ngModel)]="teso12.detsop" name="detsop" required pattern="[a-zA-Z]+"><!-- numero -->
-     <!--        <small *ngIf="!detsop.valid && detsop.touched" class="invalid-feedback d-block">
-                Este Campo es Requerido
-            </small> -->
-        <!-- </div>
-    </div>
-    <br>
-    <br>
-    <div>
-        <input type="submit" value="Enviar" class="btn btn-success" [disabled]="registerForm.invalid" /> -->
-        <!-- <button type="submit" class="btn btn-success">Enviar</button> -->
- <!--    </div>
-</form> --> -->
+<table class="table" id="tablaT10">
+    <thead>
+      <tr>
+        <th scope="col">Codsop</th>
+        <th scope="col">Detalle del Soporte</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dt of dataSoportes">
+        <th scope="row">{{dt.codsop}}</th>
+        <td>{{dt.detsop}}</td>
+      </tr>
+    </tbody>
+  </table>
