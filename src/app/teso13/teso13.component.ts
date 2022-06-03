@@ -13,6 +13,7 @@ import {Teso12Service} from '../services/teso12.service';
 import jsPDF from 'jspdf';
 import {Teso15} from '../models/teso15';
 import {Teso17} from '../models/teso17';
+import {Conta71} from '../models/conta71';
 
 @Component({
     selector: 'app-teso13',
@@ -185,35 +186,49 @@ export class Teso13Component implements OnInit {
 
 
     buscarT17(cdp_marca:any, cdp_documento:any, cdp_ano:any, nit:any){
-        this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
-            response=>{
-                console.log(response.numcuo);
-                console.log(response.cuota);
-                if(response.numcuo==response.cuota){
-                    
-                    if(response.numcuo == undefined){
-                        this.teso13.numcuo=1;
-                        this.cuota=1;
-                    }else{
-                        Swal.fire(
-                            'Información',
-                            'Ya se han realizado la totalidad de los pagos',
-                            'info'
-                          )
-                          this.teso13.numcuo=1;
-                          this.cuota=1;
-                    }
-                    
-                }else{
-                    this.datos_teso17.push(response.numcuo, response.cuota);
-                    this.teso13.numcuo=response.numcuo;
-                    this.cuota = parseInt(response.cuota)+1;
-            
-                }
+        this._userService.getbusqueda71(new Conta71(cdp_marca,cdp_documento,cdp_ano,nit)).subscribe(
+           response=>{
+               
+                console.log(response);
 
-            }
-        )
+            if(response){
+                this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
+                    response=>{
+                        console.log(response.numcuo);
+                        console.log(response.cuota);
+                        if(response.numcuo==response.cuota){
+                            
+                            if(response.numcuo == undefined){
+                                this.teso13.numcuo=1;
+                                this.cuota=1;
+                            }else{
+                                Swal.fire(
+                                    'Información',
+                                    'Ya se han realizado la totalidad de los pagos',
+                                    'info'
+                                  );
+                                  this.teso13.numcuo=1;
+                                  this.cuota=1;
+                            }
+                            
+                        }else{
+                            this.datos_teso17.push(response.numcuo, response.cuota);
+                            this.teso13.numcuo=response.numcuo;
+                            this.cuota = parseInt(response.cuota)+1;
+                    
+                        }
         
+                    }
+                );
+            }else{
+                Swal.fire(
+                    '¡Error!',
+                    'No existeN datos asociados a CDP Y NIT!',
+                    'error'
+                  );
+            }     
+            } 
+        );
     }
 
     onSubmit(form : any) {
