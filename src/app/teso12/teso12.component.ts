@@ -75,6 +75,7 @@ export class Teso12Component implements OnInit {
     this.nombres = new Nombres('', 0, '');
     
     this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
+    
     this.tpago = this.tpago[this.index]['codclas'];
     this.nombres.codclas = this.tpago;
     
@@ -83,19 +84,30 @@ export class Teso12Component implements OnInit {
     
     this.iden = this._gener02Service.getIdentity();
     console.log("longitud");
+    console.log(this.datoSoportes.length);
+    
+    if(this.datoSoportes.length==0){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No existen soportes asociados al tipo de pago!'
+      });
+      this._router.navigate(['teso10']);
+    }
 
     this.permisos=this.datoSoportes[this.datoSoportes.length-1]['obliga'];//agre
     
     for (let index = 0; index < this.permisos.length; index++) {
-        this.datoSoportes[index]['per'] = this.permisos[index];  
-    }
-    for (let index = 0; index < this.permisos.length; index++) {
-        if(this.permisos[index] == 'S'){
-            this.banderaPermisos=false;
-            this.contarPer = this.contarPer+1;
-        }
+      this.datoSoportes[index]['per'] = this.permisos[index];  
     }
     
+    for (let index = 0; index < this.permisos.length; index++) {
+      if(this.permisos[index] == 'S'){
+          this.banderaPermisos=false;
+          this.contarPer = this.contarPer+1;
+      }
+    }
+        
     console.log(this.datoSoportes);
 
 
