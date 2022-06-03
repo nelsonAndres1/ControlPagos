@@ -121,5 +121,12 @@ export class Teso13Service{
         return this.token;
     }
 
+    getTeso17(user:any): Observable<any>{
+        let json = JSON.stringify(user);
+        let params = 'json='+json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url+'teso13/teso17', params, {headers:headers});
+    }
+
 
 }

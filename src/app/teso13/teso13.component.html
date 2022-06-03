@@ -72,23 +72,29 @@
                         </select>
                     </div>
                     <div class="col">
-                        <div class="row">
+                        <!-- <div class="row"> -->
+                            <label for="name">CDP_Documento</label>
+                            <input type="text" class="form-control" name="cdp_documento" placeholder="cdp_documento" for="cdp_documento"
+                            #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7" required>
+                        <!-- </div> -->
+
+<!--                         <div class="row">
                             <label for="name">CDP_Documento</label>
                             <input type="text" class="form-control" name="cdp_documento" placeholder="cdp_documento" for="cdp_documento"
                             #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7" for="cdp_documento" (input)="getC71(teso13.cdp_marca,teso13.cdp_documento)" required>
-                        </div>
-                        <div class="row" *ngFor=" let result of data71" (click)="getDetailPageC71(result)" style="cursor: pointer; ">
+                        </div> -->
+<!--                         <div class="row" *ngFor=" let result of data71" (click)="getDetailPageC71(result)" style="cursor: pointer; ">
                             <div class="card card-body mb-1">
                                 <h6>Documento: {{result.documento}}</h6>
                                 <h6>Año: {{result.ano}}</h6>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col">
                         <label for="name">CDP_Año</label>
                         <input type="text" class="form-control" name="cdp_ano" placeholder="cdp_año" for="cdp_ano"
                         #cdp_ano="ngModel" [(ngModel)]="teso13.cdp_ano" maxlength="4" required>
-                    </div>        
+                    </div>  
             </div>
 
             <div class="row">
@@ -97,8 +103,12 @@
                     <div class="col">
                         <label for="name">NIT</label>
                         <div class="col">
-                            <input type="text" class="form-control" name="nit_name" placeholder="nit" for="nit"
-                                (input)="getConta04($event)" [(ngModel)]="nit_nombre">
+
+                            <div class="col">
+                                <div class="form-outline">
+                                    <input type="text" class="form-control" name="nit_name" placeholder="nit" for="nit" (input)="getConta04($event)" [(ngModel)]="nit_nombre">
+                                </div>
+                            </div>
                             <div *ngFor="let resultC of datac2" (click)="getDetailPageC2(resultC)">
                                 <div class="card card-body mb-1" (click)="touch(resultC)" style="cursor: pointer;"
                                     *ngIf="bandera2=='true'">
@@ -107,6 +117,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div>
                             <input class="form-control" type="text" name="nit" placeholder="" #nit="ngModel"
                                 [(ngModel)]="teso13.nit" readonly maxlength="16" required>
@@ -114,7 +125,18 @@
                                 Este Campo es requerido
                             </small>
                         </div>
+                        <button type="button" (click)="buscarT17(teso13.cdp_marca,teso13.cdp_documento,teso13.cdp_ano,teso13.nit)" class="btn btn-primary">
+                            <i class="fa fa-search" aria-hidden="true">   
+                                <span class="nav-text">
+                                    Buscar Pagos asociados a NIT Y CDP
+                                </span></i>
+                        </button>
+
                     </div>
+
+                    
+                </div>
+                <div class="row">
                     <div class="col">
                         <label for="name">Numero de Cuotas</label>
                         <div class="col">
@@ -125,7 +147,11 @@
                             Este Campo es requerido
                         </small>
                     </div>
+                    <div class="col">
+                        <label for="name">Numero de cuota actual: <b>{{cuota}}</b></label>
+                    </div>
                 </div>
+
             </div>
         <div class="row">
             <div class="col">

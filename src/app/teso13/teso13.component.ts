@@ -11,6 +11,8 @@ import {Gener02Service} from '../services/gener02.service';
 import {Teso10Service} from '../services/teso10.service';
 import {Teso12Service} from '../services/teso12.service';
 import jsPDF from 'jspdf';
+import {Teso15} from '../models/teso15';
+import {Teso17} from '../models/teso17';
 
 @Component({
     selector: 'app-teso13',
@@ -49,6 +51,8 @@ export class Teso13Component implements OnInit {
     public coddep_nombre : any;
     public marca : any = ['AC','OP','SU'];
     public data71 : any;
+    public datos_teso17 : any =[];
+    public cuota : any;
 
     constructor(private _userService : Teso13Service, private _gener02Service : Gener02Service, private _teso10Service : Teso10Service, private _teso12Service : Teso12Service, private _router : Router) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '','','',0);
@@ -131,7 +135,8 @@ export class Teso13Component implements OnInit {
             }
         }
     }
-    getC71(marca: any, documento : any){
+
+    getC71(marca: string, documento : any){
         const keyword = [marca,documento];
         
         const search = this._userService.getC71(keyword).then(
@@ -176,6 +181,39 @@ export class Teso13Component implements OnInit {
         console.log("No se puede con un año menor");
       }
       
+    }
+
+
+    buscarT17(cdp_marca:any, cdp_documento:any, cdp_ano:any, nit:any){
+        this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
+            response=>{
+                console.log(response.numcuo);
+                console.log(response.cuota);
+                if(response.numcuo==response.cuota){
+                    
+                    if(response.numcuo == undefined){
+                        this.teso13.numcuo=1;
+                        this.cuota=1;
+                    }else{
+                        Swal.fire(
+                            'Información',
+                            'Ya se han realizado la totalidad de los pagos',
+                            'info'
+                          )
+                          this.teso13.numcuo=1;
+                          this.cuota=1;
+                    }
+                    
+                }else{
+                    this.datos_teso17.push(response.numcuo, response.cuota);
+                    this.teso13.numcuo=response.numcuo;
+                    this.cuota = parseInt(response.cuota)+1;
+            
+                }
+
+            }
+        )
+        
     }
 
     onSubmit(form : any) {
