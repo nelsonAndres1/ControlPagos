@@ -54,6 +54,7 @@ export class Teso13Component implements OnInit {
     public data71 : any;
     public datos_teso17 : any =[];
     public cuota : any;
+    bd1: boolean;
 
     constructor(private _userService : Teso13Service, private _gener02Service : Gener02Service, private _teso10Service : Teso10Service, private _teso12Service : Teso12Service, private _router : Router) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '','','',0);
@@ -192,6 +193,7 @@ export class Teso13Component implements OnInit {
                 console.log(response);
 
             if(response){
+                this.bd1=true;
                 this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
                     response=>{
                         console.log(response.numcuo);
@@ -221,9 +223,12 @@ export class Teso13Component implements OnInit {
                     }
                 );
             }else{
+                
+
+                this.bd1=false;
                 Swal.fire(
                     '¡Error!',
-                    'No existeN datos asociados a CDP Y NIT!',
+                    'No existen datos asociados a CDP Y NIT!',
                     'error'
                   );
             }     
