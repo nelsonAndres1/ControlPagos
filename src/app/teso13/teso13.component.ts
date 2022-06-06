@@ -50,20 +50,22 @@ export class Teso13Component implements OnInit {
     public nit_nombre : any;
     public codcen_nombre : any;
     public coddep_nombre : any;
-    public marca : any = ['AC','OP','SU'];
+    public marca : any = ['AC', 'OP', 'SU'];
     public data71 : any;
-    public datos_teso17 : any =[];
+    public datos_teso17 : any = [];
     public cuota : any;
     public cdp_marca : any;
     public cdp_documento : any;
     public cdp_ano : any;
     public nit : any;
-    bd1: boolean;
+    bd1 : boolean;
+    public valor_CDP : any;
+    public valor_a : any;
 
     constructor(private _userService : Teso13Service, private _gener02Service : Gener02Service, private _teso10Service : Teso10Service, private _teso12Service : Teso12Service, private _router : Router) {
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '','','',0);
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0);
 
-        this.periodosT(2021,2025);
+        this.periodosT(2021, 2025);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.tpago = this._teso12Service.getTpago();
@@ -75,23 +77,23 @@ export class Teso13Component implements OnInit {
 
     }
 
-    touch(resultC:any){
+    touch(resultC : any) {
         console.log(resultC.nit);
-        this.teso13.nit=resultC.nit;
+        this.teso13.nit = resultC.nit;
         this.bandera2 = 'false';
         this.nit_nombre = resultC.razsoc;
-        
+
     }
-    touchCC(result:any){
+    touchCC(result : any) {
         console.log(result.codcen);
-        this.teso13.codcen=result.codcen;
+        this.teso13.codcen = result.codcen;
         this.bandera = 'false';
-        this.codcen_nombre = result.detalle; 
+        this.codcen_nombre = result.detalle;
     }
-    touch28(result:any){
-        this.teso13.coddep=result.coddep;
+    touch28(result : any) {
+        this.teso13.coddep = result.coddep;
         this.bandera28 = 'false';
-        this.coddep_nombre = result.detalle; 
+        this.coddep_nombre = result.detalle;
     }
 
     getConta(pclave : any) {
@@ -142,17 +144,16 @@ export class Teso13Component implements OnInit {
         }
     }
 
-    getC71(marca: string, documento : any){
-        const keyword = [marca,documento];
-        
-        const search = this._userService.getC71(keyword).then(
-            response => {
-                this.data71 = response;
-                console.log(this.data71); 
-            });
+    getC71(marca : string, documento : any) {
+        const keyword = [marca, documento];
+
+        const search = this._userService.getC71(keyword).then(response => {
+            this.data71 = response;
+            console.log(this.data71);
+        });
 
     }
-    getDetailPageC71(result:any){
+    getDetailPageC71(result : any) {
         const navigationExtras: NavigationExtras = {
             queryParams: {
                 result: JSON.stringify(result)
@@ -163,86 +164,76 @@ export class Teso13Component implements OnInit {
     ngOnInit(): void {
         this._userService.test();
     }
-    periodosT(añoI:any, añoF:any){
-      var resultado;
-      var años=[];
-      if(añoI<añoF){
-        resultado = añoF-añoI;
-        for (let index = 0; index < resultado; index++) {
-              añoI=añoI+1;
-              años.push(añoI);
-        }
-        for (let index = 0; index < años.length; index++) {
+    periodosT(añoI : any, añoF : any) {
+        var resultado;
+        var años = [];
+        if (añoI < añoF) {
+            resultado = añoF - añoI;
+            for (let index = 0; index < resultado; index++) {
+                añoI = añoI + 1;
+                años.push(añoI);
+            }
+            for (let index = 0; index < años.length; index++) {
                 for (let i = 1; i < 13; i++) {
-                      if(i<10){
-                        this.periodos.push(años[index]+'0'+i)
-                        
-                      }else{
-                        this.periodos.push(años[index]+''+i);
-                        
-                      }     
-                }
-        }
-      }else{
-        console.log("No se puede con un año menor");
-      }
-      
-    }
+                    if (i < 10) {
+                        this.periodos.push(años[index] + '0' + i)
 
+                    } else {
+                        this.periodos.push(años[index] + '' + i);
 
-    buscarT17(cdp_marca:any, cdp_documento:any, cdp_ano:any, nit:any){
-        this._userService.getbusqueda71(new Conta71(cdp_marca,cdp_documento,cdp_ano,nit)).subscribe(
-           response=>{
-               
-                console.log(response);
-
-            if(response){
-                this.cdp_marca=cdp_marca;
-                this.cdp_documento=cdp_documento;
-                this.cdp_ano=cdp_ano;
-                this.nit=nit;
-                this.bd1=true;
-                this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
-                    response=>{
-                        console.log(response.numcuo);
-                        console.log(response.cuota);
-                        if(response.numcuo==response.cuota){
-                            
-                            if(response.numcuo == undefined){
-                                this.teso13.numcuo=1;
-                                this.cuota=1;
-                            }else{
-                                Swal.fire(
-                                    'Información',
-                                    'Ya se han realizado la totalidad de los pagos',
-                                    'info'
-                                  );
-                                  this.teso13.numcuo=1;
-                                  this.cuota=1;
-                            }
-                            
-                        }else{
-                            this.datos_teso17.push(response.numcuo, response.cuota);
-                            this.teso13.numcuo=response.numcuo;
-                            this.cuota = parseInt(response.cuota)+1;
-                    
-                        }
-        
                     }
-                );
-            }else{
-                
+                }
+            }
+        } else {
+            console.log("No se puede con un año menor");
+        }
 
-                this.bd1=false;
-                Swal.fire(
-                    '¡Error!',
-                    'No existen datos asociados a CDP Y NIT!',
-                    'error'
-                  );
-            }     
-            } 
-        );
     }
+
+
+    buscarT17(cdp_marca : any, cdp_documento : any, cdp_ano : any, nit : any) {
+        this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
+
+            console.log(response);
+
+            if (response) {
+                this.cdp_marca = cdp_marca;
+                this.cdp_documento = cdp_documento;
+                this.cdp_ano = cdp_ano;
+                this.nit = nit;
+                this.bd1 = true;
+                this._userService.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(response => {
+                    console.log(response.numcuo);
+                    console.log(response.cuota);
+                    if (response.numcuo == response.cuota) {
+
+                        if (response.numcuo == undefined) {
+                            this.teso13.numcuo = 1;
+                            this.cuota = 1;
+                        } else {
+                            Swal.fire('Información', 'Ya se han realizado la totalidad de los pagos', 'info');
+                            this.teso13.numcuo = 1;
+                            this.cuota = 1;
+                        }
+
+                    } else {
+                        this.datos_teso17.push(response.numcuo, response.cuota);
+                        this.teso13.numcuo = response.numcuo;
+                        this.cuota = parseInt(response.cuota) + 1;
+
+                    }
+
+                });
+            } else {
+
+
+                this.bd1 = false;
+                Swal.fire('¡Error!', 'No existen datos asociados a CDP Y NIT!', 'error');
+            }
+        });
+    }
+    valorCDP(cdp_marca : any, cdp_documento : any, cdp_ano : any, nit : any) {}
+
 
     onSubmit(form : any) {
 
@@ -260,37 +251,41 @@ export class Teso13Component implements OnInit {
 
             if (result.value) {
 
-                this._userService.register(this.teso13).subscribe(response => {
-                    if (response.status == "success") {
-                        this.status = response.status;
+                this._userService.valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit)).subscribe(response => {
 
-                        var arrayD = [];
-                        arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre,this.coddep_nombre,this.cdp_marca,this.cdp_documento,this.cdp_ano,this.nit);
+                    if (response > parseInt(this.teso13.valor)) {
 
-                        const navigationExtras: NavigationExtras = {
-                            queryParams: {
-                                result: JSON.stringify(arrayD)
+                        this._userService.register(this.teso13).subscribe(response => {
+                            if (response.status == "success") {
+                                this.status = response.status;
+
+                                var arrayD = [];
+                                arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit);
+
+                                const navigationExtras: NavigationExtras = {
+                                    queryParams: {
+                                        result: JSON.stringify(arrayD)
+                                    }
+                                }
+                                this._router.navigate(['teso113'], navigationExtras);
+                                Swal.fire('Listo!', 'Pago Enviado', 'success');
+
+                            } else {
+                                this.status = 'error';
                             }
-                        }
-                        this._router.navigate(['teso113'], navigationExtras);
+                        }, error => {
 
+                            this.status = 'error';
+                            console.log(< any > error);
+
+                        });
                     } else {
-                        this.status = 'error';
+                        Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
                     }
-                }, error => {
-
-                    this.status = 'error';
-                    console.log(< any > error);
-
                 });
 
-                Swal.fire('Listo!', 'Pago Enviado', 'success');
-
             } else {
-
-
                 Swal.fire('Cancelado!', 'Pago No Enviado', 'error');
-
             }
         })
     }

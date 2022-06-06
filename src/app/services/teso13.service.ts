@@ -134,6 +134,14 @@ export class Teso13Service{
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url+'teso13/busqueda71', params, {headers:headers});
     }
+    valorCDP(user:any): Observable<any>{
+        
+        let json = JSON.stringify(user);
+        let params = 'json='+json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'); 
+        return this._http.post(this.url+'teso13/valorCDP', params, {headers:headers});
+
+    }
     
 
 
