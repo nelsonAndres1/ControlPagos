@@ -54,6 +54,10 @@ export class Teso13Component implements OnInit {
     public data71 : any;
     public datos_teso17 : any =[];
     public cuota : any;
+    public cdp_marca : any;
+    public cdp_documento : any;
+    public cdp_ano : any;
+    public nit : any;
     bd1: boolean;
 
     constructor(private _userService : Teso13Service, private _gener02Service : Gener02Service, private _teso10Service : Teso10Service, private _teso12Service : Teso12Service, private _router : Router) {
@@ -193,6 +197,10 @@ export class Teso13Component implements OnInit {
                 console.log(response);
 
             if(response){
+                this.cdp_marca=cdp_marca;
+                this.cdp_documento=cdp_documento;
+                this.cdp_ano=cdp_ano;
+                this.nit=nit;
                 this.bd1=true;
                 this._userService.getTeso17(new Teso17(nit,cdp_marca,cdp_documento,cdp_ano,'','',0,0,'')).subscribe(
                     response=>{
@@ -257,7 +265,7 @@ export class Teso13Component implements OnInit {
                         this.status = response.status;
 
                         var arrayD = [];
-                        arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre,this.coddep_nombre);
+                        arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre,this.coddep_nombre,this.cdp_marca,this.cdp_documento,this.cdp_ano,this.nit);
 
                         const navigationExtras: NavigationExtras = {
                             queryParams: {

@@ -27,6 +27,9 @@ export class Teso113Component implements OnInit {
     public depe : any;
     public detalle : any;
     public detalle2 : any;
+    public cdp_marca : any;
+    public cdp_documento : any;
+    public cdp_ano : any;
 
     constructor(private route : ActivatedRoute, private _router: Router, private _teso15Service : Teso15Service, private _teso13Service : Teso13Service) {
         
@@ -38,6 +41,10 @@ export class Teso113Component implements OnInit {
             this.nit = this.itemDetail[2].trim();
             this.cc = this.itemDetail[3].trim();
             this.depe = this.itemDetail[4].trim();
+            this.cdp_marca = this.itemDetail[5].trim();
+            this.cdp_documento = this.itemDetail[6].trim();
+            this.cdp_ano = this.itemDetail[7].trim();
+            
 
             this.getTeso10(this.codclas);
 
