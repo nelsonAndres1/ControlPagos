@@ -10,6 +10,7 @@ import { ErrorComponent } from './error/error.component';
 import { Teso15Component } from './teso15/teso15.component';
 import { Teso16Component } from './teso16/teso16.component';
 import { Teso17Component } from './teso17/teso17.component';
+import { Teso18Component } from './teso18/teso18.component';
 import { Teso117Component } from './teso117/teso117.component';
 import { RegisterComponent } from './register/register.component';
 import { Teso14Component } from './teso14/teso14.component';
@@ -21,6 +22,7 @@ import { Teso116Component } from './teso116/teso116.component';
 import { Teso1116Component } from './teso1116/teso1116.component';
 import { Teso1117Component } from './teso1117/teso1117.component';
 import { Teso118Component } from './teso118/teso118.component';
+import { Teso1118Component } from './teso1118/teso1118.component';
 const routes: Routes = [
 
   {path: '',pathMatch:'full',redirectTo:'login'},
@@ -35,6 +37,7 @@ const routes: Routes = [
   {path: 'teso15', component:Teso15Component},
   {path: 'teso16', component:Teso16Component},
   {path: 'teso17', component:Teso17Component},
+  {path: 'teso18', component:Teso18Component},
   {path: 'teso117', component:Teso117Component},
   {path: 'teso110', component:Teso110Component},
   {path: 'teso112', component:Teso112Component},
@@ -43,6 +46,7 @@ const routes: Routes = [
   {path: 'teso116', component:Teso116Component},
   {path: 'teso1116', component:Teso1116Component},
   {path: 'teso1117', component:Teso1117Component},
+  {path: 'teso1118',component:Teso1118Component},
   {path: 'teso118',component:Teso118Component},
   {path: '**', component:ErrorComponent}
 

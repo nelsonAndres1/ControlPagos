@@ -38,6 +38,8 @@ import { Teso1116Component } from './teso1116/teso1116.component';
 import { Teso1117Component } from './teso1117/teso1117.component';
 import { Teso118Component } from './teso118/teso118.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { Teso18Component } from './teso18/teso18.component';
+import { Teso1118Component } from './teso1118/teso1118.component';
 
 
 @NgModule({
@@ -62,7 +64,9 @@ import { NgxBarcodeModule } from 'ngx-barcode';
     Teso116Component,
     Teso1116Component,
     Teso1117Component,
-    Teso118Component
+    Teso118Component,
+    Teso18Component,
+    Teso1118Component
   ],
   
   imports: [

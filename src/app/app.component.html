@@ -67,6 +67,15 @@
                 </a>
             </li>
 
+            <li>
+                <a routerLink="teso18" *ngIf="permisosNuevoPago()">
+                    <i class="fa fa-exchange fa-fw"></i>
+                    <span class="nav-text">
+                        Desvincular Pagos y Soportes
+                    </span>
+                </a>
+            </li>
+
             <div *ngIf="permisos != null">
                 <li>
                     <a (click)="opciones()" *ngIf="permisosNuevoPago()">
