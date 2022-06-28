@@ -35,7 +35,7 @@
     </table>
   </form>
   <div *ngIf="banderaPermisos==true">
-    <button type="submit" class="btn btn-success" [routerLink]="['/teso13']">Continuar</button>
+    <button type="submit" class="btn btn-success"  (click)="pasar()" >Guardar</button>
     <br>
     <p><small>Importante: Una ves subido los soportes debe continuar con el pago</small></p>
   </div>

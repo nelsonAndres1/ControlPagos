@@ -61,7 +61,7 @@ export class Teso13Component implements OnInit {
     bd1 : boolean;
     public valor_CDP : any;
     public valor_a : any;
-
+    public datoSoportes : any;
     constructor(private _userService : Teso13Service, private _gener02Service : Gener02Service, private _teso10Service : Teso10Service, private _teso12Service : Teso12Service, private _router : Router) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', 0);
 
@@ -74,6 +74,12 @@ export class Teso13Component implements OnInit {
         this.usu = '1';
         this.tpago = '1';
         this.traerConsecutivo();
+        this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
+        
+        if (this.datoSoportes.length == 0) {
+            Swal.fire({icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!'});
+            this._router.navigate(['teso10']);
+        }
 
     }
 
@@ -255,7 +261,18 @@ export class Teso13Component implements OnInit {
 
                     if (response > parseInt(this.teso13.valor)) {
 
-                        this._userService.register(this.teso13).subscribe(response => {
+                        var arrayD = [];
+                        arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit);
+                        
+                        const navigationExtras: NavigationExtras = {
+                            queryParams: {
+                                result: JSON.stringify([this.teso13,arrayD])
+                            }
+                        }
+                        this._router.navigate(['teso12'], navigationExtras);
+                        Swal.fire('Listo!', 'Pago Enviado', 'success'); 
+                        
+                /*         this._userService.register(this.teso13).subscribe(response => {
                             if (response.status == "success") {
                                 this.status = response.status;
 
@@ -268,7 +285,7 @@ export class Teso13Component implements OnInit {
                                     }
                                 }
                                 this._router.navigate(['teso113'], navigationExtras);
-                                Swal.fire('Listo!', 'Pago Enviado', 'success');
+                                Swal.fire('Listo!', 'Pago Enviado', 'success'); 
 
                             } else {
                                 this.status = 'error';
@@ -278,7 +295,8 @@ export class Teso13Component implements OnInit {
                             this.status = 'error';
                             console.log(< any > error);
 
-                        });
+                        }); 
+                        */
                     } else {
                         Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
                     }

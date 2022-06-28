@@ -147,7 +147,7 @@ export class Teso10Component implements OnInit {
               localStorage.setItem('token1',this.token);
               localStorage.setItem('identity1', JSON.stringify(this.identity));
 
-              this._router.navigate(['teso12']);
+              this._router.navigate(['teso13']);
             },
             error => {
               this.status = 'error';
