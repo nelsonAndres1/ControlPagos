@@ -35,6 +35,19 @@ export class Teso10Service{
         return this._http.post(this.url+'teso10',params,{headers:headers});
 
     }
+    signup2(user:any, gettoken=null):Observable<any>{
+        if(gettoken != null){
+            user.gettoken = 'true';
+        }
+        let json = JSON.stringify(user);
+        let params = 'json='+json;
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        //console.log(this._http.post(this.url+'teso10',params,{headers:headers}));
+        return this._http.post(this.url+'teso10N',params,{headers:headers});
+
+    }
+
+    
 
     getIdentity(){
         let identity = JSON.parse(localStorage.getItem('identity')+'');

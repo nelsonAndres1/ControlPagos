@@ -16,3 +16,23 @@
         <small class="text-primary">estado: {{result.estado}}.</small>
     </div>
 </div>
+<div>
+    <table class="table" id="tablaT10">
+        <thead>
+          <tr>
+            <th scope="col">Codclas</th>
+            <th scope="col">Detalle</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Numero Soportes asociados</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dt of identity">
+            <th scope="row">{{dt.codclas}}</th>
+            <td>{{dt.detclas}}</td>
+            <td>{{dt.estado}}</td>
+            <td>{{dt.numero}}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
