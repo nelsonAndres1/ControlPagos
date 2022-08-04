@@ -1,42 +1,42 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable} from "rxjs";
+import { Observable } from "rxjs";
 import { Teso13 } from "../models/teso13";
 import { global } from "./global";
 
 
 
 @Injectable()
-export class Teso13Service{
+export class Teso13Service {
     public url: string;
     public identity: any;
     public token: any;
-    constructor(public _http: HttpClient){
-        this.url=global.url;
+    constructor(public _http: HttpClient) {
+        this.url = global.url;
     }
-    test(){
+    test() {
         return "Service Run";
     }
 
-    getConta28(pclave: any){
-        const response = new Promise(resolve =>{
-            this._http.get(global.url+`teso13/searchConta28?search=${pclave}`).subscribe(
-              data => {
-                resolve(data);
-              }, err =>{
-                console.log(err);
-              });
+    getConta28(pclave: any) {
+        const response = new Promise(resolve => {
+            this._http.get(global.url + `teso13/searchConta28?search=${pclave}`).subscribe(
+                data => {
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
         });
         return response;
     }
 
-    getC71(pclave: any){
-        const response = new Promise( resolve =>{
-            this._http.get(global.url+`teso13/searchC71?search=${pclave}`).subscribe(
+    getC71(pclave: any) {
+        const response = new Promise(resolve => {
+            this._http.get(global.url + `teso13/searchC71?search=${pclave}`).subscribe(
                 data => {
                     resolve(data);
 
-                }, err =>{
+                }, err => {
                     console.log(err);
 
                 });
@@ -46,105 +46,115 @@ export class Teso13Service{
 
 
 
-    getConta06(pclave: any){
-        const response = new Promise(resolve =>{
-            this._http.get(global.url+`teso13/search?search=${pclave}`).subscribe(
-              data => {
-                resolve(data);
-              }, err =>{
-                console.log(err);
-              });
+    getConta06(pclave: any) {
+        const response = new Promise(resolve => {
+            this._http.get(global.url + `teso13/search?search=${pclave}`).subscribe(
+                data => {
+                    resolve(data);
+                }, err => {
+                    console.log(err);
+                });
         });
         return response;
     }
-    getConta04(pclave: any){
-        const response = new Promise(resolve =>{
-            this._http.get(global.url+`teso13/searchConta04?search=${pclave}`).subscribe(
+    getConta04(pclave: any) {
+        const response = new Promise(resolve => {
+            this._http.get(global.url + `teso13/searchConta04?search=${pclave}`).subscribe(
                 data => {
                     resolve(data);
-                }, err =>{
+                }, err => {
                     console.log(err);
                 });
         });
         return response;
     }
 
-    name_teso10(user:any): Observable<any>{
+    name_teso10(user: any): Observable<any> {
         let json = JSON.stringify(user);
-        let params = 'json='+json;
+        let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url+'teso113/name_teso10',params,{headers: headers});
+        return this._http.post(this.url + 'teso113/name_teso10', params, { headers: headers });
     }
-    
-    register(user:any): Observable<any>{
-        let json =JSON.stringify(user);
-        let params = 'json='+json;
+
+    register(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
         console.log("aqui!");
         console.log(params);
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url+'teso13',params,{headers: headers});
+        return this._http.post(this.url + 'teso13', params, { headers: headers });
     }
-    traerConsecutivo(user:any, gettoken:any=null): Observable<any>{
-        if(gettoken != null){
-            user.gettoken='true';
+    traerConsecutivo(user: any, gettoken: any = null): Observable<any> {
+        if (gettoken != null) {
+            user.gettoken = 'true';
         }
         let json = JSON.stringify(user);
-        let params = 'json='+json;
+        let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         //console.log(this._http.post(this.url+'teso13/consecutivo', params,{headers: headers}));
-        return this._http.post(this.url+'teso13/consecutivo', params,{headers: headers}); 
+        return this._http.post(this.url + 'teso13/consecutivo', params, { headers: headers });
     }
-    traerCodClas(user:any): Observable<any>{
+    traerCodClas(user: any): Observable<any> {
         let json = JSON.stringify(user);
-        let params = 'json='+json;
+        let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url+'teso13/traerCod', params, {headers: headers});
+        return this._http.post(this.url + 'teso13/traerCod', params, { headers: headers });
     }
-    getIdentity(){
-        let identity = JSON.parse(localStorage.getItem('identity')+'');
+    getIdentity() {
+        let identity = JSON.parse(localStorage.getItem('identity') + '');
 
-        if(identity && identity != 'undefined'){
+        if (identity && identity != 'undefined') {
 
-            if(identity && identity != 'undefined'){
+            if (identity && identity != 'undefined') {
                 this.identity = identity;
-            }else{
+            } else {
                 this.identity = null;
             }
             return this.identity;
         }
     }
-    getToken(){
+    getToken() {
         let token = localStorage.getItem('token');
-        if(token && token != "undefined"){
+        if (token && token != "undefined") {
             this.token = token;
-        }else{
+        } else {
             this.token = null;
         }
         return this.token;
     }
 
-    getTeso17(user:any): Observable<any>{
+    getTeso17(user: any): Observable<any> {
         let json = JSON.stringify(user);
-        let params = 'json='+json;
+        let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url+'teso13/teso17', params, {headers:headers});
+        return this._http.post(this.url + 'teso13/teso17', params, { headers: headers });
     }
 
-    getbusqueda71(user:any): Observable<any>{
+    getbusqueda71(user: any): Observable<any> {
         let json = JSON.stringify(user);
-        let params = 'json='+json;
+        let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url+'teso13/busqueda71', params, {headers:headers});
+        return this._http.post(this.url + 'teso13/busqueda71', params, { headers: headers });
     }
-    valorCDP(user:any): Observable<any>{
-        
+    valorCDP(user: any): Observable<any> {
+
         let json = JSON.stringify(user);
-        let params = 'json='+json;
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'); 
-        return this._http.post(this.url+'teso13/valorCDP', params, {headers:headers});
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/valorCDP', params, { headers: headers });
 
     }
-    
+    fecha(): Observable<any> {
+
+        let json = JSON.stringify('');//convierto los datos en un json string 
+        let params = "json=" + json;
+
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/fecha', { headers: headers });
+    }
+
+
+
 
 
 }

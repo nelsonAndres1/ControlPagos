@@ -59,10 +59,19 @@
             </small>
         </div>
 
+        <button type="button"
+        (click)="siCDPno()"
+        class="btn btn-primary">
+        <i class="fa fa-question" aria-hidden="true">
+            <span class="nav-text">
+                ¿El pago necesita CDP?
+            </span></i>
+        </button>
+
 
 
         <!-- CDP -->
-        <div class="row">
+        <div class="row" *ngIf="banderaCDP">
             <label id="cdp" for="name"><b>CDP</b></label>
             <div class="col">
                 <label for="name">CDP_Marca</label>
@@ -115,7 +124,7 @@
                     </div>
                     <button type="button"
                         (click)="buscarT17(teso13.cdp_marca,teso13.cdp_documento,teso13.cdp_ano,teso13.nit)"
-                        class="btn btn-primary">
+                        class="btn btn-primary" *ngIf="banderaCDP">
                         <i class="fa fa-search" aria-hidden="true">
                             <span class="nav-text">
                                 Buscar Pagos asociados a NIT Y CDP
@@ -126,7 +135,7 @@
 
 
             </div>
-            <div class="row">
+            <div class="row" *ngIf="banderaCDP">
                 <div class="col">
                     <label for="name">Numero de Cuotas</label>
                     <div class="col">
