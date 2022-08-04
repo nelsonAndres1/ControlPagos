@@ -36,22 +36,29 @@ export class Teso113Component implements OnInit {
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
+            console.log("Itemdetal!!!!!")
+            console.log(this.itemDetail);
             this.numero = this.itemDetail[0];
             this.codclas = this.itemDetail[1];
-            this.nit = this.itemDetail[2].trim();
-            this.cc = this.itemDetail[3].trim();
-            this.depe = this.itemDetail[4].trim();
-            this.cdp_marca = this.itemDetail[5].trim();
-            this.cdp_documento = this.itemDetail[6].trim();
-            this.cdp_ano = this.itemDetail[7].trim();
+            this.nit = this.itemDetail[2];
+            this.cc = this.itemDetail[3];
+            this.depe = this.itemDetail[4];
+            this.cdp_marca = this.itemDetail[5];
+            this.cdp_documento = this.itemDetail[6];
+            this.cdp_ano = this.itemDetail[7];
             
 
             this.getTeso10(this.codclas);
 
             console.log("sdoashdoiauhio");
             console.log(this.nit,this.cc,this.depe);
+            console.log("Teso13---");
+            console.log(new Teso113(this.codclas, this.numero))
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
+                
                 this.data = response;
+                console.log("response!!!!!");
+                console.log(this.data);
 
                 this.data['usuela'];
             

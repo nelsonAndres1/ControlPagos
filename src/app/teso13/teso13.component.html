@@ -45,7 +45,7 @@
 
 
 
-        <div class="row">
+<!--         <div class="row">
             <div class="col">
                 <label for="name">Fecha de Radicado</label>
             </div>
@@ -57,7 +57,7 @@
             <small *ngIf="!fecrad.valid && fecrad.touched" class="invalid-feedback d-block">
                 Este Campo es requerido
             </small>
-        </div>
+        </div> -->
 
 
 
@@ -67,20 +67,19 @@
             <div class="col">
                 <label for="name">CDP_Marca</label>
                 <select class="form-select col" id="inputGroupSelect01" name="cdp_marca" placeholder="cdp_marca"
-                    for="cdp_marca" #cdp_marca="ngModel" [(ngModel)]="teso13.cdp_marca" required>
+                    for="cdp_marca" #cdp_marca="ngModel" [(ngModel)]="teso13.cdp_marca">
                     <option *ngFor="let mc of marca">{{mc}}</option>
                 </select>
             </div>
             <div class="col">
                 <label for="name">CDP_Documento</label>
                 <input type="text" class="form-control" name="cdp_documento" placeholder="cdp_documento"
-                    for="cdp_documento" #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7"
-                    required>
+                    for="cdp_documento" #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7">
             </div>
             <div class="col">
                 <label for="name">CDP_Año</label>
                 <input type="text" class="form-control" name="cdp_ano" placeholder="cdp_año" for="cdp_ano"
-                    #cdp_ano="ngModel" [(ngModel)]="teso13.cdp_ano" maxlength="4" required>
+                    #cdp_ano="ngModel" [(ngModel)]="teso13.cdp_ano" maxlength="4">
             </div>
         </div>
 

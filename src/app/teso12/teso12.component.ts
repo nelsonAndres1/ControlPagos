@@ -1,15 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, FormBuilder} from '@angular/forms';
-import {teso12} from '../models/teso12';
-import {Nombres} from '../models/nombres';
-import {Teso12Service} from '../services/teso12.service';
-import {Router, ActivatedRoute, Params, NavigationExtras} from '@angular/router';
-import {DomSanitizer} from '@angular/platform-browser';
-import {global} from '../services/global';
-import {Teso13Service} from '../services/teso13.service';
-import {Teso13} from '../models/teso13';
-import {modelUpdate} from '../models/modelUpdate';
-import {Gener02Service} from '../services/gener02.service';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { teso12 } from '../models/teso12';
+import { Nombres } from '../models/nombres';
+import { Teso12Service } from '../services/teso12.service';
+import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
+import { global } from '../services/global';
+import { Teso13Service } from '../services/teso13.service';
+import { Teso13 } from '../models/teso13';
+import { modelUpdate } from '../models/modelUpdate';
+import { Gener02Service } from '../services/gener02.service';
 import Swal from 'sweetalert2';
 
 
@@ -20,46 +20,46 @@ import Swal from 'sweetalert2';
     providers: [Teso12Service, Teso13Service]
 })
 export class Teso12Component implements OnInit {
-    public previsualizacion : any;
-    formGroup : FormGroup;
-    itemDetail : any = [];
-    public teso13 : Teso13;
-    public teso12 : teso12;
-    public status : any;
-    public token : any;
-    public identity : any;
-    public v : any = true;
-    public nombres : Nombres;
-    public tpa : any;
-    public datoSoportes : any;
-    public archivos : any = [];
-    public codclas : any;
-    public numero : any;
-    public codsop : any;
-    public token2 : any;
-    public identity2 : any;
-    public identity3 : any;
-    public consecutivo : any;
-    public nconsecutivo : number;
-    public usu : string;
-    public tpago : any;
-    public iden : any;
-    public iden1 : any;
-    public sele : any;
-    public afuConfig : any;
+    public previsualizacion: any;
+    formGroup: FormGroup;
+    itemDetail: any = [];
+    public teso13: Teso13;
+    public teso12: teso12;
+    public status: any;
+    public token: any;
+    public identity: any;
+    public v: any = true;
+    public nombres: Nombres;
+    public tpa: any;
+    public datoSoportes: any;
+    public archivos: any = [];
+    public codclas: any;
+    public numero: any;
+    public codsop: any;
+    public token2: any;
+    public identity2: any;
+    public identity3: any;
+    public consecutivo: any;
+    public nconsecutivo: number;
+    public usu: string;
+    public tpago: any;
+    public iden: any;
+    public iden1: any;
+    public sele: any;
+    public afuConfig: any;
     public index = 0;
-    public original : string;
-    public random : any;
-    public original1 : any;
-    public longSop : any = 0;
-    public permisos : any;
-    public banderaPermisos : any = true;
-    public contarPer : any = 0;
-    public confirPer : any = 0;
+    public original: string;
+    public random: any;
+    public original1: any;
+    public longSop: any = 0;
+    public permisos: any;
+    public banderaPermisos: any = true;
+    public contarPer: any = 0;
+    public confirPer: any = 0;
 
-    constructor(public formulario : FormBuilder, private _teso12Service : Teso12Service, private _router : Router, private _route : ActivatedRoute, private sanitizer : DomSanitizer, private _userService : Teso13Service, private _gener02Service : Gener02Service) {
+    constructor(public formulario: FormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', 0);
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '',null);
         this.nconsecutivo = 0;
         this.traerConsecutivo();
         this.nombres = new Nombres('', 0, '');
@@ -77,7 +77,7 @@ export class Teso12Component implements OnInit {
         console.log(this.datoSoportes.length);
 
         if (this.datoSoportes.length == 0) {
-            Swal.fire({icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!'});
+            Swal.fire({ icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!' });
             this._router.navigate(['teso113']);
         }
 
@@ -102,7 +102,7 @@ export class Teso12Component implements OnInit {
 
         this.usu = '1';
         this.nombres = new Nombres('', 0, '');
-        this.formGroup = this.formulario.group({n1: [''], n2: ['']});
+        this.formGroup = this.formulario.group({ n1: [''], n2: [''] });
 
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
@@ -146,14 +146,14 @@ export class Teso12Component implements OnInit {
                     // Fin afuconfig
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
             } else {
                 this.status = 'error';
             }
         }, error => {
             this.status = 'error';
-            console.log(< any > error);
+            console.log(<any>error);
         });
     }
 
@@ -180,7 +180,7 @@ export class Teso12Component implements OnInit {
                     }
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
                 Swal.fire('El soporte se ha guardado como una Copia!', '', 'success');
                 return con = this.original;
@@ -195,7 +195,7 @@ export class Teso12Component implements OnInit {
                     }
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
                 Swal.fire('El soporte se ha guardado como Original!', '', 'success');
                 return con = this.original;
@@ -203,7 +203,7 @@ export class Teso12Component implements OnInit {
         });
     }
 
-    imagenes(datos : any, per : any) {
+    imagenes(datos: any, per: any) {
         this.longSop = this.longSop + 1;
 
         if (per == 'S') {
@@ -237,11 +237,10 @@ export class Teso12Component implements OnInit {
             this._userService.register(this.itemDetail[0]).subscribe(response => {
                 if (response.status == "success") {
                     this.status = response.status;
-
+                    console.log("Status");
+                    console.log(this.status);
                     var arrayD = this.itemDetail[1];
 
-                    /*                     arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit);
- */
                     const navigationExtras: NavigationExtras = {
                         queryParams: {
                             result: JSON.stringify(arrayD)
@@ -256,15 +255,15 @@ export class Teso12Component implements OnInit {
             }, error => {
 
                 this.status = 'error';
-                console.log(< any > error);
+                console.log(<any>error);
 
             });
         }
     }
 
-    permisoContinuar() {}
+    permisoContinuar() { }
 
-    soporteUpload(dat : any, per : any, datos : any) {
+    soporteUpload(dat: any, per: any, datos: any) {
 
 
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
@@ -292,7 +291,7 @@ export class Teso12Component implements OnInit {
                     // Fin  subir imagen
                 }, error => {
                     this.status = 'error1';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
                 this.confirmacion();
             } else {
@@ -302,12 +301,12 @@ export class Teso12Component implements OnInit {
 
         }, error => {
             this.status = 'error2';
-            console.log(< any > error);
+            console.log(<any>error);
         });
     }
 
 
-    randomIntFromInterval(min : number, max : number) { // min and max included
+    randomIntFromInterval(min: number, max: number) { // min and max included
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
@@ -326,14 +325,14 @@ export class Teso12Component implements OnInit {
                     cs = this.nconsecutivo;
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
             } else {
                 this.status = 'error';
             }
         }, error => {
             this.status = 'error';
-            console.log(< any > error);
+            console.log(<any>error);
         });
         return cs;
     }
@@ -351,7 +350,7 @@ export class Teso12Component implements OnInit {
 
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
             } else {
                 this.status = 'error';
@@ -359,7 +358,7 @@ export class Teso12Component implements OnInit {
             }
         }, error => {
             this.status = 'error';
-            console.log(< any > error);
+            console.log(<any>error);
         });
     }
 
