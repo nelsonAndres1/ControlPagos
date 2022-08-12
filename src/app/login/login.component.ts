@@ -18,14 +18,14 @@ export class LoginComponent implements OnInit {
   public token: any;
   public identity: any;
   public v: any = true;
-  public arrayN:any = [];
+  public arrayN: any = [];
 
   constructor(
     private _gener02Service: Gener02Service,
     private _router: Router,
     private _route: ActivatedRoute,
     private _principalService: PrincipalService
-    ) {
+  ) {
     this.page_title = 'Identificate';
     this.gener02 = new Gener02('', '');
   }
@@ -33,8 +33,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.logout();
   }
-  olvidoC(){
-    Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con la oficina de Sistemas e Informatica.','question');
+  olvidoC() {
+    Swal.fire('¿Olvido la Contraseña?', 'Por favor comunicarse con la oficina de Sistemas e Informatica.', 'question');
   }
 
   permisos() {
@@ -43,37 +43,37 @@ export class LoginComponent implements OnInit {
     var permis;
 
     if (this.identity != null) {
-        usuario = this.identity['sub'];
-        user = usuario;
-        this._principalService.permisos(new Gener02(user, '')).subscribe(response => {
-            if (response.status != 'error') {
-                this.status = 'success';
-                //this.token = response;
-                this._principalService.permisos(new Gener02(user, '')).subscribe(response => {
-                    permis = response;
-                    //console.log('hshshsh');
-                    for (let index = 0; index < permis.length; index++) {
-                      //console.log(this.permis[index]['estche']);
-                      this.arrayN.push(permis[index]['estche']);
-                      this.arrayN;
-                    }
-                    localStorage.setItem('permisos',this.arrayN);
-
-                }, error => {
-                    this.status = 'error';
-                    console.log(< any > error);
-                });
-                
-            } else {
-                this.status = 'error';
+      usuario = this.identity['sub'];
+      user = usuario;
+      this._principalService.permisos(new Gener02(user, '')).subscribe(response => {
+        if (response.status != 'error') {
+          this.status = 'success';
+          //this.token = response;
+          this._principalService.permisos(new Gener02(user, '')).subscribe(response => {
+            permis = response;
+            //console.log('hshshsh');
+            for (let index = 0; index < permis.length; index++) {
+              //console.log(this.permis[index]['estche']);
+              this.arrayN.push(permis[index]['estche']);
+              this.arrayN;
             }
-        }, error => {
+            localStorage.setItem('permisos', this.arrayN);
+
+          }, error => {
             this.status = 'error';
-            console.log(< any > error);
-        });
+            console.log(<any>error);
+          });
+
+        } else {
+          this.status = 'error';
+        }
+      }, error => {
+        this.status = 'error';
+        console.log(<any>error);
+      });
     }
     return this.arrayN;
-}
+  }
 
 
   onSubmit(form: any) {
@@ -87,20 +87,35 @@ export class LoginComponent implements OnInit {
           //objeto usuario identificado
           this._gener02Service.signup(this.gener02, this.v).subscribe(
             response => {
-              this.identity = response;
 
-              this.token
-              this.identity;
+              Swal.fire({
+                title: 'Bienvenido ' + response.name + ' !',
+                text: 'Control de Pagos Comfamiliar de Nariño',
+                imageUrl: './assets/logo2.jpg',
+                imageAlt: 'Custom image',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok!'
+              }).then((result) => {
+                if (result.isConfirmed) {
 
-              //persistir los datos del usuario
-              localStorage.setItem('token',this.token);
-              console.log(this.token+'asdigaidsguyasidu');
-              localStorage.setItem('identity', JSON.stringify(this.identity));
-              //this.permisos();
-              permisos = this.permisos();
-              
-              //Redirección a principal
-              this._router.navigate(['principal']);
+                  this.identity = response;
+                  this.token
+                  this.identity;
+                  //persistir los datos del usuario
+                  localStorage.setItem('token', this.token);
+                  console.log(this.token + 'asdigaidsguyasidu');
+                  localStorage.setItem('identity', JSON.stringify(this.identity));
+                  //this.permisos();
+                  permisos = this.permisos();
+
+                  //Redirección a principal
+                  this._router.navigate(['principal']);
+
+                }
+              })
+
 
             },
             error => {
@@ -125,12 +140,12 @@ export class LoginComponent implements OnInit {
     );
 
   }
-  logout(){
+  logout() {
     this._route.params.subscribe(
-      params=>{
+      params => {
         let logout = +params['sure'];
 
-        if(logout==1){
+        if (logout == 1) {
           localStorage.removeItem('identity');
           localStorage.removeItem('token');
           localStorage.removeItem('tpago');
@@ -144,7 +159,7 @@ export class LoginComponent implements OnInit {
           this.token = null;
 
           //Redirección a Inicio
-          this._router.navigate(['login']) 
+          this._router.navigate(['login'])
         }
 
       }
