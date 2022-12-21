@@ -91,6 +91,10 @@ export class Teso13Component implements OnInit {
 
     }
 
+
+ 
+    
+
     touch(resultC: any) {
         console.log(resultC.nit);
         this.teso13.nit = resultC.nit;
