@@ -56,6 +56,7 @@ export class Teso12Component implements OnInit {
     public banderaPermisos: any = true;
     public contarPer: any = 0;
     public confirPer: any = 0;
+    files: any;
 
     constructor(public formulario: FormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
@@ -160,6 +161,14 @@ export class Teso12Component implements OnInit {
     ngOnInit(): void {
         this.random = this.randomIntFromInterval(1, 999);
     }
+
+
+    uploadImage(event){
+        this.files = event.target.files[0];
+        console.log("filesssss!");
+        console.log(this.files);
+    }
+
     confirmacion() {
 
         var con = '';
