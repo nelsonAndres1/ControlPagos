@@ -18,7 +18,7 @@ export class IdentityGuard implements CanActivate{
           
             return true;
         }else{
-            this._route.navigate(['/home']);
+            this._route.navigate(['/principal']);
             return false;
         }
     }
