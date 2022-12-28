@@ -16,10 +16,10 @@ export class IdentityGuard implements CanActivate{
         let identity = this._gener02Service.getIdentity();
         if(identity){
           
-            return true;
+            return false;
         }else{
             this._route.navigate(['/login']);
-            return false;
+            return true;
         }
     }
 }
