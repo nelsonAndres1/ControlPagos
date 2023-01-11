@@ -40,8 +40,9 @@ import { Teso118Component } from './teso118/teso118.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { Teso18Component } from './teso18/teso18.component';
 import { Teso1118Component } from './teso1118/teso1118.component';
-
-
+import { IdentityGuard } from './services/identity.guard';
+import { LoginGuard } from './services/login.guard';
+import { Gener02Service } from './services/gener02.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,6 +92,9 @@ import { Teso1118Component } from './teso1118/teso1118.component';
   ],
    //appRoutingProviders sin llaves y con corchetes
   providers: [
+    IdentityGuard,
+    LoginGuard,
+    Gener02Service,
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]

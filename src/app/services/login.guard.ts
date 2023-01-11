@@ -14,13 +14,11 @@ export class LoginGuard implements CanActivate{
 
     canActivate(){
         let identity = this._gener02Service.getIdentity();
-        console.log("identity");
-        console.log(identity);
         if(identity){
             this._route.navigate(['/principal']);
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     }
 }
