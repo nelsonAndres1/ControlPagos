@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
     var permisos;
     this._gener02Service.signup(this.gener02).subscribe(
       response => {
-        //devuelve el token 
+        console.log(response); 
         if (response.status != 'error') {
           this.status = 'success';
           this.token = response;
