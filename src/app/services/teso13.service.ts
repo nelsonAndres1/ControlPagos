@@ -100,6 +100,17 @@ export class Teso13Service {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso13/traerCod', params, { headers: headers });
     }
+
+    downloadFile(user: any): Observable<any> {
+        /* let json = JSON.stringify(user);
+        let params = 'json=' + json; */
+/*         console.log(params); */
+        let headers = new HttpHeaders({
+            'Content-Type':'application/json'
+          });
+        return this._http.get(this.url + `teso13/downloadFile?json=${user}`,{headers: headers, responseType: 'blob' as 'json'} );
+    }
+
     getIdentity() {
         let identity = JSON.parse(localStorage.getItem('identity') + '');
 

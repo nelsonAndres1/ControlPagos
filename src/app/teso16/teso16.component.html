@@ -15,16 +15,25 @@
     <tbody>
 
 
-      <tr *ngFor="let r of item1" >
+      <tr *ngFor="let r of item1">
 
         <td>{{item2.detclas}}</td>
         <td>{{r.estado}}</td>
         <td><a (click)="nombreUsuario(r.usuario)" style="cursor: pointer;">{{r.usuario}}</a></td>
         <td>{{r.fecha}}</td>
       </tr>
-<!-- 
+      <!-- 
       <tr *ngFor="let n of arrayN"></tr>
            -->
     </tbody>
   </table>
+
+<!--   <h4>Descargar Soportes</h4>
+  <div *ngFor="let sop of soportes_subidos">
+    <a class="navbar-brand"><button type="button" class="btn btn-success"
+        (click)="downloadFile(sop)"><i class="icon-home"></i> {{sop.archivo}}</button></a>
+
+    <br>
+  </div> -->
+
 </form>

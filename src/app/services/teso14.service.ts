@@ -42,5 +42,15 @@ export class Teso14Service {
     return this.http.post(this.url+'teso14/setTeso12',params, {headers:headers});
   }
 
+/*   getDocumentosSubidos(user:any):Observable<any>{
+    let json = JSON.stringify(user);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url+'teso14/getDocumentosSubidos',params, {headers:headers});
+  } */
+
+
+  
+
 
 }

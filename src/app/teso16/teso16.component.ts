@@ -5,11 +5,13 @@ import Swal from 'sweetalert2';
 import {Teso15Service} from '../services/teso15.service';
 import { Gener02 } from '../models/gener02';
 import { identity } from 'rxjs';
+import { Teso13Service } from '../services/teso13.service';
+import { Teso14Service } from '../services/teso14.service';
 
 @Component({selector: 'app-teso16', 
             templateUrl: './teso16.component.html', 
             styleUrls: ['./teso16.component.css'], 
-            providers: [Teso15Service]
+            providers: [Teso15Service, Teso13Service, Teso14Service]
           })
 export class Teso16Component implements OnInit {
 
@@ -21,15 +23,29 @@ export class Teso16Component implements OnInit {
     public identity:any;
     public identity1:any;
     public identity12:any;
+    public soportes_subidos:any = [];
     v : any = true;
     public arrayN = Array();
     
-    constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _route : Router) {
+    constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _route : Router, private _teso13Service: Teso13Service, private _teso14Service: Teso14Service) {
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
             this.itemDetail = paramsData;
-            
+            console.log("detallles!!!")
+            console.log(this.itemDetail[0][0]);
+
+          /*   this._teso14Service.getDocumentosSubidos(this.itemDetail[0][0]).subscribe(
+              response=>{
+                console.log("Ahhhhhhhh!");
+             
+                this.soportes_subidos = response;
+                console.log(this.soportes_subidos);
+              }
+            ) */
+
+
+          
             
             this.item1 = this.itemDetail[0];
             this.item2 = this.itemDetail[1][0];
@@ -44,6 +60,32 @@ export class Teso16Component implements OnInit {
     }
 
     ngOnInit(): void {}
+
+    downloadFile(array:any){
+      console.log(array.archivo)
+      const fileName = "prueba.pdf";
+      this._teso13Service.downloadFile(array.archivo).subscribe(
+        response=>{
+          this.managePdfFile(response, fileName);
+          alert("siiiii!");
+        },error => {
+            console.log("error!");
+            console.log(error.message);
+        }
+      )
+    }
+    managePdfFile(response: any, fileName: string):void{
+      const datatype = response.type;
+      const binaryData = [];
+      binaryData.push(response);
+
+      const filtePath = window.URL.createObjectURL(new Blob(binaryData, {type: datatype}));
+      const downloadLike = document.createElement('a');
+      downloadLike.href = filtePath;
+      downloadLike.setAttribute('download',fileName);
+      document.body.appendChild(downloadLike);
+      downloadLike.click();
+    }
 
 
     nombreUsuario(user: any){
