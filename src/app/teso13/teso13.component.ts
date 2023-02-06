@@ -209,9 +209,10 @@ export class Teso13Component implements OnInit {
     }
 
 
-    buscarT17(cdp_marca: any, cdp_documento: any, cdp_ano: any, nit: any) {
+    buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
         /* this.bd1=false; */
-        this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
+	console.log(cdp_documento);
+	this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
 
             console.log(response);
 
