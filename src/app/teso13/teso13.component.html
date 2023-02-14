@@ -42,26 +42,6 @@
                 </div>
             </div>
         </div>
-
-
-
-<!--         <div class="row">
-            <div class="col">
-                <label for="name">Fecha de Radicado</label>
-            </div>
-            <div class="col">
-                <input type="date" class="form-control" id="start" name="fecrad" value="today" min="2018-01-01"
-                    max="2030-12-31" placeholder="Fecha de Radicado" #fecrad="ngModel" [(ngModel)]="teso13.fecrad"
-                    required>
-            </div>
-            <small *ngIf="!fecrad.valid && fecrad.touched" class="invalid-feedback d-block">
-                Este Campo es requerido
-            </small>
-        </div> -->
-
-
-
-        <!-- CDP -->
         <div class="row">
             <label id="cdp" for="name"><b>CDP</b></label>
             <div class="col">
@@ -240,6 +220,37 @@
                 </div>
                 <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
                     Solo Numeros
+                </small>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <label for="name">Persona quien revisa</label>
+                <div class="col">
+                    <div class="col">
+                        <input type="text" class="form-control" id="start" name="perrev"
+                             placeholder="¿Quien revisa?" #perrev="ngModel"
+                            [(ngModel)]="teso13.perrev" required>
+                    </div>
+                </div>
+                <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
+                    Este Campo es requerido
+                </small>
+            </div>
+
+            <div class="col">
+                <label for="name">Persona quien Autoriza</label>
+                <div class="col">
+                    <div class="col">
+                        <input type="text" class="form-control" id="start" name="peraut"
+                             placeholder="¿Quien autoriza?" #peraut="ngModel"
+                            [(ngModel)]="teso13.peraut" required>
+                    </div>
+                </div>
+                <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
+                    Este Campo es requerido
                 </small>
             </div>
         </div>

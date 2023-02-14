@@ -59,13 +59,13 @@ export class Teso13Component implements OnInit {
     public cdp_ano: any;
     public nit: any;
     bd1 = true;
-    siCDPno=false;
+    siCDPno = false;
     public valor_CDP: any;
     public valor_a: any;
     public datoSoportes: any;
     public fechaRdicado: any = '';
     constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null);
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '');
 
         this.periodosT(2021, 2025);
         this.identity = this._gener02Service.getIdentity();
@@ -73,8 +73,8 @@ export class Teso13Component implements OnInit {
         this.tpago = this._teso12Service.getTpago();
 
         this._userService.fecha().subscribe(
-            response=>{
-                this.fechaRdicado=response;
+            response => {
+                this.fechaRdicado = response;
             }
         )
 
@@ -92,8 +92,8 @@ export class Teso13Component implements OnInit {
     }
 
 
- 
-    
+
+
 
     touch(resultC: any) {
         console.log(resultC.nit);
@@ -211,8 +211,8 @@ export class Teso13Component implements OnInit {
 
     buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
         /* this.bd1=false; */
-	console.log(cdp_documento);
-	this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
+        console.log(cdp_documento);
+        this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
 
             console.log(response);
 
@@ -224,7 +224,7 @@ export class Teso13Component implements OnInit {
 
                 this._userService.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(
                     response => {
-                        this.siCDPno=true;
+                        this.siCDPno = true;
                         this.bd1 = true;
                         console.log(response.numcuo);
                         console.log(response.cuota);
@@ -275,14 +275,14 @@ export class Teso13Component implements OnInit {
 
         }).then(result => {
             console.log("fecha radicaood");
-            this.teso13.fecrad=this.fechaRdicado;
+            this.teso13.fecrad = this.fechaRdicado;
             console.log(this.fechaRdicado);
             console.log(this.teso13);
-            
+
             if (result.value) {
-                
+
                 if (this.siCDPno == true) {
-                    this.teso13.sCDPn=true;
+                    this.teso13.sCDPn = true;
                     this._userService.valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit)).subscribe(response => {
 
                         if (response > parseInt(this.teso13.valor)) {
@@ -298,44 +298,19 @@ export class Teso13Component implements OnInit {
                             this._router.navigate(['teso12'], navigationExtras);
                             Swal.fire('Listo!', 'Pago Enviado', 'success');
 
-                            /*         this._userService.register(this.teso13).subscribe(response => {
-                                        if (response.status == "success") {
-                                            this.status = response.status;
-            
-                                            var arrayD = [];
-                                            arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit);
-            
-                                            const navigationExtras: NavigationExtras = {
-                                                queryParams: {
-                                                    result: JSON.stringify(arrayD)
-                                                }
-                                            }
-                                            this._router.navigate(['teso113'], navigationExtras);
-                                            Swal.fire('Listo!', 'Pago Enviado', 'success'); 
-            
-                                        } else {
-                                            this.status = 'error';
-                                        }
-                                    }, error => {
-            
-                                        this.status = 'error';
-                                        console.log(< any > error);
-            
-                                    }); 
-                                    */
                         } else {
                             Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
                         }
                     });
                 } else {
 
-                    this.teso13.sCDPn=false;
+                    this.teso13.sCDPn = false;
                     var arrayD = [];
                     arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, 'OP', '00', '0', this.teso13.nit);
 
-                    this.teso13.cdp_ano="0";
-                    this.teso13.cdp_documento='00';
-                    this.teso13.cdp_marca='OP';
+                    this.teso13.cdp_ano = "0";
+                    this.teso13.cdp_documento = '00';
+                    this.teso13.cdp_marca = 'OP';
 
                     const navigationExtras: NavigationExtras = {
                         queryParams: {

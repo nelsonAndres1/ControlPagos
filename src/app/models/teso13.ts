@@ -28,7 +28,9 @@ export class Teso13{
         public cdp_marca: string,
         public cdp_documento: string,
         public cdp_ano: string,
-        public sCDPn:boolean
+        public sCDPn:boolean,
+        public perrev:string,
+        public peraut:string,
     ){
 
     }

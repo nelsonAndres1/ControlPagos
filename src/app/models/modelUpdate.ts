@@ -3,7 +3,8 @@ export class modelUpdate{
         public codclas: string,
         public numero: number,
         public codsop: string,
-        public original: string
+        public codsop_new: string,
+        public original: string,
     ){
 
     }

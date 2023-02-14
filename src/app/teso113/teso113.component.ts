@@ -56,7 +56,7 @@ export class Teso113Component implements OnInit {
             console.log("Teso13---");
             console.log(new Teso113(this.codclas, this.numero))
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
-
+                
                 this.data = response;
                 console.log("response!!!!!");
                 console.log(this.data);

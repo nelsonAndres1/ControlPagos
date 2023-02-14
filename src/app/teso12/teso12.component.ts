@@ -60,7 +60,7 @@ export class Teso12Component implements OnInit {
 
     constructor(public formulario: FormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '',null);
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '');
         this.nconsecutivo = 0;
         this.traerConsecutivo();
         this.nombres = new Nombres('', 0, '');
@@ -163,13 +163,13 @@ export class Teso12Component implements OnInit {
     }
 
 
-    uploadImage(event){
+    uploadImage(event) {
         this.files = event.target.files[0];
         console.log("filesssss!");
         console.log(this.files);
     }
 
-    confirmacion() {
+    confirmacion(dt: any) {
 
         var con = '';
         Swal.fire({
@@ -181,7 +181,7 @@ export class Teso12Component implements OnInit {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.original = 'n';
-                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, 'n')).subscribe(response => {
+                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 'n')).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
                     } else {
@@ -194,9 +194,8 @@ export class Teso12Component implements OnInit {
                 Swal.fire('El soporte se ha guardado como una Copia!', '', 'success');
                 return con = this.original;
             } else {
-
                 this.original = 's';
-                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, 's')).subscribe(response => {
+                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 's')).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
                     } else {
@@ -235,14 +234,10 @@ export class Teso12Component implements OnInit {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
         });
-        console.log("1");
-        console.log(this.itemDetail[1]);
-        console.log("2");
+        console.log("item detail");
         console.log(this.itemDetail[0]);
 
         if (this.banderaPermisos) {
-
-
             this._userService.register(this.itemDetail[0]).subscribe(response => {
                 if (response.status == "success") {
                     this.status = response.status;
@@ -272,7 +267,7 @@ export class Teso12Component implements OnInit {
 
     permisoContinuar() { }
 
-    soporteUpload(dat: any, per: any, datos: any) {
+    soporteUpload(dat: any, per: any, datos: any, dt: any) {
 
 
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
@@ -298,11 +293,16 @@ export class Teso12Component implements OnInit {
                     this.imagenes(datos, per);
 
                     // Fin  subir imagen
+
+                    this.confirmacion(dt);
+
+                    console.log("Ahhhhh prueba de permiso");
+                    console.log(dt);
                 }, error => {
                     this.status = 'error1';
-                    console.log(<any>error);
+                    Swal.fire("Error", "No se pudo subir el documento", 'error');
                 });
-                this.confirmacion();
+
             } else {
                 this.status = 'error';
                 console.log("errorrrrrrrrr");
