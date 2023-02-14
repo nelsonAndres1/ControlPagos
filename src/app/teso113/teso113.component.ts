@@ -10,6 +10,8 @@ import { Teso13Service } from '../services/teso13.service';
 import { Gener02 } from '../models/gener02';
 import Swal from 'sweetalert2';
 import { identity } from 'rxjs';
+import { teso12 } from '../models/teso12';
+
 @Component({ selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service] })
 export class Teso113Component implements OnInit {
 
@@ -31,9 +33,12 @@ export class Teso113Component implements OnInit {
     public cdp_documento: any;
     public cdp_ano: any;
     public fecrad: any;
+    public soportes: any;
+    public teso10: teso10;
     public array_fecrad: any = [];
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
 
+        this.teso10 = new teso10('','','','');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -50,6 +55,11 @@ export class Teso113Component implements OnInit {
 
 
             this.getTeso10(this.codclas);
+
+
+
+            this.teso10.codclas = this.codclas;
+            this.teso10.numero = this.numero;
 
             console.log("sdoashdoiauhio");
             console.log(this.nit, this.cc, this.depe);
@@ -69,7 +79,11 @@ export class Teso113Component implements OnInit {
                     console.log(response);
                     this.identity = response;
                     this.identity1 = this.identity[0]['nombre'];
-                    let timerInterval
+                    let timerInterval;
+
+
+                    this.traerSoportes();
+
                     Swal.fire({
                         title: 'Generando PDF...',
                         html: 'El proceso terminara en <b></b> milisegundos.',
@@ -124,6 +138,14 @@ export class Teso113Component implements OnInit {
                 this.detalle = 'error';
                 console.log(<any>error);
             });
+    }
+
+    traerSoportes(){
+        this._teso13Service.getSoportes(this.teso10).subscribe(
+            response =>{
+                this.soportes = response;
+            }
+        )
     }
 
 

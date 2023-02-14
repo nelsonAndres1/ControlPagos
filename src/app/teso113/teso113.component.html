@@ -1,98 +1,112 @@
 <form id="myData" #myData *ngIf="data != null">
   <table class="table table-hover">
-      <thead>
-        <tr>
-          <td class="tg-0pky" colspan="2" rowspan="3"><img src="../../../../assets/logo.png"></td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" rowspan="2"><h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO.<br>FORMATO PARA REQUISITOS PAGO CUENTA<br>INDIVIDUAL.</h6></td>
-        </tr>
-        <tr class="tg-0pky"  rowspan="2">
-          <ngx-barcode [bc-value]="data.codclas+data.numero" [bc-display-value]="true"></ngx-barcode>
-        </tr>
-      </thead>
+    <thead>
+      <tr>
+        <td class="tg-0pky" colspan="2" rowspan="3"><img src="../../../../assets/logo.png"></td>
+      </tr>
+      <tr>
+        <td class="tg-0pky" rowspan="2">
+          <h6 align="center">CAJA DE COMPENSACIÓN FAMILIAR DE NARIÑO.<br>FORMATO PARA REQUISITOS PAGO
+            CUENTA<br>INDIVIDUAL.</h6>
+        </td>
+      </tr>
+      <tr class="tg-0pky" rowspan="2">
+        <ngx-barcode [bc-value]="data.codclas+data.numero" [bc-display-value]="true"></ngx-barcode>
+      </tr>
+    </thead>
   </table>
   <table class="table table-bordered">
-      <thead>
-        
-          <th class="tg-0pky" colspan="3"><b align="center">Fecha de Diligenciamiento</b></th>
-          <th class="tg-0pky" colspan="2"><b>N° de Factura/Nota de Contabilidad a Pagar</b></th>
-        
-      </thead>
-      <tbody>
-        <tr>
-          <td class="tg-0pky" colspan="2" rowspan="2">{{data.fecrad}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="4">{{data.numfac}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0pky" colspan="4"><b>Nombre de Empresa / Persona a quien se Paga: </b></td>
-          <td class="tg-0pky">{{nit}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0lax" colspan="4"><b>NIT o Cedula de Ciudadania: </b></td>
-          <td class="tg-0lax">{{data.nit}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0lax" colspan="4"><b>Tipo de Pago: </b></td>
-          <td class="tg-0lax">{{data.codclas}} - {{detalle}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0lax" colspan="4"><b>Valor: </b></td>
-          <td class="tg-0lax">$ {{data.valor}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0lax" colspan="4"><b>Centro de Costo: </b></td>
-          <td class="tg-0lax">{{data.codcen}} - {{cc}}</td>
-        </tr>
-        <tr>
-          <td class="tg-0lax" colspan="4"><b>Codigo de Dependencia: </b></td>
-          <td class="tg-0lax">{{data.coddep}} - {{depe}}</td>
-        </tr>
-        <tr>
-          <div *ngIf="cdp_documento=='00'; else block">
-            <td class="tg-0lax" colspan="4"><b>CDP</b></td>
-            <td class="tg-0lax">SIN CDP</td>
-          </div>
-          <ng-template #block>
-            <td class="tg-0lax" colspan="4"><b>CDP</b></td>
-            <td class="tg-0lax">{{cdp_marca}}-{{cdp_documento}}-{{cdp_ano}}</td>
-          </ng-template>
-        </tr>
-        <tr>
-          <td class="tg-0lax"><b>Detalle</b></td>
-          <td class="tg-0lax" colspan="4">{{data.detalle}}</td>
-        </tr>
-      </tbody>
-      </table>
-      <br>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th class="tg-0pky"><b align="center">Radicado/Liquidado</b></th>
-            <th class="tg-0pky"><b align="center"></b>Revisado</th>
-            <th class="tg-0pky"><b align="center">Autorizado</b></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="tg-0pky"><b>Nombre:</b> <br>{{identity1}}</td>
-            <td class="tg-0pky"><b>Nombre:</b> <br>{{data.perrev}}</td>
-            <td class="tg-0pky"><b>Nombre:</b> <br>{{data.peraut}}</td>
-          </tr>
-          <tr>
-            <td class="tg-0pky"><b>Firma:</b> <br></td>
-            <td class="tg-0pky"><b>Firma:</b> <br></td>
-            <td class="tg-0pky"><b>Firma:</b> <br></td>
-          </tr>
-          <tr>
-            <td class="tg-0pky"><b>Fecha:</b> {{data.fecrad}}</td>
-            <td class="tg-0pky"><b>Fecha:</b></td>
-            <td class="tg-0pky"><b>Fecha:</b></td>
-          </tr>
-        </tbody>
-        </table>
-        
-        
-  </form>
+    <thead>
+
+      <th class="tg-0pky" colspan="3"><b align="center">Fecha de Diligenciamiento</b></th>
+      <th class="tg-0pky" colspan="2"><b>N° de Factura/Nota de Contabilidad a Pagar</b></th>
+
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-0pky" colspan="2" rowspan="2">{{data.fecrad}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0pky" colspan="4">{{data.numfac}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0pky" colspan="4"><b>Nombre de Empresa / Persona a quien se Paga: </b></td>
+        <td class="tg-0pky">{{nit}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>NIT o Cedula de Ciudadania: </b></td>
+        <td class="tg-0lax">{{data.nit}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Tipo de Pago: </b></td>
+        <td class="tg-0lax">{{data.codclas}} - {{detalle}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Valor: </b></td>
+        <td class="tg-0lax">$ {{data.valor}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Centro de Costo: </b></td>
+        <td class="tg-0lax">{{data.codcen}} - {{cc}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0lax" colspan="4"><b>Codigo de Dependencia: </b></td>
+        <td class="tg-0lax">{{data.coddep}} - {{depe}}</td>
+      </tr>
+      <tr>
+        <div *ngIf="cdp_documento=='00'; else block">
+          <td class="tg-0lax" colspan="4"><b>CDP</b></td>
+          <td class="tg-0lax">SIN CDP</td>
+        </div>
+        <ng-template #block>
+          <td class="tg-0lax" colspan="4"><b>CDP</b></td>
+          <td class="tg-0lax">{{cdp_marca}}-{{cdp_documento}}-{{cdp_ano}}</td>
+        </ng-template>
+      </tr>
+      <tr>
+        <td class="tg-0lax"><b>Detalle</b></td>
+        <td class="tg-0lax" colspan="4">{{data.detalle}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="tg-0pky"><b align="center">Radicado/Liquidado</b></th>
+        <th class="tg-0pky"><b align="center"></b>Revisado</th>
+        <th class="tg-0pky"><b align="center">Autorizado</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tg-0pky"><b>Nombre:</b> <br>{{identity1}}</td>
+        <td class="tg-0pky"><b>Nombre:</b> <br>{{data.perrev}}</td>
+        <td class="tg-0pky"><b>Nombre:</b> <br>{{data.peraut}}</td>
+      </tr>
+      <tr>
+        <td class="tg-0pky"><b>Firma:</b> <br></td>
+        <td class="tg-0pky"><b>Firma:</b> <br></td>
+        <td class="tg-0pky"><b>Firma:</b> <br></td>
+      </tr>
+      <tr>
+        <td class="tg-0pky"><b>Fecha:</b> {{data.fecrad}}</td>
+        <td class="tg-0pky"><b>Fecha:</b></td>
+        <td class="tg-0pky"><b>Fecha:</b></td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th class="tg-0pky"><b align="center">Documentos Adjuntos</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let da of soportes">
+        <td class="tg-0pky">{{da}}</td>
+      </tr>
+    </tbody>
+  </table>
+</form>
