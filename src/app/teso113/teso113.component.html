@@ -54,10 +54,12 @@
         <td class="tg-0lax">{{data.coddep}} - {{depe}}</td>
       </tr>
       <tr>
-        <div *ngIf="cdp_documento=='00'; else block">
+        <div  *ngIf="cdp_documento=='00'; then inBlock  else block"></div>
+        
+        <ng-template #inBlock>
           <td class="tg-0lax" colspan="4"><b>CDP</b></td>
           <td class="tg-0lax">SIN CDP</td>
-        </div>
+        </ng-template>
         <ng-template #block>
           <td class="tg-0lax" colspan="4"><b>CDP</b></td>
           <td class="tg-0lax">{{cdp_marca}}-{{cdp_documento}}-{{cdp_ano}}</td>
