@@ -152,6 +152,8 @@ export class Teso113Component implements OnInit {
     traerSoportes() {
         this._teso13Service.getSoportes(this.teso10).subscribe(
             response => {
+                console.log("Ahhh Soportes");
+                console.log(response);
                 this.soportes = response;
             }
         )

@@ -167,8 +167,6 @@ export class Teso13Service {
     getSoportes(user: any): Observable<any>{
         let json = JSON.stringify(user); 
         let params = "json=" + json;
-        console.log("ahhhahoahodhoahsdahsduhasuhgdiuahsdiuhasd");
-        console.log(params);
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso13/TraerSoportes',params,{ headers: headers });
     }
