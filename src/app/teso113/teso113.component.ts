@@ -38,7 +38,7 @@ export class Teso113Component implements OnInit {
     public array_fecrad: any = [];
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
 
-        this.teso10 = new teso10('','','','');
+        this.teso10 = new teso10('', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -66,48 +66,57 @@ export class Teso113Component implements OnInit {
             console.log("Teso13---");
             console.log(new Teso113(this.codclas, this.numero))
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
-                
-                this.data = response;
-                console.log("response!!!!!");
-                console.log(this.data);
-                this.fecrad = this.data.fecrad;
-                this.array_fecrad = this.fecrad.split('-');
-                console.log(this.array_fecrad);
-                this.data['usuela'];
 
-                this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
-                    console.log(response);
-                    this.identity = response;
-                    this.identity1 = this.identity[0]['nombre'];
-                    let timerInterval;
+                if (response.status != 'error') {
+                    this.data = response;
+                    console.log("response!!!!!");
+                    console.log(this.data);
+                    this.fecrad = this.data.fecrad;
+                    this.array_fecrad = this.fecrad.split('-');
+                    console.log(this.array_fecrad);
+                    this.data['usuela'];
 
-
-                    this.traerSoportes();
-
-                    Swal.fire({
-                        title: 'Generando PDF...',
-                        html: 'El proceso terminara en <b></b> milisegundos.',
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: () => {
-                            Swal.showLoading()
-                            const b = Swal.getHtmlContainer().querySelector('b')
-                            timerInterval = setInterval(() => {
-                                b.textContent = Swal.getTimerLeft() + ''
-                            }, 100)
-                        },
-                        willClose: () => {
-                            this.setPdf();
+                    this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
+                        console.log(response);
+                        this.identity = response;
+                        this.identity1 = this.identity[0]['nombre'];
+                        let timerInterval;
 
 
-                            clearInterval(timerInterval)
-                        }
-                    }).then((result) => { /* Read more about handling dismissals below */
-                        if (result.dismiss === Swal.DismissReason.timer) {
+                        this.traerSoportes();
 
-                        }
+                        Swal.fire({
+                            title: 'Generando PDF...',
+                            html: 'El proceso terminara en <b></b> milisegundos.',
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading()
+                                const b = Swal.getHtmlContainer().querySelector('b')
+                                timerInterval = setInterval(() => {
+                                    b.textContent = Swal.getTimerLeft() + ''
+                                }, 100)
+                            },
+                            willClose: () => {
+                                this.setPdf();
+
+
+                                clearInterval(timerInterval)
+                            }
+                        }).then((result) => { /* Read more about handling dismissals below */
+                            if (result.dismiss === Swal.DismissReason.timer) {
+
+                            }
+                        })
                     })
-                })
+                }else{
+
+                    console.log(response);
+
+
+                }
+
+
             });
         });
     }
@@ -140,9 +149,9 @@ export class Teso113Component implements OnInit {
             });
     }
 
-    traerSoportes(){
+    traerSoportes() {
         this._teso13Service.getSoportes(this.teso10).subscribe(
-            response =>{
+            response => {
                 this.soportes = response;
             }
         )

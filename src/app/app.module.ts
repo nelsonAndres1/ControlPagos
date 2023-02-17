@@ -17,6 +17,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
 import { BarcodeGeneratorAllModule,QRCodeGeneratorAllModule,DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import  {  PdfViewerModule  }  from  'ng2-pdf-viewer';
 
 import { Teso12Component } from './teso12/teso12.component';
 import { Teso13Component } from './teso13/teso13.component';
@@ -88,7 +89,8 @@ import { Gener02Service } from './services/gener02.service';
     MatCardModule,    
     
     SweetAlert2Module.forRoot(),
-    routing
+    routing,
+    PdfViewerModule
   ],
    //appRoutingProviders sin llaves y con corchetes
   providers: [

@@ -242,7 +242,7 @@ export class Teso12Component implements OnInit {
                 if (response.status == "success") {
                     this.status = response.status;
                     console.log("Status");
-                    console.log(this.status);
+                    console.log(response);
                     var arrayD = this.itemDetail[1];
 
                     const navigationExtras: NavigationExtras = {

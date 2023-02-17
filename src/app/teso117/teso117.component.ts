@@ -1,18 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
-import {Teso15Service} from '../services/teso15.service';
-import {Teso117Service} from '../services/teso117.service';
-import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
-import {Gener02} from '../models/gener02';
-import {ThisReceiver} from '@angular/compiler';
-import {Teso113} from '../models/teso113';
-import {Teso13Teso15} from '../models/teso13teso15';
-import { identity } from 'rxjs';
+import { Teso15Service } from '../services/teso15.service';
+import { Teso117Service } from '../services/teso117.service';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { Gener02 } from '../models/gener02';
+import { Teso113 } from '../models/teso113';
+import { Teso13Teso15 } from '../models/teso13teso15';
+import { global } from '../services/global';
+import { Teso12Service } from '../services/teso12.service';
+import { Documento } from '../models/documento';
 @Component({
     selector: 'app-teso117',
     templateUrl: './teso117.component.html',
-    styleUrls: ['./teso117.component.css'],
-    providers: [Teso15Service, Teso117Service]
+    styleUrls: ['./teso117.component.scss'],
+    providers: [Teso15Service, Teso117Service, Teso12Service]
 })
 
 export class Teso117Component implements OnInit { /* RA - Radicado
@@ -45,27 +46,35 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         'Anulado'
     ];
     public btn = false;
-    public data : any = '';
+    public data: any = '';
     public arraySalida = [];
-    itemDetail : any = [];
-    item1 : any = [];
-    item2 : any = [];
-    public status : any;
-    public token : any;
-    public identity : any;
-    public identity1 : any;
-    public identity12 : any;
-    v : any = true;
+    itemDetail: any = [];
+    item1: any = [];
+    item2: any = [];
+    public status: any;
+    public token: any;
+    public identity: any;
+    public identity1: any;
+    public identity12: any;
+    v: any = true;
     public arrayN = Array();
-    public estadoA : any;
-    public estadoActual : any;
-    public itemF : any;
-    public teso13teso15 : any;
-    public permisos : any;
-    public arrayPermisos : any;
+    public estadoA: any;
+    public estadoActual: any;
+    public itemF: any;
+    public teso13teso15: any;
+    public permisos: any;
+    public arrayPermisos: any;
+    pdfSource = '0090000053136comprobante_de_pago.pdf';
+    documento: Documento;
+    soportes: any;
+    global_url = global.url;
+    banderasop: any =true;
 
 
-    constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _teso117Service : Teso117Service, private _router : Router) {
+
+    constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _teso12Service: Teso12Service, private _teso117Service: Teso117Service, private _router: Router) {
+
+        this.pdfSource = global.url + 'teso12/getDocumento/' + '009000004085Javeriana001.pdf'
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
@@ -89,17 +98,37 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         });
 
     }
-    getAllTeso13(codclas : any, numero : any) {
+    manageExcel(response: any, fileName: string): void {
+        const dataType = response.type;
+        const binaryData = [];
+        binaryData.push(response);
+
+        const filePath = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
+        const downloadLink = document.createElement('a');
+        downloadLink.href = filePath;
+        downloadLink.setAttribute('download', fileName);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+    getAllTeso13(codclas: any, numero: any) {
         this._teso15Service.getAllTeso13(new Teso113(codclas, numero)).subscribe(response => {
             this.data = response;
             console.log('jjjj');
             console.log(this.data);
+            this.traerSoportes();
         });
         return this.data;
-
-
     }
-    nombreUsuario(user : any) {
+    sop1() {
+        this.banderasop = true;
+        console.log(this.banderasop);
+    }
+    sop2() {
+        this.banderasop = false;
+        console.log(this.banderasop);
+    }
+
+    nombreUsuario(user: any) {
         console.log("Buscando..")
         for (let index = 0; index < this.arrayN.length; index++) {
             if (this.arrayN[index] == user) {
@@ -112,7 +141,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
         }
     }
-    getUsuario(user : any) {
+    getUsuario(user: any) {
 
         this._teso15Service.getUsuario(new Gener02(user, '')).subscribe(response => {
             if (response.status != 'error') {
@@ -129,7 +158,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
 
             } else {
@@ -138,11 +167,24 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
         }, error => {
             this.status = 'error';
-            console.log(< any > error);
+            console.log(<any>error);
         });
     }
 
-    cambioEstado(estado : any) {
+    traerSoportes() {
+        console.log("data!");
+        console.log(this.data);
+        this._teso117Service.traerSoportes(this.data).subscribe(
+            response => {
+                this.soportes = response;
+                console.log("soportes!");
+                console.log(this.soportes);
+            }
+        )
+    }
+
+
+    cambioEstado(estado: any) {
 
         this.estadoActual = estado;
         if (estado == 'Revisión') {
@@ -184,7 +226,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         console.log(this.estadoActual);
     }
 
-    estados(estado : any) {
+    estados(estado: any) {
         var bandera: any;
         this.permisos = localStorage.getItem('permisos');
 
@@ -324,7 +366,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         }
                     }, error => {
                         this.status = 'error';
-                        console.log(< any > error);
+                        console.log(<any>error);
                     });
 
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
@@ -340,7 +382,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         }
                     }, error => {
                         this.status = 'error';
-                        console.log(< any > error);
+                        console.log(<any>error);
                     });
 
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
@@ -357,7 +399,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                         }
                     }, error => {
                         this.status = 'error';
-                        console.log(< any > error);
+                        console.log(<any>error);
                     });
 
                     Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
@@ -371,6 +413,6 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         })
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
 }
