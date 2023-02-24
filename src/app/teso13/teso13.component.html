@@ -16,7 +16,8 @@
 
         <div class="row">
             <div class="col">
-                <label for="name">Consecutivo</label>
+                <label for="name">
+                    <b>Consecutivo</b></label>
 
                 <div class="col">
                     <input type="text" [value]=nconsecutivo ng-value="nconsecutivo" name="numero" class="form-control"
@@ -24,7 +25,8 @@
                 </div>
             </div>
             <div class="col">
-                <label for="name">Usuario</label>
+                <label for="name">
+                    <b>Usuario</b> </label>
 
                 <div class="col">
                     <input type="text" [value]=usu ng-value="usu" id="{{usu}}" name="usuela" class="form-control"
@@ -33,7 +35,9 @@
                 </div>
             </div>
             <div class="col">
-                <label for="name">Tipo de Pago</label>
+                <label for="name">
+                    <b>
+                        Tipo de Pago</b></label>
 
                 <div class="col">
                     <input type="text" [value]=tpago ng-value="tpago" name="codclas" class="form-control"
@@ -45,19 +49,19 @@
         <div class="row">
             <label id="cdp" for="name"><b>CDP</b></label>
             <div class="col">
-                <label for="name">CDP_Marca</label>
+                <label for="name"><b>CDP_Marca</b></label>
                 <select class="form-select col" id="inputGroupSelect01" name="cdp_marca" placeholder="cdp_marca"
                     for="cdp_marca" #cdp_marca="ngModel" [(ngModel)]="teso13.cdp_marca">
                     <option *ngFor="let mc of marca">{{mc}}</option>
                 </select>
             </div>
             <div class="col">
-                <label for="name">CDP_Documento</label>
+                <label for="name"><b>CDP_Documento</b></label>
                 <input class="form-control" type="string" name="cdp_documento" placeholder="cdp_documento"
                     for="cdp_documento" #cdp_documento="ngModel" [(ngModel)]="teso13.cdp_documento" maxlength="7">
             </div>
             <div class="col">
-                <label for="name">CDP_Año</label>
+                <label for="name"><b>CDP_Año</b></label>
                 <input type="number" class="form-control" name="cdp_ano" placeholder="cdp_año" for="cdp_ano"
                     #cdp_ano="ngModel" [(ngModel)]="teso13.cdp_ano" maxlength="4">
             </div>
@@ -67,7 +71,7 @@
             <!-- NIT -->
             <div class="col">
                 <div class="col">
-                    <label for="name">NIT</label>
+                    <label for="name"><b>NIT</b></label>
                     <div class="col">
 
                         <div class="col">
@@ -107,7 +111,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <label for="name">Numero de Cuotas</label>
+                    <label for="name"><b>Numero de Cuotas</b></label>
                     <div class="col">
                         <input type="text" class="form-control" name="numcuo" placeholder="Numero Cuotas"
                             #numcuo="ngModel" [(ngModel)]="teso13.numcuo" maxlength="2" required>
@@ -117,18 +121,28 @@
                     </small>
                 </div>
                 <div class="col">
-                    <label for="name">Numero de cuota actual: <b>{{cuota}}</b></label>
+                    <label for="name"><b>Numero de cuota actual:</b> {{cuota}}</label>
                 </div>
             </div>
 
         </div>
         <div class="row">
             <div class="col">
-                <label for="name">Centro de Costo</label>
+                <label for="name"><b>Centro de Costo</b></label>
                 <div class="col">
                     <div>
+                        <div class="form-check">
+                            <br>
+                            <input class="form-check-input" type="checkbox" value="" (click)="centroC()"
+                                id="defaultCheck1">
+
+                            <label class="form-check-label" for="defaultCheck1">
+                                Centro de Costo - Varios
+                            </label>
+                        </div>
                         <input type="text" class="form-control" name="codcen_name" placeholder="Centro de Costo"
-                            for="codcen" (input)="getConta($event)" [(ngModel)]="codcen_nombre">
+                            for="codcen" (input)="getConta($event)" [(ngModel)]="codcen_nombre"
+                            disabled={{centroCostos}}>
                         <div *ngFor="let result of data" (click)="getDetailPage(result)">
                             <div class="card card-body mb-1" (click)="touchCC(result)" style="cursor: pointer;"
                                 *ngIf="bandera=='true'">
@@ -148,10 +162,13 @@
             </div>
 
             <div class="col">
-                <label for="name">Codigo de Dependencia</label>
+                <label for="name"><b>Codigo de Dependencia</b></label>
                 <div class="col">
+                    <br>
+                    <br>
                     <input type="text" class="form-control" name="coddep_nombre" [(ngModel)]="coddep_nombre"
-                        placeholder="Codigo Dependencia" for="coddep" (input)="getConta28($event)">
+                        placeholder="Codigo Dependencia" for="coddep" (input)="getConta28($event)"
+                        disabled={{centroCostos}}>
                     <div *ngFor="let resultC2 of datac28" (click)="getDetailPageC28(resultC2)">
                         <div class="card card-body mb-1" (click)="touch28(resultC2)" style="cursor: pointer;"
                             *ngIf="bandera28=='true'">
@@ -172,7 +189,7 @@
 
         <div class="row">
             <div class="col">
-                <label for="name">Numero de Factura</label>
+                <label for="name"><b>Numero de Factura</b></label>
                 <div class="col">
                     <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
                         #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="15" required>
@@ -182,7 +199,7 @@
                 </small>
             </div>
             <div class="col">
-                <label for="name">Periodo de Facturación</label>
+                <label for="name"><b>Periodo de Facturación</b></label>
                 <div class="col">
                     <select class="form-select col" id="inputGroupSelect01" name="perfac"
                         placeholder="Periodo Facturación" #perfac="ngModel" [(ngModel)]="teso13.perfac" required>
@@ -197,7 +214,7 @@
 
         <div class="row">
             <div class="col">
-                <label for="name">Fecha de Facturación</label>
+                <label for="name"><b>Fecha de Facturación</b></label>
                 <div class="col">
                     <div class="col">
                         <input type="date" class="form-control" id="start" name="fecfac" value="today" min="2018-01-01"
@@ -212,7 +229,7 @@
 
             <div class="col">
                 <div class="col">
-                    <label for="name">Valor</label>
+                    <label for="name"><b>Valor</b></label>
                     <div class="col">
                         <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
                             #valor="ngModel" [(ngModel)]="teso13.valor" maxlength="20" required pattern="[0-9]+">
@@ -227,12 +244,11 @@
 
         <div class="row">
             <div class="col">
-                <label for="name">Persona quien revisa</label>
+                <label for="name"><b>Persona quien revisa</b></label>
                 <div class="col">
                     <div class="col">
-                        <input type="text" class="form-control" id="start" name="perrev"
-                             placeholder="¿Quien revisa?" #perrev="ngModel"
-                            [(ngModel)]="teso13.perrev" required>
+                        <input type="text" class="form-control" id="start" name="perrev" placeholder="¿Quien revisa?"
+                            #perrev="ngModel" [(ngModel)]="teso13.perrev" required>
                     </div>
                 </div>
                 <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
@@ -241,12 +257,11 @@
             </div>
 
             <div class="col">
-                <label for="name">Persona quien Autoriza</label>
+                <label for="name"><b>Persona quien Autoriza</b></label>
                 <div class="col">
                     <div class="col">
-                        <input type="text" class="form-control" id="start" name="peraut"
-                             placeholder="¿Quien autoriza?" #peraut="ngModel"
-                            [(ngModel)]="teso13.peraut" required>
+                        <input type="text" class="form-control" id="start" name="peraut" placeholder="¿Quien autoriza?"
+                            #peraut="ngModel" [(ngModel)]="teso13.peraut" required>
                     </div>
                 </div>
                 <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
@@ -258,7 +273,8 @@
 
         <div class="row">
             <div class="input-group">
-                <span class="input-group-text">Detalle</span>
+                <span class="input-group-text">
+                    <b>Detalle</b></span>
                 <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
                     [(ngModel)]="teso13.detalle" maxlength="100" required></textarea>
             </div>
@@ -277,13 +293,3 @@
     <br>
     <br>
 </form>
-
-
-
-
-
-
-
-
-
-

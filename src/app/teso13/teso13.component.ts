@@ -64,6 +64,7 @@ export class Teso13Component implements OnInit {
     public valor_a: any;
     public datoSoportes: any;
     public fechaRdicado: any = '';
+    public centroCostos = false;
     constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '');
 
@@ -90,11 +91,6 @@ export class Teso13Component implements OnInit {
         }
 
     }
-
-
-
-
-
     touch(resultC: any) {
         console.log(resultC.nit);
         this.teso13.nit = resultC.nit;
@@ -102,6 +98,23 @@ export class Teso13Component implements OnInit {
         this.nit_nombre = resultC.razsoc;
 
     }
+
+    centroC() {
+        if(this.centroCostos == true){
+            this.teso13.codcen = ''    
+            this.codcen_nombre = '';
+            this.centroCostos = false;
+            this.teso13.coddep = '';
+            this.coddep_nombre = '';
+        }else{
+            this.teso13.codcen = '0000'    
+            this.codcen_nombre = 'VARIOS';
+            this.centroCostos = true;
+            this.teso13.coddep = '000000';
+            this.coddep_nombre = 'VARIOS';
+        }
+    }
+
     touchCC(result: any) {
         console.log(result.codcen);
         this.teso13.codcen = result.codcen;
