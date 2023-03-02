@@ -65,6 +65,7 @@ export class Teso13Component implements OnInit {
     public datoSoportes: any;
     public fechaRdicado: any = '';
     public centroCostos = false;
+    public cdp_bandera = false;
     constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '');
 
@@ -97,6 +98,14 @@ export class Teso13Component implements OnInit {
         this.bandera2 = 'false';
         this.nit_nombre = resultC.razsoc;
 
+    }
+
+    CDP(){
+        if(this.cdp_bandera == true){
+            this.cdp_bandera = false;
+        }else{
+            this.cdp_bandera = true;
+        }
     }
 
     centroC() {
