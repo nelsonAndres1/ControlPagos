@@ -23,6 +23,7 @@ import { Teso1116Component } from './teso1116/teso1116.component';
 import { Teso1117Component } from './teso1117/teso1117.component';
 import { Teso118Component } from './teso118/teso118.component';
 import { Teso1118Component } from './teso1118/teso1118.component';
+import { EditarTeso12Component } from './editar-teso12/editar-teso12.component';
 import { LoginGuard } from './services/login.guard';
 import { IdentityGuard } from './services/identity.guard';
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: 'logout/:sure', component:LoginComponent, canActivate: [IdentityGuard] },
   {path: 'teso10', component:Teso10Component, canActivate: [IdentityGuard] },
   {path: 'teso12', component:Teso12Component, canActivate: [IdentityGuard] },
+  {path: 'editar_teso12', component:EditarTeso12Component, canActivate: [IdentityGuard] },
   {path: 'teso13', component:Teso13Component, canActivate: [IdentityGuard] },
   {path: 'teso14', component:Teso14Component, canActivate: [IdentityGuard] },
   {path: 'teso114', component:Teso114Component, canActivate: [IdentityGuard] },

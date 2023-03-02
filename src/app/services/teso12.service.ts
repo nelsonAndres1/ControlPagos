@@ -94,6 +94,14 @@ export class Teso12Service {
 
     }
 
+    editarObligacionSoportes(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso12/editarObligacionSoportes', params, { headers: headers });
+
+    }
+
     downloadFile(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = 'json=' + json;
@@ -102,7 +110,14 @@ export class Teso12Service {
 
     }
 
-       
+    traerSoportesO(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso12/traerSoportesO', params,{ headers: headers });
+
+    }
+    
 
 
     

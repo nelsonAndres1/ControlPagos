@@ -46,6 +46,7 @@ DoCheck {
     inp(){
         this.router.navigate(['teso10'])
     }
+    
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
