@@ -29,22 +29,48 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     RP-Radicacion Pago
     PP-Pago Portal
     PB-Pago Banco
-    AN-Anulado */
+    AN-Anulado 
+    LC-Legalización de Cheque
+    CF-Cheque en Firmas
+    CE-Cheque Entregado
+    VF-Verificación Estado de Transferencia
+    PE-Pago Exitoso
+    CA-Causación de Pago
+    */
 
     public array1 = ['Revisión', 'Anulado'];
     public array2 = ['Autorizado', 'Anulado'];
     public array3 = ['Financiera', 'Anulado'];
-    public array4 = ['Causación', 'Anulado'];
+    public array4 = ['Causación de Cuenta', 'Causación de Pago', 'Anulado'];
     public array5 = ['Causación Pago', 'Devuelto Radicado', 'Anulado'];
-    public array6 = ['Revision Tesoreria', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
-    public array7 = ['Radicación Pago', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
+    public array6 = ['Autorización Pago', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
+    public array7 = ['Preparación Transferencia', 'Legalización de Cheque', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
     public array8 = [
-        'Pago Banco',
-        'Pago Portal',
+        'Verificación Estado de Transferencia',
         'Devuelto Causación',
         'Devuelto Radicado',
         'Anulado'
     ];
+    public array9 = [
+        'Cheque en Firmas',
+        'Devuelto Causación',
+        'Devuelto Radicado',
+        'Anulado'
+    ];
+    public array10 = [
+        'Cheque Entregado',
+        'Devuelto Causación',
+        'Devuelto Radicado',
+        'Anulado'
+    ];
+    public array11 = [
+        'Pago Exitoso',
+        'Devuelto Causación',
+        'Devuelto Radicado',
+        'Anulado'
+    ];
+
+
     public btn = false;
     public data: any = '';
     public arraySalida = [];
@@ -68,7 +94,8 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     documento: Documento;
     soportes: any;
     global_url = global.url;
-    banderasop: any =true;
+    banderasop: any = true;
+    estadoEscrito: any = '';
 
 
 
@@ -184,6 +211,69 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     }
 
 
+    cambioEstadoNombre(estado: any) {
+        var estadoEscr
+
+        if (estado == 'RV') {
+            estadoEscr = 'Revisión';
+        }
+        if (estado == 'RA') {
+            estadoEscr = 'Radicado';
+        }
+        if (estado == 'AN') {
+            estadoEscr = 'Anulado';
+        }
+        if (estado == 'AU') {
+            estadoEscr = 'Autorizado';
+        }
+        if (estado == 'FI') {
+            estadoEscr = 'Financiera';
+        }
+        if (estado == 'CT') {
+            estadoEscr = 'Causación de Cuenta';
+        }
+        if (estado == 'PC') {
+            estadoEscr = 'Causación Pago';
+        }
+        if (estado == 'DR') {
+            estadoEscr = 'Devuelto Radicado';
+        }
+        if (estado == 'RT') {
+            estadoEscr = 'Autorización Pago';
+        }
+        if (estado == 'DC') {
+            estadoEscr = 'Devuelto Causación';
+        }
+        if (estado == 'PB') {
+            estadoEscr = 'Pago Banco';
+        }
+        if (estado == 'PP') {
+            estadoEscr = 'Pago Portal';
+        }
+        if (estado == 'RP') {
+            estadoEscr = 'Preparación Transferencia';
+        }
+        if (estado == 'LC') {
+            estadoEscr = 'Legalización de Cheque';
+        }
+        if (estado == 'CF') {
+            estadoEscr = 'Cheque en Firmas';
+        }
+        if (estado == 'CE') {
+            estadoEscr = 'Cheque Entregado';
+        }
+        if (estado == 'VF') {
+            estadoEscr = 'Verificación Estado de Transferencia';
+        }
+        if (estado == 'PE') {
+            estadoEscr = 'Pago Exitoso';
+        }
+        if (estado == 'CA') {
+            estadoEscr = 'Causación de Pago';
+        }
+
+        return estadoEscr;
+    }
     cambioEstado(estado: any) {
 
         this.estadoActual = estado;
@@ -199,7 +289,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'Financiera') {
             this.estadoActual = 'FI';
         }
-        if (estado == 'Causación') {
+        if (estado == 'Causación de Cuenta') {
             this.estadoActual = 'CT';
         }
         if (estado == 'Causación Pago') {
@@ -208,7 +298,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'Devuelto Radicado') {
             this.estadoActual = 'DR';
         }
-        if (estado == 'Revision Tesoreria') {
+        if (estado == 'Autorización Pago') {
             this.estadoActual = 'RT';
         }
         if (estado == 'Devuelto Causación') {
@@ -220,8 +310,26 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'Pago Portal') {
             this.estadoActual = 'PP';
         }
-        if (estado == 'Radicación Pago') {
+        if (estado == 'Preparación Transferencia') {
             this.estadoActual = 'RP';
+        }
+        if (estado == 'Legalización de Cheque') {
+            this.estadoActual = 'LC';
+        }
+        if (estado == 'Cheque en Firmas') {
+            this.estadoActual = 'CF';
+        }
+        if (estado == 'Cheque Entregado') {
+            this.estadoActual = 'CE';
+        }
+        if (estado == 'Verificación Estado de Transferencia') {
+            this.estadoActual = 'VF';
+        }
+        if (estado == 'Pago Exitoso') {
+            this.estadoActual = 'PE';
+        }
+        if (estado == 'Causación de Pago') {
+            this.estadoActual = 'CA';
         }
         console.log(this.estadoActual);
     }
@@ -325,6 +433,59 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'P' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array8;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                }
+            }
+
+            if (estado == 'LC') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'LC' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array9;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                }
+            }
+
+            if (estado == 'CF') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'CF' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array10;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                }
+            }
+
+            if (estado == 'VF') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'VF' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array11;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                }
+            }
+
+
+            if (estado == 'CA') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array6;
                         bandera = true;
                         this.btn = true;
                     }
