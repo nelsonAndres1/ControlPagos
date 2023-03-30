@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import Swal from 'sweetalert2';
-import {Teso16Service} from '../services/teso16.service';
-import {Teso16} from '../models/teso16';
+import { Teso16Service } from '../services/teso16.service';
+import { Teso16 } from '../models/teso16';
 import { identity } from 'rxjs';
 
 
 
-@Component({selector: 'app-teso1116', templateUrl: './teso1116.component.html', styleUrls: ['./teso1116.component.css']})
+@Component({ selector: 'app-teso1116', templateUrl: './teso1116.component.html', styleUrls: ['./teso1116.component.css'] })
 
 export class Teso1116Component implements OnInit { /* public array1 = ['Revisión', 'Anulado'];
     public array2 = ['Autorizado', 'Anulado'];
@@ -27,26 +27,28 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
         'Financiera',
         'Causación',
         'Causación Pago',
-        'Revision Tesoreria',
-        'Radicación Pago',
-        'Pago'
+        'Autorización Pago',
+        'Preparación Transferencia',
+        'Verificación Estado de Transferencia',
+        'Pago',
+        'Cheque en Firmas'
     ];
-    public teso16 : Teso16;
+    public teso16: Teso16;
 
-    itemDetail : any = [];
-    array : any = [];
-    status : any;
-    constructor(private route : ActivatedRoute, private _route : Router, private _teso16Service : Teso16Service) {
+    itemDetail: any = [];
+    array: any = [];
+    status: any;
+    constructor(private route: ActivatedRoute, private _route: Router, private _teso16Service: Teso16Service) {
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
             console.log(this.itemDetail.usuario);
         })
-        
+
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
     submit() {
         if (this.array.length > 0) {
             Swal.fire({
@@ -60,7 +62,7 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
             }).then(result => {
                 if (result.value) {
                     for (let index = 0; index < this.array.length; index++) {
-                        this._teso16Service.registerTeso16(new Teso16(this.itemDetail.usuario,this.array[index])).subscribe(response => {
+                        this._teso16Service.registerTeso16(new Teso16(this.itemDetail.usuario, this.array[index])).subscribe(response => {
                             if (response.status == "success") {
                                 this.status = response.status;
                             } else {
@@ -68,13 +70,13 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
                             }
                         }, error => {
                             this.status = 'error';
-                            console.log(< any > error);
+                            console.log(<any>error);
                         });
                     }
                     Swal.fire('Listo!', 'Permiso(s) Agregado(s)', 'success');
-                
+
                     this._route.navigate(['teso116']);
-                    
+
                 } else {
                     Swal.fire('Cancelado!', 'Permiso(s) No Agregado(s)', 'error');
                 }
@@ -83,9 +85,9 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
             Swal.fire('¡Error!', 'No ha seleccionado ningun permiso', 'error');
         }
     }
-    onChange($event, result : any) {
+    onChange($event, result: any) {
         var bandera = false;
-        if(result == 'Administrador'){
+        if (result == 'Administrador') {
             result = 'AD';
         }
 
@@ -107,15 +109,35 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
         if (result == 'Causación Pago') {
             result = 'PC';
         }
-        if (result == 'Revision Tesoreria') {
+        if (result == 'Autorización Pago') {
             result = 'RT';
         }
-        if (result == 'Radicación Pago') {
+        if (result == 'Preparación Transferencia') {
             result = 'RP';
         }
         if (result == 'Pago') {
             result = 'P';
         }
+
+        if (result == 'Verificación Estado de Transferencia') {
+            result = 'VF';
+        }
+
+        if (result == 'Cheque en Firmas') {
+            result = 'CF';
+        }
+        if (result == 'Cheque Entregado') {
+            result = 'CE';
+        }
+
+        if (result == 'Pago Exitoso') {
+            result = 'PE';
+        }
+        if (result == 'Causación de Pago') {
+            result = 'CA';
+        }
+
+
 
         const navigationExtras: NavigationExtras = {
             queryParams: {
