@@ -61,6 +61,70 @@ export class Teso16Component implements OnInit {
 
     ngOnInit(): void {}
 
+    cambioEstadoNombre(estado: any) {
+      var estadoEscr
+
+      if (estado == 'RV') {
+          estadoEscr = 'Revisión';
+      }
+      if (estado == 'RA') {
+          estadoEscr = 'Radicado';
+      }
+      if (estado == 'AN') {
+          estadoEscr = 'Anulado';
+      }
+      if (estado == 'AU') {
+          estadoEscr = 'Autorizado';
+      }
+      if (estado == 'FI') {
+          estadoEscr = 'Financiera';
+      }
+      if (estado == 'CT') {
+          estadoEscr = 'Causación de Cuenta';
+      }
+      if (estado == 'PC') {
+          estadoEscr = 'Causación Pago';
+      }
+      if (estado == 'DR') {
+          estadoEscr = 'Devuelto Radicado';
+      }
+      if (estado == 'RT') {
+          estadoEscr = 'Autorización Pago';
+      }
+      if (estado == 'DC') {
+          estadoEscr = 'Devuelto Causación';
+      }
+      if (estado == 'PB') {
+          estadoEscr = 'Pago Banco';
+      }
+      if (estado == 'PP') {
+          estadoEscr = 'Pago Portal';
+      }
+      if (estado == 'RP') {
+          estadoEscr = 'Preparación Transferencia';
+      }
+      if (estado == 'LC') {
+          estadoEscr = 'Legalización de Cheque';
+      }
+      if (estado == 'CF') {
+          estadoEscr = 'Cheque en Firmas';
+      }
+      if (estado == 'CE') {
+          estadoEscr = 'Cheque Entregado';
+      }
+      if (estado == 'VF') {
+          estadoEscr = 'Verificación Estado de Transferencia';
+      }
+      if (estado == 'PE') {
+          estadoEscr = 'Pago Exitoso';
+      }
+      if (estado == 'CA') {
+          estadoEscr = 'Causación de Pago';
+      }
+
+      return estadoEscr;
+  }
+
     downloadFile(array:any){
       console.log(array.archivo)
       const fileName = "prueba.pdf";

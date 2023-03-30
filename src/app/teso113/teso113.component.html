@@ -54,6 +54,10 @@
         <td class="tg-0lax">{{data.coddep}} - {{depe}}</td>
       </tr>
       <tr>
+        <td class="tg-0lax" colspan="4"><b>Prioridad: </b></td>
+        <td class="tg-0lax">{{data.prioridad}}</td>
+      </tr>
+      <tr>
         <div  *ngIf="cdp_documento=='00'; then inBlock  else block"></div>
         
         <ng-template #inBlock>

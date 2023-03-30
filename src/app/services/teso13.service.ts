@@ -104,11 +104,11 @@ export class Teso13Service {
     downloadFile(user: any): Observable<any> {
         /* let json = JSON.stringify(user);
         let params = 'json=' + json; */
-/*         console.log(params); */
+        /*         console.log(params); */
         let headers = new HttpHeaders({
-            'Content-Type':'application/json'
-          });
-        return this._http.get(this.url + `teso13/downloadFile?json=${user}`,{headers: headers, responseType: 'blob' as 'json'} );
+            'Content-Type': 'application/json'
+        });
+        return this._http.get(this.url + `teso13/downloadFile?json=${user}`, { headers: headers, responseType: 'blob' as 'json' });
     }
 
     getIdentity() {
@@ -164,12 +164,21 @@ export class Teso13Service {
         return this._http.post(this.url + 'teso13/fecha', { headers: headers });
     }
 
-    getSoportes(user: any): Observable<any>{
-        let json = JSON.stringify(user); 
+    getSoportes(user: any): Observable<any> {
+        let json = JSON.stringify(user);
         let params = "json=" + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url + 'teso13/TraerSoportes',params,{ headers: headers });
+        return this._http.post(this.url + 'teso13/TraerSoportes', params, { headers: headers });
     }
+
+    getAllTeso13Pri(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = "json=" + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/getAllTeso13Pri', params, { headers: headers });
+    }
+
+
 
 
 

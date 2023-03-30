@@ -1,13 +1,133 @@
-<br>
-<br>
-<br>
-<div>
-    <h4>Bienvenido</h4>
-    <h4>{{identity.name}}</h4>
+<link
+    href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,500,500i,600,600i|Playfair+Display:300,400,400i,500,500i,600,600i|Lobster:400,400i,500,500i,600,600i|Montserrat:400,400i,500,500i,600,600i'
+    rel='stylesheet' type='text/css'>
+<div class="posts">
+
+    <h1>Pagos Pendientes - Prioridad Alta</h1>
+
+    <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-800 min-h-screen p-4">
+        <div class="h-full">
+            <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+                <div class="p-3">
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full">
+                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                <tr>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Numero</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Tipo de Pago</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Estado</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-gray-100">
+                                <tr *ngFor="let dt of pagosA">
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.detcodclas}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
-<h1>Caja de Compensación Familiar de Nariño</h1>
-<img src="./assets/LogoComfa.PNG" class="img-fluid rounded"  alt="Eniun">
-<h2>Sistema de Gestión</h2>
-<h2>Control de Pagos</h2>
-<br>
-<br>
+
+<div class="posts">
+    <h1>Pagos Pendientes - Prioridad Media</h1>
+
+
+    <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
+        <div class="h-full">
+            <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+                <div class="p-3">
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full">
+                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                <tr>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Numero</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Tipo de Pago</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Estado</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-gray-100">
+                                <tr *ngFor="let dt of pagosM">
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.detcodclas}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="posts">
+    <h1>Pagos Pendientes - Prioridad Baja</h1>
+    <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
+        <div class="h-full">
+            <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+                <div class="p-3">
+                    <div class="overflow-x-auto">
+                        <table class="table-auto w-full">
+                            <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                                <tr>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Numero</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Tipo de Pago</div>
+                                    </th>
+                                    <th class="p-2 whitespace-nowrap">
+                                        <div class="font-semibold text-left">Estado</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-gray-100">
+                                <tr *ngFor="let dt of pagosB">
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{dt.detcodclas}}</div>
+                                    </td>
+                                    <td class="p-2 whitespace-nowrap">
+                                        <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
