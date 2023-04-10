@@ -3,6 +3,7 @@ export class teso110{
         public codclas: string,
         public detclas: string,
         public estado: string,
+        public prioridad: string
     ){
 
     }

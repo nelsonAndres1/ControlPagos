@@ -38,7 +38,7 @@ export class Teso113Component implements OnInit {
     public array_fecrad: any = [];
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
 
-        this.teso10 = new teso10('', '', '', '');
+        this.teso10 = new teso10('', '', '', '','');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -138,7 +138,7 @@ export class Teso113Component implements OnInit {
         this._router.navigate['/principal'];
     }
     getTeso10(n: any) {
-        this._teso13Service.name_teso10(new teso10(n, '', '', '')).subscribe(
+        this._teso13Service.name_teso10(new teso10(n, '', '', '','')).subscribe(
             response => {
                 this.detalle = response.detclas;
                 console.log(this.detalle);

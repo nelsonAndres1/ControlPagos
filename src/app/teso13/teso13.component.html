@@ -276,22 +276,6 @@
                     Este Campo es requerido
                 </small>
             </div>
-
-            <div class="col">
-                <label for="name"><b>Prioridad del Pago</b></label>
-                <div class="col">
-                    <select class="form-select col" id="inputGroupSelect01" name="prioridad"
-                        placeholder="Periodo Facturación" #prioridad="ngModel" [(ngModel)]="teso13.prioridad" required>
-                        <option value="" selected>Seleccione!</option>
-                        <option value="A">ALTA</option>
-                        <option value="M">MEDIA</option>
-                        <option value="B">BAJA</option>
-                    </select>
-                </div>
-                <small *ngIf="!prioridad.valid && prioridad.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
-            </div>
         </div>
 
 

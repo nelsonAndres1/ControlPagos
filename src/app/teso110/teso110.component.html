@@ -30,7 +30,7 @@
                 <h6>Pago: {{result.detclas}}.</h6>
                 <small class="text-primary">estado: {{result.estado}}.</small>
                 <div class="row">
-                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codclas, result.detclas, result.estado)" style="cursor: pointer;">Modificar</button>
+                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codclas, result.detclas, result.estado, result.prioridad)" style="cursor: pointer;">Modificar</button>
                 </div>
                 <br>
                 <div class="row">
@@ -44,10 +44,25 @@
                 <h6>Seleccione Estado del Tipo de Pago </h6>
             </label>
 
-            <select for="estado" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.estado" name="estado"
+            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.estado" name="estado"
                 required>
+                <option selected>Seleccione!</option>
                 <option>Activo</option>
                 <option>Inactivo</option>
+            </select>
+        </div>
+        
+        <div class="row">
+            <label for="estado">
+                <h6>Prioridad </h6>
+            </label>
+
+            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.prioridad" name="estado"
+                required>
+                <option value="" selected>Seleccione!</option>
+                <option value="A" >ALTA</option>
+                <option value="M">MEDIA</option>
+                <option value="B">BAJA</option>
             </select>
         </div>
     </div>
@@ -64,6 +79,7 @@
         <th scope="col">Codclas</th>
         <th scope="col">Detalle</th>
         <th scope="col">Estado</th>
+        <th scope="col">Prioridad</th>
         <th scope="col">Numero de Pagos</th>
       </tr>
     </thead>
@@ -72,6 +88,7 @@
         <th scope="row">{{dt.codclas}}</th>
         <td>{{dt.detclas}}</td>
         <td>{{dt.estado}}</td>
+        <td>{{dt.prioridad}}</td>
         <td>{{dt.numero}}</td>
       </tr>
     </tbody>

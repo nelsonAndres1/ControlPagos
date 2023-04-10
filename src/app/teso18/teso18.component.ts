@@ -26,7 +26,7 @@ export class Teso18Component implements OnInit {
     private _teso10Service: Teso10Service
 
   ) { 
-    this.teso10 = new teso10('','','','');
+    this.teso10 = new teso10('','','','','');
     this.datosTabla();
   }
 

@@ -24,7 +24,7 @@ export class Teso14Component implements OnInit {
     private router:Router
     ) {
 
-      this.teso10 = new teso10('','','','');
+      this.teso10 = new teso10('','','','','');
      } 
 
   ngOnInit(): void {
