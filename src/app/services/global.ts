@@ -1,4 +1,4 @@
 export var global = {
     
-    url: 'http://localhost/angular/ControlPagosBack/public/api/'
+    url: 'http://192.168.6.34:8081/api/'
 }
