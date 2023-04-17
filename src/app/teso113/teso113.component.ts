@@ -36,6 +36,7 @@ export class Teso113Component implements OnInit {
     public soportes: any;
     public teso10: teso10;
     public array_fecrad: any = [];
+    public longitud: any = '';
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
 
         this.teso10 = new teso10('', '', '', '','');
@@ -150,11 +151,15 @@ export class Teso113Component implements OnInit {
     }
 
     traerSoportes() {
+        this.longitud = '';
         this._teso13Service.getSoportes(this.teso10).subscribe(
             response => {
                 console.log("Ahhh Soportes");
                 console.log(response);
                 this.soportes = response;
+                for (let index = 0; index < this.soportes.length; index++) {
+                    this.longitud += this.soportes[index]+',  ';
+                }
             }
         )
     }
