@@ -307,7 +307,7 @@ export class Teso13Component implements OnInit {
                     this.teso13.sCDPn = true;
                     this._userService.valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit)).subscribe(response => {
 
-                        if (response > parseInt(this.teso13.valor)) {
+                        if (response >= parseInt(this.teso13.valor)) {
 
                             var arrayD = [];
                             arrayD.push(this.num, this.tpago, this.nit_nombre, this.codcen_nombre, this.coddep_nombre, this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit);
