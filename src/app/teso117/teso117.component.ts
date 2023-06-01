@@ -482,7 +482,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
 
 
-            if (estado == 'CA') {
+            if (estado == 'RT') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array6;
