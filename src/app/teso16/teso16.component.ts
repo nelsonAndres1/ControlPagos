@@ -7,6 +7,7 @@ import { Gener02 } from '../models/gener02';
 import { identity } from 'rxjs';
 import { Teso13Service } from '../services/teso13.service';
 import { Teso14Service } from '../services/teso14.service';
+import { Teso113 } from '../models/teso113';
 
 @Component({selector: 'app-teso16', 
             templateUrl: './teso16.component.html', 
@@ -26,6 +27,7 @@ export class Teso16Component implements OnInit {
     public soportes_subidos:any = [];
     v : any = true;
     public arrayN = Array();
+    public data: any = '';
     
     constructor(private route : ActivatedRoute, private _teso15Service : Teso15Service, private _route : Router, private _teso13Service: Teso13Service, private _teso14Service: Teso14Service) {
 
@@ -55,9 +57,18 @@ export class Teso16Component implements OnInit {
                 this.getUsuario(this.item1[index]['usuario']);
                 this.arrayN;
             }
+            this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
         })
 
     }
+    getAllTeso13(codclas: any, numero: any) {
+      this._teso15Service.getAllTeso13(new Teso113(codclas, numero)).subscribe(response => {
+          this.data = response;
+          console.log('jjjj');
+          console.log(this.data);
+      });
+      return this.data;
+  }
 
     ngOnInit(): void {}
 

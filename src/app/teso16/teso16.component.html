@@ -9,6 +9,7 @@
         <th scope="col">Tipo de Pago</th>
         <th scope="col">Estado</th>
         <th scope="col">Usuario</th>
+        <th scope="col">Valor</th>  
         <th scope="col">Fecha</th>
       </tr>
     </thead>
@@ -20,6 +21,7 @@
         <td>{{item2.detclas}}</td>
         <td>{{cambioEstadoNombre(r.estado)}}</td>
         <td><a (click)="nombreUsuario(r.usuario)" style="cursor: pointer;">{{r.usuario}}</a></td>
+        <td>${{data.valor}}</td>
         <td>{{r.fecha}}</td>
       </tr>
       <!-- 
