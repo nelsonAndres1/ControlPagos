@@ -22,6 +22,7 @@
                                 <th scope="col">Estado</th>
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Numero de Factura</th>
+                                <th scope="col">NIT</th>
                                 <th scope="col">Valor</th>
                                 <th scope="col">Fecha</th>
                             </tr>
@@ -37,6 +38,10 @@
                                 <td><a (click)="nombreUsuario(r.usuario)" style="cursor: pointer;">{{r.usuario}}</a>
                                 </td>
                                 <td>{{item1[0].numfac}}</td>
+                                <td>
+                                    <a (click)="getConta04(data.nit)" style="cursor: pointer;">{{data.nit}}
+                                    </a>
+                                </td>
                                 <td>${{data.valor}}</td>
                                 <td>{{r.fecha}}</td>
                             </tr>

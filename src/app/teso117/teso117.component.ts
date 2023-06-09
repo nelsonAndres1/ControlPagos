@@ -9,6 +9,7 @@ import { Teso13Teso15 } from '../models/teso13teso15';
 import { global } from '../services/global';
 import { Teso12Service } from '../services/teso12.service';
 import { Documento } from '../models/documento';
+import { Conta04 } from '../models/conta04';
 @Component({
     selector: 'app-teso117',
     templateUrl: './teso117.component.html',
@@ -96,11 +97,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     global_url = global.url;
     banderasop: any = true;
     estadoEscrito: any = '';
-
+    conta04: Conta04;
 
 
     constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _teso12Service: Teso12Service, private _teso117Service: Teso117Service, private _router: Router) {
 
+        this.conta04 = new Conta04('', '');
         this.pdfSource = global.url + 'teso12/getDocumento/' + '009000004085Javeriana001.pdf'
 
         this.route.queryParams.subscribe(response => {
@@ -108,8 +110,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             this.itemDetail = paramsData;
 
             this.item1 = this.itemDetail[0];
+            console.log("item1!!!!");
+            console.log(this.item1);
             this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
             this.item2 = this.itemDetail[1][0];
+            console.log("data!!!!");
+            console.log(this.data);
             for (let index = 0; index < this.item1.length; index++) {
 
                 this.getUsuario(this.item1[index]['usuario']);
@@ -575,5 +581,17 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     }
 
     ngOnInit(): void { }
+    getConta04(nit) {
+        this.conta04.nit = nit;
+        this._teso117Service.getConta04(this.conta04).subscribe(
+            response => {
+                Swal.fire(
+                    'Razon Social:',
+                    response.razsoc,
+                    'info'
+                )
+            }
+        )
+    }
 
 }

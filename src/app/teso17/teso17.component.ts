@@ -30,6 +30,7 @@ export class Teso17Component implements OnInit {
     if(keyword.length==10){
       const search = this._teso15Service.getTPago(keyword).then(
         response => {
+
           this.data= response[1];
           this.data1 = response;
 
