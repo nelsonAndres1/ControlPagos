@@ -62,14 +62,15 @@ export class Teso12Component implements OnInit {
 
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '');
         this.nconsecutivo = 0;
-        this.traerConsecutivo();
+
         this.nombres = new Nombres('', 0, '');
 
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
 
         this.tpago = this.tpago[this.index]['codclas'];
         this.nombres.codclas = this.tpago;
-
+        this.teso13.codclas = this.tpago;
+        this.traerConsecutivo();
         this.nombres.numpago = this.nconsecutivo;
         this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
 
@@ -239,6 +240,7 @@ export class Teso12Component implements OnInit {
 
         if (this.banderaPermisos) {
             this._userService.register(this.itemDetail[0]).subscribe(response => {
+
                 if (response.status == "success") {
                     this.status = response.status;
                     console.log("Status");
@@ -254,12 +256,13 @@ export class Teso12Component implements OnInit {
                     Swal.fire('Listo!', 'Pago Enviado Existosamente!', 'success');
 
                 } else {
+
+                    Swal.fire('Listo!', response.error.message, 'success');
+
                     this.status = 'error';
                 }
             }, error => {
-
-                this.status = 'error';
-                console.log(<any>error);
+                Swal.fire('Error!', error.error.message, 'info');
 
             });
         }
@@ -321,6 +324,9 @@ export class Teso12Component implements OnInit {
 
     traerConsecutivo() {
         var cs;
+        console.log("aisha");
+        console.log(this.teso13);
+
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
                 this.token2 = response;

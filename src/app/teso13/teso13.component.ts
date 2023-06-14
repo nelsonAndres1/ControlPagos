@@ -100,23 +100,23 @@ export class Teso13Component implements OnInit {
 
     }
 
-    CDP(){
-        if(this.cdp_bandera == true){
+    CDP() {
+        if (this.cdp_bandera == true) {
             this.cdp_bandera = false;
-        }else{
+        } else {
             this.cdp_bandera = true;
         }
     }
 
     centroC() {
-        if(this.centroCostos == true){
-            this.teso13.codcen = ''    
+        if (this.centroCostos == true) {
+            this.teso13.codcen = ''
             this.codcen_nombre = '';
             this.centroCostos = false;
             this.teso13.coddep = '';
             this.coddep_nombre = '';
-        }else{
-            this.teso13.codcen = '0000'    
+        } else {
+            this.teso13.codcen = '0000'
             this.codcen_nombre = 'VARIOS';
             this.centroCostos = true;
             this.teso13.coddep = '000000';
@@ -362,6 +362,10 @@ export class Teso13Component implements OnInit {
 
 
     traerConsecutivo() {
+        this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
+        this.tpago = this.tpago[0]['codclas'];
+        this.codclas = this.tpago;
+        this.teso13.codclas = this.codclas;
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
                 this.token2 = response;
@@ -370,7 +374,7 @@ export class Teso13Component implements OnInit {
                     this.identity3 = response;
                     this.consecutivo = this.identity2[0]['numero'];
                     this.nconsecutivo = + this.consecutivo;
-                    this.nconsecutivo = this.nconsecutivo + 1;
+                    this.nconsecutivo = this.nconsecutivo;
                     this.num = this.nconsecutivo;
                     this.teso13.numero = this.num;
 
@@ -379,10 +383,7 @@ export class Teso13Component implements OnInit {
                     this.teso13.usuela = this.usuela;
 
 
-                    this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
-                    this.tpago = this.tpago[0]['codclas'];
-                    this.codclas = this.tpago;
-                    this.teso13.codclas = this.codclas;
+
 
                     this.tpago;
                     this.nconsecutivo;
