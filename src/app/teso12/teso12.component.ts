@@ -114,7 +114,7 @@ export class Teso12Component implements OnInit {
                     this.identity3 = response;
                     this.consecutivo = this.identity2[this.index]['numero'];
                     this.nconsecutivo = + this.consecutivo;
-                    this.nconsecutivo = this.nconsecutivo;
+                    this.nconsecutivo = this.nconsecutivo + 1;
                     this.tpago;
                     this.nconsecutivo;
                     this.original1;
