@@ -409,7 +409,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     Swal.fire('Error', 'Usted no tiene permisos para Causación Pago', 'error');
                 }
             }
-            if (estado == 'PC') {
+            if (estado == 'PC' || estado == 'CA') {
 
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'RT' || this.arrayPermisos[index] == 'AD') {
