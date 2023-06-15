@@ -113,13 +113,16 @@ export class Teso12Component implements OnInit {
                     this.identity2 = response;
                     this.identity3 = response;
                     this.consecutivo = this.identity2[this.index]['numero'];
+                    console.log("consecutivo1");
+                    console.log(this.consecutivo);
                     this.nconsecutivo = + this.consecutivo;
                     this.nconsecutivo = this.nconsecutivo;
                     this.tpago;
                     this.nconsecutivo;
                     this.original1;
 
-
+                    console.log("consecutivo2");
+                    console.log(this.nconsecutivo);
                     // Inicio afuconfig
                     this.afuConfig = {
                         multiple: false,
