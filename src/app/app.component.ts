@@ -46,6 +46,9 @@ DoCheck {
     inp(){
         this.router.navigate(['teso10'])
     }
+    reportes(){
+        this.router.navigate(['reporte'])
+    }
     
 
     opciones() {

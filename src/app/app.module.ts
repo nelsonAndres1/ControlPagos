@@ -45,6 +45,7 @@ import { IdentityGuard } from './services/identity.guard';
 import { LoginGuard } from './services/login.guard';
 import { Gener02Service } from './services/gener02.service';
 import { EditarTeso12Component } from './editar-teso12/editar-teso12.component';
+import { ReportesComponent } from './reportes/reportes.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +71,8 @@ import { EditarTeso12Component } from './editar-teso12/editar-teso12.component';
     Teso118Component,
     Teso18Component,
     Teso1118Component,
-    EditarTeso12Component
+    EditarTeso12Component,
+    ReportesComponent
   ],
   
   imports: [
