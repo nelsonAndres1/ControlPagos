@@ -63,8 +63,8 @@ export class ReporteService {
         }
 
         sheet.addImage(logo, position);
-        const titleCell = sheet.getCell('B5');
-        titleCell.value = 'REPORTE TICKETS';
+        const titleCell = sheet.getCell('C5');
+        titleCell.value = 'REPORTE PAGOS';
         titleCell.style.font = { bold: true, size: 13 }
         const headerRow = sheet.getRow(10);
         headerRow.values = campos;
