@@ -31,7 +31,7 @@ export class ReportesComponent implements OnInit {
       response => {
         console.log("reporte!");
         console.log(response);
-/*         this._reporteService.dowloadExcel(response); */
+         this._reporteService.dowloadExcel(response); 
       }
     )
   }
