@@ -53,9 +53,16 @@ export class PrincipalComponent implements OnInit {
         this.permisos = localStorage.getItem('permisos');
         if (this.permisos != null) {
             this.arrayPermisos = this.permisos.split(',');
+            if(this.arrayPermisos.length>0){
+            }else{
+                this.arrayPermisos = [this.permisos]
+            }
+            console.log("hshs");
+            console.log(this.arrayPermisos);
             if (estado == 'RA' || estado == 'DR') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'RV' || this.arrayPermisos[index] == 'AD') {
+                        
                         if (pago.prioridad == 'ALTA') {
                             this.pagosA.push(pago);
                         }
@@ -72,6 +79,7 @@ export class PrincipalComponent implements OnInit {
 
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'AU' || this.arrayPermisos[index] == 'AD') {
+
                         if (pago.prioridad == 'ALTA') {
                             this.pagosA.push(pago);
                         }
@@ -88,6 +96,7 @@ export class PrincipalComponent implements OnInit {
 
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'FI' || this.arrayPermisos[index] == 'AD') {
+
                         if (pago.prioridad == 'ALTA') {
                             this.pagosA.push(pago);
                         }
@@ -242,6 +251,8 @@ export class PrincipalComponent implements OnInit {
                     }
                 }
             }
+        }else{
+            console.log('no hay permiso');
         }
     }
 
