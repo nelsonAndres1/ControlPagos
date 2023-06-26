@@ -46,6 +46,8 @@ import { LoginGuard } from './services/login.guard';
 import { Gener02Service } from './services/gener02.service';
 import { EditarTeso12Component } from './editar-teso12/editar-teso12.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,7 +93,7 @@ import { ReportesComponent } from './reportes/reportes.component';
     MatRadioModule,
     NgxBarcodeModule,
     MatCardModule,    
-    
+    ScrollingModule,
     SweetAlert2Module.forRoot(),
     routing,
     PdfViewerModule
