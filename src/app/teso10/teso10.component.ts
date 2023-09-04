@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { teso10 } from '../models/teso10';
 import { Teso12Component } from '../teso12/teso12.component';
@@ -18,7 +18,7 @@ import { teso12 } from '../models/teso12';
 })
 
 export class Teso10Component implements OnInit {
-  formGroup:FormGroup;
+  formGroup:UntypedFormGroup;
 
   public teso10: teso10;
   public teso12: teso12;
@@ -32,7 +32,7 @@ export class Teso10Component implements OnInit {
   verSeleccion: string        = '';
 
   constructor(
-    public formulario:FormBuilder,
+    public formulario:UntypedFormBuilder,
     private _teso10Service: Teso10Service,
     private _teso12Service: Teso12Service, 
     private _userService: Teso13Service,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { teso12 } from '../models/teso12';
 import { Nombres } from '../models/nombres';
 import { Teso12Service } from '../services/teso12.service';
@@ -21,7 +21,7 @@ import Swal from 'sweetalert2';
 })
 export class Teso12Component implements OnInit {
     public previsualizacion: any;
-    formGroup: FormGroup;
+    formGroup: UntypedFormGroup;
     itemDetail: any = [];
     public teso13: Teso13;
     public teso12: teso12;
@@ -58,7 +58,7 @@ export class Teso12Component implements OnInit {
     public confirPer: any = 0;
     files: any;
 
-    constructor(public formulario: FormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
+    constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '');
         this.nconsecutivo = 0;

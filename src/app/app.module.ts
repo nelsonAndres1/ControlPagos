@@ -10,10 +10,7 @@ import { HttpClientModule} from '@angular/common/http';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import {MatRadioModule} from '@angular/material/radio';
+
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
 import { BarcodeGeneratorAllModule,QRCodeGeneratorAllModule,DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
@@ -32,7 +29,7 @@ import { Teso14Component } from './teso14/teso14.component';
 import { Teso110Component } from './teso110/teso110.component';
 import { Teso112Component } from './teso112/teso112.component';
 import { Teso114Component } from './teso114/teso114.component';
-import {MatCardModule} from '@angular/material/card';
+
 import { Teso113Component } from './teso113/teso113.component';
 import { Teso116Component } from './teso116/teso116.component';
 import { Teso1116Component } from './teso1116/teso1116.component';
@@ -87,12 +84,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     ReactiveFormsModule,
     HttpClientModule,
     SweetAlert2Module,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatRadioModule,
     NgxBarcodeModule,
-    MatCardModule,    
     ScrollingModule,
     SweetAlert2Module.forRoot(),
     routing,

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Teso14Service} from '../services/teso14.service';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
-import {FormGroup, FormBuilder, FormArray, FormControl} from '@angular/forms';
+import {FormGroup, UntypedFormBuilder, UntypedFormArray, FormControl} from '@angular/forms';
 import Swal from 'sweetalert2';
 import {teso112} from '../models/teso112';
 import {identity} from 'rxjs';
@@ -20,7 +20,7 @@ export class Teso1118Component implements OnInit {
     sw1 : any;
     public teso112 : teso112;
     dataSoportes : any;
-    constructor(private route : ActivatedRoute,private _teso18Service : Teso18Service, private _teso14Service : Teso14Service, fb : FormBuilder, private _router : Router) {
+    constructor(private route : ActivatedRoute,private _teso18Service : Teso18Service, private _teso14Service : Teso14Service, fb : UntypedFormBuilder, private _router : Router) {
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -29,7 +29,7 @@ export class Teso1118Component implements OnInit {
         });
         this.grupoSoportes = this.getTsoportes();
 
-        this.grupoSoportes = fb.group({selected: new FormArray([])});
+        this.grupoSoportes = fb.group({selected: new UntypedFormArray([])});
         this.getSoportes();
     }
 
