@@ -1,10 +1,10 @@
-import {Component, OnInit, DoCheck} from '@angular/core';
-import {teso10} from './models/teso10';
-import {Gener02Service} from './services/gener02.service';
-import {Teso10Service} from './services/teso10.service';
-import {PrincipalService} from './services/principal.service';
-import {Gener02} from './models/gener02';
-import {ActivatedRoute} from '@angular/router';
+import { Component, OnInit, DoCheck } from '@angular/core';
+import { teso10 } from './models/teso10';
+import { Gener02Service } from './services/gener02.service';
+import { Teso10Service } from './services/teso10.service';
+import { PrincipalService } from './services/principal.service';
+import { Gener02 } from './models/gener02';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { identity } from 'rxjs';
@@ -17,39 +17,41 @@ import { identity } from 'rxjs';
 })
 
 export class AppComponent implements OnInit,
-DoCheck {
+    DoCheck {
+    // Graph
 
     title = 'ControlPagos';
     public identity;
-    public permis : any;
+    public permis: any;
     public token;
-    public teso10 : teso10;
-    public status : any;
-    public v : any = true;
-    public usuario : any;
-    public bandera : any = true;
-    public arrayN : any = [];
-    public permisos : any;
-    itemDetail : any = [];
-    arrayPermisos : any = [];
+    public teso10: teso10;
+    public status: any;
+    public v: any = true;
+    public usuario: any;
+    public bandera: any = true;
+    public arrayN: any = [];
+    public permisos: any;
+    itemDetail: any = [];
+    arrayPermisos: any = [];
 
-    constructor(private route : ActivatedRoute, public _principalService : PrincipalService, public _gener02Service : Gener02Service, public _teso10Service : Teso10Service, private router: Router) {
+    constructor(private route: ActivatedRoute, public _principalService: PrincipalService, public _gener02Service: Gener02Service, public _teso10Service: Teso10Service, private router: Router) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
-        this.teso10 = new teso10('', '', '', '','');
+        this.teso10 = new teso10('', '', '', '', '');
+        
     }
 
     ngOnInit(): void {
         console.log("Web cargada correctamente");
     }
 
-    inp(){
+    inp() {
         this.router.navigate(['teso10'])
     }
-    reportes(){
+    reportes() {
         this.router.navigate(['reporte'])
     }
-    
+
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
@@ -69,14 +71,14 @@ DoCheck {
             cancelButtonText: 'Eliminar Permisos',
             reverseButtons: true
         }).then((result) => {
-            if (result.isConfirmed) { 
-                
+            if (result.isConfirmed) {
+
                 this.router.navigate(['teso116'])
 
             } else if (result.dismiss === Swal.DismissReason.cancel) {
 
                 this.router.navigate(['teso1117'])
-                
+
             }
         })
     }
@@ -89,10 +91,10 @@ DoCheck {
         }
     }
 
-    permisosPago(){
+    permisosPago() {
         var ban = false;
         for (let index = 0; index < this.arrayPermisos.length; index++) {
-            if(this.arrayPermisos[index]=='AD' || this.arrayPermisos[index]=='RA'){
+            if (this.arrayPermisos[index] == 'AD' || this.arrayPermisos[index] == 'RA') {
                 ban = true;
                 break;
             }
@@ -100,13 +102,13 @@ DoCheck {
         return ban;
     }
 
-    permisosNuevoPago(){
+    permisosNuevoPago() {
         var bandera = false;
         for (let index = 0; index < this.arrayPermisos.length; index++) {
-            if(this.arrayPermisos[index]=='AD'){
+            if (this.arrayPermisos[index] == 'AD') {
                 bandera = true;
                 break;
-            }   
+            }
         }
         return bandera;
     }
@@ -126,14 +128,14 @@ DoCheck {
                     this.identity = response;
                 }, error => {
                     this.status = 'error';
-                    console.log(< any > error);
+                    console.log(<any>error);
                 });
             } else {
                 this.status = 'error';
             }
         }, error => {
             this.status = 'error';
-            console.log(< any > error);
+            console.log(<any>error);
         });
 
     }

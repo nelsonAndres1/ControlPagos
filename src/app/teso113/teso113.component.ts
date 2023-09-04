@@ -39,7 +39,7 @@ export class Teso113Component implements OnInit {
     public longitud: any = '';
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
 
-        this.teso10 = new teso10('', '', '', '','');
+        this.teso10 = new teso10('', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -53,39 +53,21 @@ export class Teso113Component implements OnInit {
             this.cdp_marca = this.itemDetail[5];
             this.cdp_documento = this.itemDetail[6];
             this.cdp_ano = this.itemDetail[7];
-
-
             this.getTeso10(this.codclas);
-
-
-
             this.teso10.codclas = this.codclas;
             this.teso10.numero = this.numero;
-
-            console.log("sdoashdoiauhio");
-            console.log(this.nit, this.cc, this.depe);
-            console.log("Teso13---");
-            console.log(new Teso113(this.codclas, this.numero))
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
 
                 if (response.status != 'error') {
                     this.data = response;
-                    console.log("response!!!!!");
-                    console.log(this.data);
                     this.fecrad = this.data.fecrad;
                     this.array_fecrad = this.fecrad.split('-');
-                    console.log(this.array_fecrad);
                     this.data['usuela'];
-
                     this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
-                        console.log(response);
                         this.identity = response;
                         this.identity1 = this.identity[0]['nombre'];
                         let timerInterval;
-
-
                         this.traerSoportes();
-
                         Swal.fire({
                             title: 'Generando PDF...',
                             html: 'El proceso terminara en <b></b> milisegundos.',
@@ -100,24 +82,17 @@ export class Teso113Component implements OnInit {
                             },
                             willClose: () => {
                                 this.setPdf();
-
-
                                 clearInterval(timerInterval)
                             }
-                        }).then((result) => { /* Read more about handling dismissals below */
+                        }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.timer) {
 
                             }
                         })
                     })
-                }else{
-
-                    console.log(response);
-
+                } else {
 
                 }
-
-
             });
         });
     }
@@ -139,7 +114,7 @@ export class Teso113Component implements OnInit {
         this._router.navigate['/principal'];
     }
     getTeso10(n: any) {
-        this._teso13Service.name_teso10(new teso10(n, '', '', '','')).subscribe(
+        this._teso13Service.name_teso10(new teso10(n, '', '', '', '')).subscribe(
             response => {
                 this.detalle = response.detclas;
                 console.log(this.detalle);
@@ -158,7 +133,7 @@ export class Teso113Component implements OnInit {
                 console.log(response);
                 this.soportes = response;
                 for (let index = 0; index < this.soportes.length; index++) {
-                    this.longitud += this.soportes[index]+',  ';
+                    this.longitud += this.soportes[index] + ',  ';
                 }
             }
         )

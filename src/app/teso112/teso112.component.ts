@@ -24,7 +24,7 @@ export class Teso112Component implements OnInit {
     public dataSoportes : any;
 
     constructor(private _teso112Service : Teso112Service, private _teso12Service : Teso12Service, private _router : Router, private _teso14Service : Teso14Service) {
-        this.teso12 = new teso12('');
+        this.teso12 = new teso12('','');
         //this.getTSoportes1();
         this.soportes1();
 
@@ -66,7 +66,7 @@ export class Teso112Component implements OnInit {
                 autocapitalize: 'off'
             },
             showCancelButton: true,
-            confirmButtonText: 'Look up',
+            confirmButtonText: 'Modificar',
             showLoaderOnConfirm: true
         }).then((result) => {
             if (result.isConfirmed) {

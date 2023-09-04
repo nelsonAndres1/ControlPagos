@@ -1,76 +1,53 @@
-div {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.tg {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-
-form {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.tg td {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
+  padding: 10px 5px;
+  word-break: normal;
 }
 
-label {
-  display: block;
-  font: 1rem 'Fira Sans', sans-serif;
+.tg th {
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  overflow: hidden;
+  padding: 10px 5px;
+  word-break: normal;
 }
 
-input,
-label {
-  margin: .4rem 0;
-}
-
-h2 {
+.tg .tg-c3ow {
+  border-color: inherit;
   text-align: center;
+  vertical-align: top
 }
 
-button {
-  width: 80px;
-  height: 29px;
+.tg .tg-0pky {
+  border-color: inherit;
+  text-align: left;
+  vertical-align: top
 }
 
-
-.factura {
-  table-layout: fixed;
-}
-
-.fact-info>div>h5 {
+.tg .tg-fymr {
+  border-color: inherit;
   font-weight: bold;
+  text-align: left;
+  vertical-align: top
 }
 
-.factura>thead {
-  border-top: solid 3px #000;
-  border-bottom: 3px solid #000;
-}
-
-.factura>thead>tr>th:nth-child(2),
-.factura>tbod>tr>td:nth-child(2) {
-  width: 300px;
-}
-
-.factura>thead>tr>th:nth-child(n+3) {
-  text-align: right;
-}
-
-.factura>tbody>tr>td:nth-child(n+3) {
-  text-align: right;
-}
-
-.factura>tfoot>tr>th,
-.factura>tfoot>tr>th:nth-child(n+3) {
-  font-size: 24px;
-  text-align: right;
-}
-
-.cond {
-  border-top: solid 2px #000;
+.tg .tg-7btt {
+  border-color: inherit;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top
 }

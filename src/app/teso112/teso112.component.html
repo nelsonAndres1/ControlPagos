@@ -1,4 +1,3 @@
-
 <h2>Tipos de Soporte</h2>
 
 <div class="alert alert-success" *ngIf="status == 'success'">
@@ -18,45 +17,57 @@
                 <h6> Tipo de Soporte</h6>
             </label>
 
-            <input type="text" placeholder="Buscar o Agregar Soporte" for="detsop" class="form-control" (input)="getTSoportes($event)" #detsop="ngModel"
-                [(ngModel)]="teso12.detsop" name="detsop" required pattern="[a-zA-Z]+"><!-- numero -->
+            <input type="text" placeholder="Buscar o Agregar Soporte" for="detsop" class="form-control"
+                (input)="getTSoportes($event)" #detsop="ngModel" [(ngModel)]="teso12.detsop" name="detsop" required
+                pattern="[a-zA-Z]+"><!-- numero -->
+            <div *ngFor="let result of data" (click)="getDetailPage(result)">
+                <div class="card card-body mb-1">
+                    <h6>Pago: {{result.detsop}}.</h6>
+                    <div class="row">
+                        <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codsop)"
+                            style="cursor: pointer;">Modificar</button>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codsop)"
+                            style=" cursor: pointer;">Eliminar</button>
+                    </div>
+                </div>
+            </div>
             <small *ngIf="!detsop.valid && detsop.touched" class="invalid-feedback d-block">
                 Este Campo es Requerido
             </small>
+            <label for="name">
+                <h6> Detalle </h6>
+            </label>
+            <textarea maxlength="1000" class="form-control" aria-label="With textarea" #decsop="ngModel"
+                [(ngModel)]="teso12.decsop" name="decsop"></textarea>
+
         </div>
-        <div *ngFor="let result of data" (click)="getDetailPage(result)">
-            <div class = "card card-body mb-1">
-                <h6>Pago: {{result.detsop}}.</h6>
-                <div class="row">
-                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codsop)" style="cursor: pointer;">Modificar</button>
-                </div>
-                <br>
-                <div class="row">
-                    <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codsop)" style=" cursor: pointer;">Eliminar</button>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <br>
     <br>
     <div>
-        <input type="submit" value="Agregar Tipo de Soporte" class="btn btn-success"/>
-        
+        <input type="submit" value="Agregar Tipo de Soporte" class="btn btn-success" />
+
     </div>
 </form>
 
 <table class="table" id="tablaT10">
     <thead>
-      <tr>
-        <th scope="col">Codsop</th>
-        <th scope="col">Detalle del Soporte</th>
-      </tr>
+        <tr>
+            <th scope="col">Codsop</th>
+            <th scope="col">Detalle del Soporte</th>
+            <th scope="col">Descripción del Soporte</th>
+        </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let dt of dataSoportes">
-        <th scope="row">{{dt.codsop}}</th>
-        <td>{{dt.detsop}}</td>
-      </tr>
+        <tr *ngFor="let dt of dataSoportes">
+            <th scope="row">{{dt.codsop}}</th>
+            <td>{{dt.detsop}}</td>
+            <td>{{dt.decsop}}</td>
+        </tr>
     </tbody>
-  </table>
+</table>

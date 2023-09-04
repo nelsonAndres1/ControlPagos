@@ -100,7 +100,7 @@ export class Teso12Component implements OnInit {
 
 
         console.log(this.permisos);
-        this.teso12 = new teso12('');
+        this.teso12 = new teso12('','');
 
         this.usu = '1';
         this.nombres = new Nombres('', 0, '');
