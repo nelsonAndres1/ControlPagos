@@ -125,6 +125,8 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                 this.itemF = this.item1[index];
 
             }
+            console.log("estado!");
+            console.log(this.estadoA);
 
             this.estados(this.estadoA);
 
@@ -488,7 +490,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
 
 
-            if (estado == 'RT') {
+/*             if (estado == 'RT') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array6;
@@ -499,7 +501,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                 if (bandera != true) {
                     Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
                 }
-            }
+            } */
         } else {
             Swal.fire('Error', 'Usted no tiene Permisos', 'error');
         }

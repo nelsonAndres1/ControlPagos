@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Gener02 } from "../models/gener02";
 import { global } from "./global";
-import { ImagePosition, Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 import { LOGO } from "./logo";
+import { ImagePosition, Workbook } from "exceljs";
 
 @Injectable()
 export class ReporteService {

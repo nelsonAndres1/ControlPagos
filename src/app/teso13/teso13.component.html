@@ -286,7 +286,7 @@
                 <span class="input-group-text">
                     <b>Detalle</b></span>
                 <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
-                    [(ngModel)]="teso13.detalle" maxlength="250" required></textarea>
+                    [(ngModel)]="teso13.detalle" maxlength="2000" required></textarea>
             </div>
             <small *ngIf="!detalle.valid && detalle.touched" class="invalid-feedback d-block">
                 Este Campo es requerido
