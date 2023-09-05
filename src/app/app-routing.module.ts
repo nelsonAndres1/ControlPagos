@@ -29,36 +29,36 @@ import { IdentityGuard } from './services/identity.guard';
 import { ReportesComponent } from './reportes/reportes.component';
 const routes: Routes = [
 
-  {path: '',component:LoginComponent, canActivate:[LoginGuard] },
-  {path: 'login', component:LoginComponent, canActivate:[LoginGuard] },
-  {path: 'principal', component:PrincipalComponent, canActivate: [IdentityGuard] },
-  {path: 'logout/:sure', component:LoginComponent, canActivate: [IdentityGuard] },
-  {path: 'teso10', component:Teso10Component, canActivate: [IdentityGuard] },
-  {path: 'teso12', component:Teso12Component, canActivate: [IdentityGuard] },
-  {path: 'editar_teso12', component:EditarTeso12Component, canActivate: [IdentityGuard] },
-  {path: 'teso13', component:Teso13Component, canActivate: [IdentityGuard] },
-  {path: 'teso14', component:Teso14Component, canActivate: [IdentityGuard] },
-  {path: 'teso114', component:Teso114Component, canActivate: [IdentityGuard] },
-  {path: 'teso15', component:Teso15Component, canActivate: [IdentityGuard] },
-  {path: 'teso16', component:Teso16Component, canActivate: [IdentityGuard] },
-  {path: 'teso17', component:Teso17Component, canActivate: [IdentityGuard] },
-  {path: 'teso18', component:Teso18Component, canActivate: [IdentityGuard] },
-  {path: 'teso117', component:Teso117Component, canActivate: [IdentityGuard] },
-  {path: 'teso110', component:Teso110Component, canActivate: [IdentityGuard] },
-  {path: 'teso112', component:Teso112Component, canActivate: [IdentityGuard] },
-  {path: 'teso113', component:Teso113Component, canActivate: [IdentityGuard] },
-  {path: 'register', component:RegisterComponent, canActivate: [IdentityGuard] },
-  {path: 'teso116', component:Teso116Component, canActivate: [IdentityGuard] },
-  {path: 'teso1116', component:Teso1116Component, canActivate: [IdentityGuard] },
-  {path: 'teso1117', component:Teso1117Component, canActivate: [IdentityGuard] },
-  {path: 'teso1118',component:Teso1118Component, canActivate: [IdentityGuard] },
-  {path: 'teso118',component:Teso118Component, canActivate: [IdentityGuard] },
-  {path: 'reporte',component:ReportesComponent, canActivate: [IdentityGuard] },
-  {path: '**', component:ErrorComponent, canActivate: [IdentityGuard] }
+  { path: '', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: 'principal', component: PrincipalComponent, canActivate: [IdentityGuard] },
+  { path: 'logout/:sure', component: LoginComponent, canActivate: [IdentityGuard] },
+  { path: 'teso10', component: Teso10Component, canActivate: [IdentityGuard] },
+  { path: 'teso12', component: Teso12Component, canActivate: [IdentityGuard] },
+  { path: 'editar_teso12', component: EditarTeso12Component, canActivate: [IdentityGuard] },
+  { path: 'teso13', component: Teso13Component, canActivate: [IdentityGuard] },
+  { path: 'teso14', component: Teso14Component, canActivate: [IdentityGuard] },
+  { path: 'teso114', component: Teso114Component, canActivate: [IdentityGuard] },
+  { path: 'teso15', component: Teso15Component, canActivate: [IdentityGuard] },
+  { path: 'teso16', component: Teso16Component, canActivate: [IdentityGuard] },
+  { path: 'teso17', component: Teso17Component, canActivate: [IdentityGuard] },
+  { path: 'teso18', component: Teso18Component, canActivate: [IdentityGuard] },
+  { path: 'teso117', component: Teso117Component, canActivate: [IdentityGuard] },
+  { path: 'teso110', component: Teso110Component, canActivate: [IdentityGuard] },
+  { path: 'teso112', component: Teso112Component, canActivate: [IdentityGuard] },
+  { path: 'teso113', component: Teso113Component, canActivate: [IdentityGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [IdentityGuard] },
+  { path: 'teso116', component: Teso116Component, canActivate: [IdentityGuard] },
+  { path: 'teso1116', component: Teso1116Component, canActivate: [IdentityGuard] },
+  { path: 'teso1117', component: Teso1117Component, canActivate: [IdentityGuard] },
+  { path: 'teso1118', component: Teso1118Component, canActivate: [IdentityGuard] },
+  { path: 'teso118', component: Teso118Component, canActivate: [IdentityGuard] },
+  { path: 'reporte', component: ReportesComponent, canActivate: [IdentityGuard] },
+  { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];
 //Exportar configuración 
-export const appRoutingProviders: any[]=[];
-export const routing:ModuleWithProviders<any> = RouterModule.forRoot(routes);
+export const appRoutingProviders: any[] = [];
+export const routing: ModuleWithProviders<any> = RouterModule.forRoot(routes);
 
 

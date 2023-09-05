@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
-import { routing,appRoutingProviders } from './app-routing.module';
+import { routing, appRoutingProviders } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 //import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Teso10Component } from './teso10/teso10.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule} from '@angular/common/http';
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
-import { BarcodeGeneratorAllModule,QRCodeGeneratorAllModule,DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { BarcodeGeneratorAllModule, QRCodeGeneratorAllModule, DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-import  {  PdfViewerModule  }  from  'ng2-pdf-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { Teso12Component } from './teso12/teso12.component';
 import { Teso13Component } from './teso13/teso13.component';
@@ -43,7 +43,11 @@ import { LoginGuard } from './services/login.guard';
 import { Gener02Service } from './services/gener02.service';
 import { EditarTeso12Component } from './editar-teso12/editar-teso12.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import {ScrollingModule} from '@angular/cdk/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SidebarModule } from 'ng-cdbangular';
+import { IconModule } from 'ng-cdbangular';
+import { BadgeModule } from 'ng-cdbangular';
+
 
 @NgModule({
   declarations: [
@@ -73,8 +77,12 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     EditarTeso12Component,
     ReportesComponent
   ],
-  
+
   imports: [
+
+    BadgeModule,
+    IconModule,
+    SidebarModule,
     BrowserModule,
     BarcodeGeneratorAllModule,
     BarcodeScannerLivestreamModule,
@@ -88,15 +96,16 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     ScrollingModule,
     SweetAlert2Module.forRoot(),
     routing,
-    PdfViewerModule
+    PdfViewerModule,
+
   ],
-   //appRoutingProviders sin llaves y con corchetes
+  //appRoutingProviders sin llaves y con corchetes
   providers: [
     IdentityGuard,
     LoginGuard,
     Gener02Service,
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

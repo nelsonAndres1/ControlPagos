@@ -1,169 +1,96 @@
-<div class="container" x-data="{ rightSide: false, leftSide: false }">
-    <div class="left-side" :class="{'active' : leftSide}" *ngIf="identity != null">
-        <div>
-            <div class="left-side-button">
-                <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-                <svg stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                    viewBox="0 0 24 24">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-            </div>
-            <div class="logo">Control de Pagos
-                
-            </div>
-            <div class="side-wrapper">
-                <!-- <div class="side-title">MENU</div> -->
-                <div class="side-menu">
-                    <div>
-                        <a routerLink="principal">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!-- <circle cx="12" cy="12" r="5" /> -->
-                            </svg>
-                            <u>
-                                Menu Principal
-                            </u>
-                        </a>
-                    </div>
-                    <br>
+<div class="dashboard d-flex">
+    <div *ngIf="identity != null" class="app" style="display: flex; height: 100vh;">
+        <CDBSidebar textColor="#000000" backgroundColor="#c6d7e4">
+
+            <CDBSidebarHeader [prefix]="icon">
+                <ng-template #icon>
+                    <CDBIcon icon="bars" size="lg"></CDBIcon>
+                </ng-template>
+
+                Control de Pagos
+            </CDBSidebarHeader>
+
+            <CDBSidebarContent>
+                <CDBSidebarMenu>
+                    <CDBSidebarMenuItem icon="home" routerLink="principal">
+                        Pagina Principal
+                    </CDBSidebarMenuItem>
                     <div *ngIf="permisos != null">
-                        <a (click)="inp()" *ngIf="permisosPago()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="play" (click)="inp()" *ngIf="permisosPago()">
                             Inicie el Pago
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-                    <br>
-                    <div>
-                        <a routerLink="teso15">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
-                            Consultar estado del Pago
-                        </a>
-                    </div>
-                    <br>
-                    <div>
-                        <a routerLink="teso17">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
-                            Modificar Estado de Pago
-                        </a>
-                    </div>
-                    <br>
+
+
+                    <CDBSidebarMenuItem icon="search" routerLink="teso15">
+
+                        Consultar estado del Pago
+                    </CDBSidebarMenuItem>
+                    <CDBSidebarMenuItem icon="cogs" routerLink="teso17">
+
+                        Modificar estado del Pago
+                    </CDBSidebarMenuItem>
                     <div *ngIf="permisosNuevoPago()">
-                        <a routerLink="teso110">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="shopping-cart" routerLink="teso110">
+
                             Tipos de Pago
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-                    <br>
                     <div *ngIf="permisosNuevoPago()">
-                        <a routerLink="teso112">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="file" routerLink="teso112">
+
                             Tipos de Soportes
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-                    <br>
+
                     <div *ngIf="permisosNuevoPago()">
-                        <a routerLink="editar_teso12">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="cog" routerLink="editar_teso12">
+
                             Editar Soportes
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-
-                    <br>
                     <div *ngIf="permisosNuevoPago()">
-                        <a routerLink="teso14">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="fa fa-link" routerLink="teso14">
+
                             Vincular Pagos y Soportes
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-                    <br>
-<!--                     <div *ngIf="permisosNuevoPago()">
-                        <a routerLink="teso18">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
-                            Desvincular Pagos y
-                            Soportes
-                        </a>
-                    </div>
-                    <br> -->
                     <div *ngIf="permisos != null">
-                        <a (click)="opciones()" *ngIf="permisosNuevoPago()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="fa fa-lock" (click)="opciones()" *ngIf="permisosNuevoPago()">
+
                             Administrador
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
-                    <br>
                     <div *ngIf="permisos != null">
-                        <a (click)="reportes()" *ngIf="permisosNuevoPago()">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <circle cx="12" cy="12" r="5" />
-                            </svg>
+                        <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
+
                             Reportes
-                        </a>
+                        </CDBSidebarMenuItem>
                     </div>
 
 
-                    <br>
-                    <div>
-                        <a [routerLink]="['/logout/1']">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <!--   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /> -->
-                                <!--  <circle cx="12" cy="12" r="5" /> -->
+                    <CDBSidebarMenuItem icon="fa fa-times-circle" [routerLink]="['/logout/1']">
 
-                            </svg>
-                            <span class="nav-text">
-                                Salir
-                            </span>
-                        </a>
+                        Salir
+                    </CDBSidebarMenuItem>
+                </CDBSidebarMenu>
+
+                <CDBSidebarMenu>
+
+                </CDBSidebarMenu>
+            </CDBSidebarContent>
+
+            <div class="mt-auto">
+                <CDBSidebarFooter style="text-align: center">
+                    <div class="sidebar-btn-wrapper" style="padding: 20px 5px">
+                        Comfamiliar de Nariño
                     </div>
-                </div>
+                </CDBSidebarFooter>
             </div>
-        </div>
+        </CDBSidebar>
     </div>
-    <div class="main">
-        <div class="main-container">
-            <router-outlet></router-outlet>
-        </div>
+
+    <div style="flex:1 1 auto; display:flex; flex-flow:column; height:100vh; overflow-y:scroll">
+        <router-outlet></router-outlet>
     </div>
+</div>

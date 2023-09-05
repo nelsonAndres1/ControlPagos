@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
     var permisos;
     this._gener02Service.signup(this.gener02).subscribe(
       response => {
-        console.log(response); 
+        console.log(response);
         if (response.status != 'error') {
           this.status = 'success';
           this.token = response;
@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
               Swal.fire({
                 title: 'Bienvenido ' + response.name + ' !',
                 text: 'Control de Pagos Comfamiliar de Nariño',
-                imageUrl: './assets/logo2.jpg',
+                imageUrl: './assets/logo_final.png',
                 imageAlt: 'Custom image',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -141,6 +141,7 @@ export class LoginComponent implements OnInit {
 
   }
   logout() {
+
     this._route.params.subscribe(
       params => {
         let logout = +params['sure'];
