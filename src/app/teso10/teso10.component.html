@@ -1,18 +1,70 @@
-<br>
-<br>
 <div class="div1">
-    <form  [formGroup]="formGroup" class="row g-3">
+    <form [formGroup]="formGroup" class="row g-3">
         <div class="col-md-4">
             <h3>Seleccione la Clase de Pago</h3>
             <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
-            <select  [(ngModel)]="opcionSeleccionado" (change)="capturar()" id="inputState" formControlName="n1" class="form-select">
+            <select [(ngModel)]="opcionSeleccionado" (change)="capturar()" id="inputState" formControlName="n1"
+                class="form-select">
                 <option selected>Seleccione</option>
                 <option *ngFor="let dt of identity">{{dt.detclas}}</option>
-            </select> 
-            <br> 
-        </div> 
+            </select>
+            <br>
+        </div>
     </form>
 </div>
 
 
+<div class="container mt-5">
+    <div class="row">
 
+
+        <div class="col-sm-12">
+            <div class="alert fade alert-simple  alert-dismissible text-left font__family-montserrat font__size-16 font__weight-light brk-library-rendered rendered show"
+                role="alert" data-brk-library="component__alert">
+                <button type="button" class="close font__size-18" data-dismiss="alert">
+                    <span aria-hidden="true">
+                        <i class="fa fa-times warning"></i>
+                    </span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <i class="start-icon fa fa-exclamation-triangle faa-flash animated"></i>
+                <strong class="font__weight">Importante antes de iniciar el pago!</strong>
+                <ul>
+                    <li> Para el tramite de la cuenta debe
+                        obligatoriamente diligenciar este formato en su totalidad.</li>
+                    <li>
+                        Los requisitos se actualizarán de acuerdo con la normatividad vigente.
+                    </li>
+                    <li>
+                        Cuando es, un pago por primera vez se debe anexar el Formato de Información y Pagos Mediante
+                        el Sistema de Traslado Electrónico.
+                    </li>
+                    <li>
+                        Cuando es, un pago por primera vez se debe anexar el RUT actualizado.
+                    </li>
+                    <li>
+                        Verificar que la resolución de la factura este vigente (dos años).
+                    </li>
+                    <li>
+                        Cuando se trate de cuentas que se encuentran con provisión del año inmediatamente anterior,
+                        se debe anexar soporte de la misma emitido por la Coordinación de Contabilidad.
+                    </li>
+                    <li>
+                        Cuando se trate de legalización de cuentas de periodos anteriores que no se encuentren
+                        provisionadas o cuando requieran el pago de cuentas después de las fechas.
+                    </li>
+                    <li>
+                        Cuando se trate de modificaciones al contrato inicial, a través de otro Si, en la referente
+                        el monto, plazo o supervisión, debe presentarse una copia adjunta del Otro Si en la cuenta.
+                    </li>
+                </ul>
+
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
