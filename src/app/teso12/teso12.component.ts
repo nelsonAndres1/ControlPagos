@@ -57,26 +57,21 @@ export class Teso12Component implements OnInit {
     public contarPer: any = 0;
     public confirPer: any = 0;
     files: any;
+    sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '');
         this.nconsecutivo = 0;
-
         this.nombres = new Nombres('', 0, '');
-
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
-
         this.tpago = this.tpago[this.index]['codclas'];
         this.nombres.codclas = this.tpago;
         this.teso13.codclas = this.tpago;
         this.traerConsecutivo();
         this.nombres.numpago = this.nconsecutivo;
         this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
-
         this.iden = this._gener02Service.getIdentity();
-        console.log("longitud");
-        console.log(this.datoSoportes.length);
 
         if (this.datoSoportes.length == 0) {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!' });
@@ -96,12 +91,7 @@ export class Teso12Component implements OnInit {
             }
         }
 
-        console.log(this.datoSoportes);
-
-
-        console.log(this.permisos);
-        this.teso12 = new teso12('','');
-
+        this.teso12 = new teso12('', '');
         this.usu = '1';
         this.nombres = new Nombres('', 0, '');
         this.formGroup = this.formulario.group({ n1: [''], n2: [''] });
@@ -113,16 +103,12 @@ export class Teso12Component implements OnInit {
                     this.identity2 = response;
                     this.identity3 = response;
                     this.consecutivo = this.identity2[this.index]['numero'];
-                    console.log("consecutivo1");
-                    console.log(this.consecutivo);
                     this.nconsecutivo = + this.consecutivo;
                     this.nconsecutivo = this.nconsecutivo;
                     this.tpago;
                     this.nconsecutivo;
                     this.original1;
 
-                    console.log("consecutivo2");
-                    console.log(this.nconsecutivo);
                     // Inicio afuconfig
                     this.afuConfig = {
                         multiple: false,
@@ -174,7 +160,6 @@ export class Teso12Component implements OnInit {
     }
 
     confirmacion(dt: any) {
-
         var con = '';
         Swal.fire({
             title: '¿El soporte es Copia o Original?',
@@ -188,28 +173,34 @@ export class Teso12Component implements OnInit {
                 this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 'n')).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
+                        Swal.fire('El soporte se ha guardado como una Copia!', '', 'success');
                     } else {
                         this.status = 'error';
+                        Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     }
                 }, error => {
+                    Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     this.status = 'error';
                     console.log(<any>error);
                 });
-                Swal.fire('El soporte se ha guardado como una Copia!', '', 'success');
+
                 return con = this.original;
             } else {
                 this.original = 's';
                 this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 's')).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
+                        Swal.fire('El soporte se ha guardado como Original!', '', 'success');
                     } else {
                         this.status = 'error';
+                        Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     }
                 }, error => {
+                    Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     this.status = 'error';
                     console.log(<any>error);
                 });
-                Swal.fire('El soporte se ha guardado como Original!', '', 'success');
+
                 return con = this.original;
             }
         });
@@ -225,12 +216,9 @@ export class Teso12Component implements OnInit {
             this.banderaPermisos = true;
         }
 
-        console.log("longitud1111");
-        console.log(this.longSop);
         let data_image = datos.body;
         this.datoSoportes.image = data_image;
         this.identity = data_image;
-
     }
     pasar() {
 
@@ -238,8 +226,7 @@ export class Teso12Component implements OnInit {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
         });
-        console.log("item detail");
-        console.log(this.itemDetail[0]);
+
 
         if (this.banderaPermisos) {
             this._userService.register(this.itemDetail[0]).subscribe(response => {
@@ -275,35 +262,26 @@ export class Teso12Component implements OnInit {
 
     soporteUpload(dat: any, per: any, datos: any, dt: any) {
 
-
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
-
         this.tpago = this.tpago[0]['codclas'];
         this.nombres.codclas = this.tpago;
         this.nombres.numpago = this.nconsecutivo;
         this.sele = dat;
         this.nombres.tiposoporte = this.sele;
 
-
         this._teso12Service.getNombre(this.nombres).subscribe(response => {
             if (response.status != 'error') {
                 this.status = 'success';
                 this.token = response;
 
-                this._teso12Service.getNombre(this.nombres, this.v).subscribe(response => {
+                this._teso12Service.getNombre(this.nombres, this.v).subscribe(async response => {
 
                     this.iden1 = response;
                     this.identity = response;
-
-                    // inicio subir imagen
                     this.imagenes(datos, per);
-
-                    // Fin  subir imagen
-
                     this.confirmacion(dt);
 
-                    console.log("Ahhhhh prueba de permiso");
-                    console.log(dt);
+
                 }, error => {
                     this.status = 'error1';
                     Swal.fire("Error", "No se pudo subir el documento", 'error');
