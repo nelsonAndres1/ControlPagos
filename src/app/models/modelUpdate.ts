@@ -5,6 +5,7 @@ export class modelUpdate{
         public codsop: string,
         public codsop_new: string,
         public original: string,
+        public estedato: string
     ){
 
     }

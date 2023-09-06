@@ -57,6 +57,7 @@ export class Teso12Component implements OnInit {
     public contarPer: any = 0;
     public confirPer: any = 0;
     files: any;
+    public estedato: any;
     sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
@@ -115,7 +116,7 @@ export class Teso12Component implements OnInit {
                         formatsAllowed: ".docx, .pdf",
                         maxSize: 50,
                         uploadAPI: {
-                            url: global.url + 'teso12/upload?json={"codclas":"' + this.tpago + '","numpago":"' + this.nconsecutivo + '","tiposoporte":"' + this.random + '"}',
+                            url: global.url + 'teso12/upload?json={"codclas":"' + this.tpago + '","numpago":"' + this.nconsecutivo + '","tiposoporte":"' + this.random + '","estedato":"' + this.estedato + '"}',
                             headers: {
                                 "Authorization": this._teso12Service.getToken()
                             }
@@ -137,14 +138,14 @@ export class Teso12Component implements OnInit {
                     // Fin afuconfig
                 }, error => {
                     this.status = 'error';
-                    console.log(<any>error);
+
                 });
             } else {
                 this.status = 'error';
             }
         }, error => {
             this.status = 'error';
-            console.log(<any>error);
+
         });
     }
 
@@ -155,11 +156,9 @@ export class Teso12Component implements OnInit {
 
     uploadImage(event) {
         this.files = event.target.files[0];
-        console.log("filesssss!");
-        console.log(this.files);
     }
 
-    confirmacion(dt: any) {
+    confirmacion(dt: any, dat: any) {
         var con = '';
         Swal.fire({
             title: '¿El soporte es Copia o Original?',
@@ -170,7 +169,9 @@ export class Teso12Component implements OnInit {
         }).then((result) => {
             if (result.isConfirmed) {
                 this.original = 'n';
-                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 'n')).subscribe(response => {
+
+                var model = new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 'n', this.estedato);
+                this._teso12Service.update(model).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
                         Swal.fire('El soporte se ha guardado como una Copia!', '', 'success');
@@ -181,13 +182,12 @@ export class Teso12Component implements OnInit {
                 }, error => {
                     Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     this.status = 'error';
-                    console.log(<any>error);
                 });
 
                 return con = this.original;
             } else {
                 this.original = 's';
-                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 's')).subscribe(response => {
+                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 's', this.estedato)).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
                         Swal.fire('El soporte se ha guardado como Original!', '', 'success');
@@ -198,7 +198,6 @@ export class Teso12Component implements OnInit {
                 }, error => {
                     Swal.fire('El soporte NO se ha guardado!', '', 'error');
                     this.status = 'error';
-                    console.log(<any>error);
                 });
 
                 return con = this.original;
@@ -233,8 +232,6 @@ export class Teso12Component implements OnInit {
 
                 if (response.status == "success") {
                     this.status = response.status;
-                    console.log("Status");
-                    console.log(response);
                     var arrayD = this.itemDetail[1];
 
                     const navigationExtras: NavigationExtras = {
@@ -252,7 +249,9 @@ export class Teso12Component implements OnInit {
                     this.status = 'error';
                 }
             }, error => {
-                Swal.fire('Error!', error.error.message, 'info');
+                Swal.fire('Error!', error.error.message, 'info').then(() => {
+                    this._router.navigate(['teso10']);
+                });
 
             });
         }
@@ -261,7 +260,7 @@ export class Teso12Component implements OnInit {
     permisoContinuar() { }
 
     soporteUpload(dat: any, per: any, datos: any, dt: any) {
-
+        this.estedato = dat;
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
         this.tpago = this.tpago[0]['codclas'];
         this.nombres.codclas = this.tpago;
@@ -279,7 +278,7 @@ export class Teso12Component implements OnInit {
                     this.iden1 = response;
                     this.identity = response;
                     this.imagenes(datos, per);
-                    this.confirmacion(dt);
+                    this.confirmacion(dt, dat);
 
 
                 }, error => {
@@ -289,12 +288,12 @@ export class Teso12Component implements OnInit {
 
             } else {
                 this.status = 'error';
-                console.log("errorrrrrrrrr");
+
             }
 
         }, error => {
             this.status = 'error2';
-            console.log(<any>error);
+
         });
     }
 
@@ -305,8 +304,6 @@ export class Teso12Component implements OnInit {
 
     traerConsecutivo() {
         var cs;
-        console.log("aisha");
-        console.log(this.teso13);
 
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
@@ -316,19 +313,15 @@ export class Teso12Component implements OnInit {
                     this.identity3 = response;
                     this.consecutivo = this.identity2[0]['numero'];
                     this.nconsecutivo = + this.consecutivo;
-                    this.nconsecutivo = this.nconsecutivo + 1;
-
                     cs = this.nconsecutivo;
                 }, error => {
                     this.status = 'error';
-                    console.log(<any>error);
                 });
             } else {
                 this.status = 'error';
             }
         }, error => {
             this.status = 'error';
-            console.log(<any>error);
         });
         return cs;
     }
@@ -346,15 +339,15 @@ export class Teso12Component implements OnInit {
 
                 }, error => {
                     this.status = 'error';
-                    console.log(<any>error);
+
                 });
             } else {
                 this.status = 'error';
-                console.log("erorrrrr");
+
             }
         }, error => {
             this.status = 'error';
-            console.log(<any>error);
+
         });
     }
 
