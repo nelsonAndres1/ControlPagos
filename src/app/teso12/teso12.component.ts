@@ -58,11 +58,12 @@ export class Teso12Component implements OnInit {
     public confirPer: any = 0;
     files: any;
     public estedato: any;
+    public datos_actualizados:any;
     sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '');
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '','1');
         this.nconsecutivo = 0;
         this.nombres = new Nombres('', 0, '');
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
@@ -73,6 +74,12 @@ export class Teso12Component implements OnInit {
         this.nombres.numpago = this.nconsecutivo;
         this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
         this.iden = this._gener02Service.getIdentity();
+
+        this._route.queryParams.subscribe(response => {
+            const paramsData = JSON.parse(response['result']);
+            this.itemDetail = paramsData;
+            this.datos_actualizados = this.itemDetail[0];
+        });
 
         if (this.datoSoportes.length == 0) {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!' });
@@ -96,50 +103,60 @@ export class Teso12Component implements OnInit {
         this.usu = '1';
         this.nombres = new Nombres('', 0, '');
         this.formGroup = this.formulario.group({ n1: [''], n2: [''] });
-
+        this.teso13.bandera_actualizar = '1';
+        console.log("ayuda!");
+        console.log(this.teso13);
+        this.teso13.codclas = this.datos_actualizados.codclas;
+        this.teso13.numero = this.datos_actualizados.numero;
+        console.log("aytuda!!!")
+        console.log(this.teso13);
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
                 this.token2 = response;
-                this._userService.traerConsecutivo(this.teso13).subscribe(response => {
-                    this.identity2 = response;
-                    this.identity3 = response;
-                    this.consecutivo = this.identity2[this.index]['numero'];
-                    this.nconsecutivo = + this.consecutivo;
-                    this.nconsecutivo = this.nconsecutivo;
-                    this.tpago;
-                    this.nconsecutivo;
-                    this.original1;
+                /*                 this._userService.traerConsecutivo(this.teso13).subscribe(response => { */
+                this.identity2 = response;
+                this.identity3 = response;
+                this.consecutivo = this.identity2[this.index]['numero'];
+   
+                this.nconsecutivo = + this.teso13.numero;
+                this.tpago;
+                this.nconsecutivo;
+                this.original1;
 
-                    // Inicio afuconfig
-                    this.afuConfig = {
-                        multiple: false,
-                        formatsAllowed: ".docx, .pdf",
-                        maxSize: 50,
-                        uploadAPI: {
-                            url: global.url + 'teso12/upload?json={"codclas":"' + this.tpago + '","numpago":"' + this.nconsecutivo + '","tiposoporte":"' + this.random + '","estedato":"' + this.estedato + '"}',
-                            headers: {
-                                "Authorization": this._teso12Service.getToken()
-                            }
-                        },
-                        theme: "attachPin",
-                        hideProgressBar: true,
-                        hideResetBtn: true,
-                        hideSelectBtn: true,
-                        replaceTexts: {
-                            selectFileBtn: 'Select Files',
-                            resetBtn: 'Reset',
-                            uploadBtn: 'Upload',
-                            dragNDropBox: 'Drag N Drop',
-                            attachPinBtn: 'Seleccionar Soportes',
-                            afterUploadMsg_success: 'Successfully Uploaded !',
-                            afterUploadMsg_error: 'Upload Failed !'
+/* 
+                console.log("consecutivo")
+                console.log(this.nconsecutivo);
+ */
+                // Inicio afuconfig
+                this.afuConfig = {
+                    multiple: false,
+                    formatsAllowed: ".docx, .pdf",
+                    maxSize: 50,
+                    uploadAPI: {
+                        url: global.url + 'teso12/upload?json={"codclas":"' + this.tpago + '","numpago":"' + this.nconsecutivo + '","tiposoporte":"' + this.random + '","estedato":"' + this.estedato + '"}',
+                        headers: {
+                            "Authorization": this._teso12Service.getToken()
                         }
-                    };
-                    // Fin afuconfig
-                }, error => {
-                    this.status = 'error';
-
-                });
+                    },
+                    theme: "attachPin",
+                    hideProgressBar: true,
+                    hideResetBtn: true,
+                    hideSelectBtn: true,
+                    replaceTexts: {
+                        selectFileBtn: 'Select Files',
+                        resetBtn: 'Reset',
+                        uploadBtn: 'Upload',
+                        dragNDropBox: 'Drag N Drop',
+                        attachPinBtn: 'Seleccionar Soportes',
+                        afterUploadMsg_success: 'Successfully Uploaded !',
+                        afterUploadMsg_error: 'Upload Failed !'
+                    }
+                };
+                // Fin afuconfig
+                /*                 }, error => {
+                                    this.status = 'error';
+                
+                                }); */
             } else {
                 this.status = 'error';
             }
@@ -170,7 +187,7 @@ export class Teso12Component implements OnInit {
             if (result.isConfirmed) {
                 this.original = 'n';
 
-                var model = new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 'n', this.estedato);
+                var model = new modelUpdate(this.tpago, parseInt(this.teso13.numero), this.random, dt.codsop, 'n', this.estedato);
                 this._teso12Service.update(model).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
@@ -187,7 +204,7 @@ export class Teso12Component implements OnInit {
                 return con = this.original;
             } else {
                 this.original = 's';
-                this._teso12Service.update(new modelUpdate(this.tpago, this.nconsecutivo, this.random, dt.codsop, 's', this.estedato)).subscribe(response => {
+                this._teso12Service.update(new modelUpdate(this.tpago, parseInt(this.teso13.numero), this.random, dt.codsop, 's', this.estedato)).subscribe(response => {
                     if (response.status == 'success') {
                         this.status = response.status;
                         Swal.fire('El soporte se ha guardado como Original!', '', 'success');

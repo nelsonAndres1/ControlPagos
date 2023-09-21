@@ -1,0 +1,79 @@
+<br><br>
+<meta charset="utf-8">
+<div class="container py-1">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-3">Agregar Causador@s</h2>
+            <hr class="mb-4">
+        </div>
+    </div>
+    <div class="col-md-10 offset-md-1">
+        <span class="anchor" id="formComplex"></span>
+        <div class="card card-outline-secondary">
+            <div class="card-header">
+                <h3 class="mb-0">Ingrese la información requerida</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mt-12">
+
+                    <input type="text" class="form-control" (input)="input($event)"
+                        placeholder="Buscar por documento...">
+                    <div *ngFor="let dt of usuarios">
+                        <div class="card card-body mb-1">
+                            <h6>Documento: {{dt.cedtra}}</h6>
+                            <h6>Nombre: {{dt.nombre}}</h6>
+                            <h6>Usuario: {{dt.usuario}}</h6>
+                            <div>
+                                <button type="button" class="btn btn-success" (click)="agregar(dt)">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container py-1">
+    <div class="col-md-10 offset-md-1">
+        <span class="anchor" id="formComplex"></span>
+        <div class="card card-outline-secondary">
+            <div class="card-header">
+                <h3 class="mb-0">Lista de Causadores</h3>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Documento</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Usuario SISU</th>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dt of usuarios_teso18">
+                            <th scope="row">{{dt.id}}</th>
+                            <td>{{dt.docemp}}</td>
+                            <td>{{dt.nombre_docemp}}</td>
+                            <td>{{dt.sisu}}</td>
+                            <td>{{dt.numero}}</td>
+                            <td>{{dt.estado}}</td>
+                            <td *ngIf="dt.estado == 'A'">
+                                <button type="button" class="btn btn-warning" (click)="estado(dt,'I')">Inactivar</button>
+                            </td>
+                            <td *ngIf="dt.estado == 'I'">
+                                <button type="button" class="btn btn-success" (click)="estado(dt, 'A')">Activar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

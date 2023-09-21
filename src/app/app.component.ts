@@ -51,6 +51,10 @@ export class AppComponent implements OnInit,
         this.router.navigate(['reporte'])
     }
 
+    causadores() {
+        this.router.navigate(['causadores'])
+    }
+
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({

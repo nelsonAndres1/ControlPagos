@@ -62,11 +62,17 @@
                         </CDBSidebarMenuItem>
                     </div>
                     <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-users" (click)="causadores()" *ngIf="permisosNuevoPago()">
+                            Agregar Causadores
+                        </CDBSidebarMenuItem>
+                    </div>
+                    <div *ngIf="permisos != null">
                         <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
 
                             Reportes
                         </CDBSidebarMenuItem>
                     </div>
+
 
 
                     <CDBSidebarMenuItem icon="fa fa-times-circle" [routerLink]="['/logout/1']">

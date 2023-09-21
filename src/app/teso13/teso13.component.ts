@@ -67,7 +67,7 @@ export class Teso13Component implements OnInit {
     public centroCostos = false;
     public cdp_bandera = false;
     constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '');
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '','0');
 
         this.periodosT(2021, 2025);
         this.identity = this._gener02Service.getIdentity();
@@ -369,30 +369,21 @@ export class Teso13Component implements OnInit {
         this._userService.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
                 this.token2 = response;
-                this._userService.traerConsecutivo(this.teso13).subscribe(response => {
-                    this.identity2 = response;
-                    this.identity3 = response;
-                    this.consecutivo = this.identity2[0]['numero'];
-                    this.nconsecutivo = + this.consecutivo;
-                    this.nconsecutivo = this.nconsecutivo;
-                    this.num = this.nconsecutivo;
-                    this.teso13.numero = this.num;
-
-                    this.usu = this.identity['sub'];
-                    this.usuela = this.usu;
-                    this.teso13.usuela = this.usuela;
-
-
-
-
-                    this.tpago;
-                    this.nconsecutivo;
-                    Object.keys(identity);
-
-                }, error => {
-                    this.status = 'error';
-                    console.log(<any>error);
-                });
+                /*                 this._userService.traerConsecutivo(this.teso13).subscribe(response => { */
+                this.identity2 = response;
+                this.identity3 = response;
+                this.consecutivo = this.identity2[0]['numero'];
+                this.nconsecutivo = parseInt(this.consecutivo);
+                this.nconsecutivo = this.nconsecutivo;
+                this.num = this.nconsecutivo;
+                this.teso13.numero = this.num;
+                this.usu = this.identity['sub'];
+                this.usuela = this.usu;
+                this.teso13.usuela = this.usuela;
+                /*   }, error => {
+                      this.status = 'error';
+                      console.log(<any>error);
+                  }); */
             } else {
                 this.status = 'error';
             }

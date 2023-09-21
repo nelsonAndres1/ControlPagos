@@ -30,6 +30,7 @@ export class Teso13{
         public cdp_ano: string,
         public sCDPn:boolean,
         public perrev:string,
-        public peraut:string
+        public peraut:string,
+        public bandera_actualizar: string
     ){}
 }

@@ -47,6 +47,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SidebarModule } from 'ng-cdbangular';
 import { IconModule } from 'ng-cdbangular';
 import { BadgeModule } from 'ng-cdbangular';
+import { CausadoresComponent } from './causadores/causadores.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { BadgeModule } from 'ng-cdbangular';
     Teso18Component,
     Teso1118Component,
     EditarTeso12Component,
-    ReportesComponent
+    ReportesComponent,
+    CausadoresComponent
   ],
 
   imports: [
