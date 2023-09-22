@@ -73,6 +73,8 @@ export class Teso12Component implements OnInit {
         this.traerConsecutivo();
         this.nombres.numpago = this.nconsecutivo;
         this.datoSoportes = JSON.parse(localStorage.getItem('identity1') + '');
+        console.log("datosssssssssss!")
+        console.log(this.datoSoportes);
         this.iden = this._gener02Service.getIdentity();
 
         this._route.queryParams.subscribe(response => {
