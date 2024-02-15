@@ -125,11 +125,6 @@ export class Teso12Component implements OnInit {
                 this.nconsecutivo;
                 this.original1;
 
-/* 
-                console.log("consecutivo")
-                console.log(this.nconsecutivo);
- */
-                // Inicio afuconfig
                 this.afuConfig = {
                     multiple: false,
                     formatsAllowed: ".docx, .pdf",

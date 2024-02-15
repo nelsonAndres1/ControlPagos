@@ -20,8 +20,11 @@
                             Inicie el Pago
                         </CDBSidebarMenuItem>
                     </div>
-
-
+                    <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="pen" (click)="inp_editar()" *ngIf="permisosPago()">
+                            Editar sus pagos
+                        </CDBSidebarMenuItem>
+                    </div>
                     <CDBSidebarMenuItem icon="search" routerLink="teso15">
 
                         Consultar estado del Pago

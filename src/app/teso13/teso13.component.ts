@@ -1,19 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { identity, Observable, switchAll } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Router, NavigationExtras } from '@angular/router';
-/* import { ConsoleReporter } from 'jasmine'; */
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { Teso13 } from '../models/teso13';
 import { Teso13Service } from '../services/teso13.service';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso10Service } from '../services/teso10.service';
 import { Teso12Service } from '../services/teso12.service';
 import jsPDF from 'jspdf';
-import { Teso15 } from '../models/teso15';
 import { Teso17 } from '../models/teso17';
 import { Conta71 } from '../models/conta71';
+
 
 @Component({
     selector: 'app-teso13',
@@ -23,53 +19,60 @@ import { Conta71 } from '../models/conta71';
 })
 export class Teso13Component implements OnInit {
 
-    public teso13: Teso13;
-    public status: any;
-    public token2: any;
-    public identity2: any;
-    public identity3: any;
-    public token: any;
-    public identity: any;
-    public v: any = true;
-    public res: any;
-    public consecutivo = '';
-    public nconsecutivo: number;
-    public usu: string;
-    public tpago: any;
-    public num: any; // consecutivo
-    public usuela: any; // usuario
-    public codclas: any; // codigo clase
-    public periodos = [];
+
+    teso13: Teso13;
+    status: any;
+    token2: any;
+    identity2: any;
+    identity3: any;
+    token: any;
+    identity: any;
+    v: any = true;
+    res: any;
+    consecutivo = '';
+    nconsecutivo: number;
+    usu: string;
+    tpago: any;
+    num: any; // consecutivo
+    usuela: any; // usuario
+    codclas: any; // codigo clase
+    periodos = [];
     data: any;
     datac2: any;
     datac28: any;
     valor: any;
-    public bandera: any;
-    public bandera2: any;
-    public bandera28: any;
-    public nit_nombre: any;
-    public codcen_nombre: any;
-    public coddep_nombre: any;
-    public marca: any = ['AC', 'OP', 'SU'];
-    public data71: any;
-    public datos_teso17: any = [];
-    public cuota: any;
-    public cdp_marca: any;
-    public cdp_documento: any;
-    public cdp_ano: any;
-    public nit: any;
+    bandera: any;
+    bandera2: any;
+    bandera28: any;
+    nit_nombre: any;
+    codcen_nombre: any;
+    coddep_nombre: any;
+    marca: any = ['AC', 'OP', 'SU'];
+    data71: any;
+    datos_teso17: any = [];
+    cuota: any;
+    cdp_marca: any;
+    cdp_documento: any;
+    cdp_ano: any;
+    nit: any;
     bd1 = true;
     siCDPno = false;
-    public valor_CDP: any;
-    public valor_a: any;
-    public datoSoportes: any;
-    public fechaRdicado: any = '';
-    public centroCostos = false;
-    public cdp_bandera = false;
-    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '','0');
+    valor_CDP: any;
+    valor_a: any;
+    datoSoportes: any;
+    fechaRdicado: any = '';
+    centroCostos = false;
+    cdp_bandera = false;
 
-        this.periodosT(2021, 2025);
+    data_keyword: any = { data: '', codcen: '' }
+
+    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0');
+
+
+
+
+        this.periodosT(2023, 2024);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.tpago = this._teso12Service.getTpago();
@@ -105,6 +108,9 @@ export class Teso13Component implements OnInit {
             this.cdp_bandera = false;
         } else {
             this.cdp_bandera = true;
+            this.teso13.cdp_marca = '';
+            this.teso13.cdp_documento = '';
+            this.teso13.cdp_ano = '';
         }
     }
 
@@ -146,8 +152,10 @@ export class Teso13Component implements OnInit {
     }
 
     getConta28(pclave: any) {
-        const keyword = pclave.target.value;
-        const search = this._userService.getConta28(keyword).then(response => {
+
+        this.data_keyword.data = pclave.target.value;
+        this.data_keyword.codcen = this.teso13.codcen;
+        const search = this._userService.getConta28(this.data_keyword).subscribe(response => {
             this.datac28 = response;
             this.datac28;
         });
@@ -232,11 +240,7 @@ export class Teso13Component implements OnInit {
 
 
     buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
-        /* this.bd1=false; */
-        console.log(cdp_documento);
         this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
-
-            console.log(response);
 
             if (response) {
                 this.cdp_marca = cdp_marca;
@@ -248,10 +252,7 @@ export class Teso13Component implements OnInit {
                     response => {
                         this.siCDPno = true;
                         this.bd1 = true;
-                        console.log(response.numcuo);
-                        console.log(response.cuota);
                         if (response.numcuo == response.cuota) {
-
                             if (response.numcuo == undefined) {
                                 this.teso13.numcuo = 1;
                                 this.cuota = 1;
@@ -260,7 +261,6 @@ export class Teso13Component implements OnInit {
                                 this.teso13.numcuo = 1;
                                 this.cuota = 1;
                             }
-
                         } else {
                             this.datos_teso17.push(response.numcuo, response.cuota);
                             this.teso13.numcuo = response.numcuo;
@@ -273,8 +273,6 @@ export class Teso13Component implements OnInit {
                         this.bd1 = false;
                     });
             } else {
-
-
                 this.bd1 = false;
                 Swal.fire('¡Error!', 'No existen datos asociados a CDP Y NIT!', 'error');
             }
@@ -317,8 +315,8 @@ export class Teso13Component implements OnInit {
                                     result: JSON.stringify([this.teso13, arrayD])
                                 }
                             }
-                            this._router.navigate(['teso12'], navigationExtras);
-                            Swal.fire('Listo!', 'Pago Enviado', 'success');
+                            this._router.navigate(['teso12_upload'], navigationExtras);
+                            Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
 
                         } else {
                             Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
@@ -339,8 +337,8 @@ export class Teso13Component implements OnInit {
                             result: JSON.stringify([this.teso13, arrayD])
                         }
                     }
-                    this._router.navigate(['teso12'], navigationExtras);
-                    Swal.fire('Listo!', 'Pago Enviado', 'success');
+                    this._router.navigate(['teso12_upload'], navigationExtras);
+                    Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
 
                 }
 

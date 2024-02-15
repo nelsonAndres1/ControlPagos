@@ -48,7 +48,11 @@ import { SidebarModule } from 'ng-cdbangular';
 import { IconModule } from 'ng-cdbangular';
 import { BadgeModule } from 'ng-cdbangular';
 import { CausadoresComponent } from './causadores/causadores.component';
+import { Teso12UploadComponent } from './teso12-upload/teso12-upload.component';
+import { Teso13editarComponent } from './teso13editar/teso13editar.component';
+import { Teso13modalComponent } from './modal/teso13modal/teso13modal.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -77,7 +81,10 @@ import { CausadoresComponent } from './causadores/causadores.component';
     Teso1118Component,
     EditarTeso12Component,
     ReportesComponent,
-    CausadoresComponent
+    CausadoresComponent,
+    Teso12UploadComponent,
+    Teso13editarComponent,
+    Teso13modalComponent
   ],
 
   imports: [
@@ -99,6 +106,7 @@ import { CausadoresComponent } from './causadores/causadores.component';
     SweetAlert2Module.forRoot(),
     routing,
     PdfViewerModule,
+    MatDialogModule
 
   ],
   //appRoutingProviders sin llaves y con corchetes

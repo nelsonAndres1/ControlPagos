@@ -1,0 +1,30 @@
+<div class="div1">
+  <h2>Soportes Solicitados</h2>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Documento Solicitado</th>
+        <th scope="col">Subir Documento</th>
+        <th scope="col">¿Obligatorio?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dt of datoSoportes">
+        <th scope="row">{{dt.codsop}}</th>
+        <td>{{dt.detsop}}</td>
+        <td>  
+          <input class="form-control" type="file" id="formFile" (change)="onFileSelected($event, dt.detsop, dt)">
+        </td>
+        <td>
+          {{obligatorio(dt.per)}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="align-items: center; margin-inline-start: 50%;"> 
+    <button *ngIf="hasSelectedFiles()" (click)="uploadFiles()" type="submit" class="btn btn-success">Subir Documentos y Enviar Pago</button>
+  </div>
+  <div *ngIf="uploading">Subiendo archivos...</div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>

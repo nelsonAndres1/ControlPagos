@@ -1,0 +1,32 @@
+<div style="margin: 50px;">
+    <h2>Editar Pago</h2>
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Codclas</th>
+                <th scope="col">Codclas Detalle</th>
+                <th scope="col">Numero</th>
+                <th scope="col">Fecha Radicado</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Detalle</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let dt of data_teso13">
+                <th scope="row">{{dt.id}}</th>
+                <td>{{dt.codclas}}</td>
+                <td>{{dt.codclas_detalle}}</td>
+                <td>{{dt.numero}}</td>
+                <td>{{dt.fecrad}}</td>
+                <td>{{dt.valor}}</td>
+                <td>{{dt.detalle}}</td>
+                <td>
+                    <button type="button" class="btn btn-info" (click)="editar(dt)">Editar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

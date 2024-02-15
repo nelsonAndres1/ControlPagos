@@ -19,15 +19,11 @@ export class Teso13Service {
     }
 
     getConta28(pclave: any) {
-        const response = new Promise(resolve => {
-            this._http.get(global.url + `teso13/searchConta28?search=${pclave}`).subscribe(
-                data => {
-                    resolve(data);
-                }, err => {
-                    console.log(err);
-                });
-        });
-        return response;
+
+        let json = JSON.stringify(pclave);
+        let params = 'search=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/searchConta28', params, { headers: headers });
     }
 
     getC71(pclave: any) {
@@ -76,6 +72,13 @@ export class Teso13Service {
         return this._http.post(this.url + 'teso113/name_teso10', params, { headers: headers });
     }
 
+    getTeso13Editar(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/getTeso13Editar', params, { headers: headers });
+    }
+
     register(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = 'json=' + json;
@@ -84,6 +87,7 @@ export class Teso13Service {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso13', params, { headers: headers });
     }
+    
     traerConsecutivo(user: any, gettoken: any = null): Observable<any> {
         if (gettoken != null) {
             user.gettoken = 'true';

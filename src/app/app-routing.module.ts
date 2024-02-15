@@ -28,6 +28,9 @@ import { LoginGuard } from './services/login.guard';
 import { IdentityGuard } from './services/identity.guard';
 import { ReportesComponent } from './reportes/reportes.component';
 import { CausadoresComponent } from './causadores/causadores.component';
+import { Teso12UploadComponent } from './teso12-upload/teso12-upload.component';
+import { Teso13editarComponent } from './teso13editar/teso13editar.component';
+
 const routes: Routes = [
 
   { path: '', component: LoginComponent, canActivate: [LoginGuard] },
@@ -36,8 +39,10 @@ const routes: Routes = [
   { path: 'logout/:sure', component: LoginComponent, canActivate: [IdentityGuard] },
   { path: 'teso10', component: Teso10Component, canActivate: [IdentityGuard] },
   { path: 'teso12', component: Teso12Component, canActivate: [IdentityGuard] },
+  { path: 'teso12_upload', component: Teso12UploadComponent, canActivate: [IdentityGuard] },
   { path: 'editar_teso12', component: EditarTeso12Component, canActivate: [IdentityGuard] },
   { path: 'teso13', component: Teso13Component, canActivate: [IdentityGuard] },
+  { path: 'editar_teso13', component: Teso13editarComponent, canActivate: [IdentityGuard] },
   { path: 'teso14', component: Teso14Component, canActivate: [IdentityGuard] },
   { path: 'teso114', component: Teso114Component, canActivate: [IdentityGuard] },
   { path: 'teso15', component: Teso15Component, canActivate: [IdentityGuard] },

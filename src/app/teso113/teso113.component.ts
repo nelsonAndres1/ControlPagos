@@ -4,15 +4,15 @@ import jsPDF from 'jspdf';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Teso113 } from '../models/teso113';
 import { teso10 } from '../models/teso10';
-
 import { Teso15Service } from '../services/teso15.service';
 import { Teso13Service } from '../services/teso13.service';
 import { Gener02 } from '../models/gener02';
 import Swal from 'sweetalert2';
-import { identity } from 'rxjs';
-import { teso12 } from '../models/teso12';
+import { PdfService } from '../services/pdf.service';
+import { Impresion } from '../models/impresion';
 
-@Component({ selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service] })
+
+@Component({ selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service, PdfService] })
 export class Teso113Component implements OnInit {
 
     @ViewChild('myData') myData: ElementRef;
@@ -20,25 +20,28 @@ export class Teso113Component implements OnInit {
     itemDetail: any = [];
     numero: any;
     codclas: any;
-    public data: any;
-    public identity: any;
-    public identity1: any;
-    public respuesta: any;
-    public nit: any;
-    public cc: any;
-    public depe: any;
-    public detalle: any;
-    public detalle2: any;
-    public cdp_marca: any;
-    public cdp_documento: any;
-    public cdp_ano: any;
-    public fecrad: any;
-    public soportes: any;
-    public teso10: teso10;
-    public array_fecrad: any = [];
-    public longitud: any = '';
-    constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service) {
+    data: any;
+    identity: any;
+    identity1: any;
+    respuesta: any;
+    nit: any;
+    cc: any;
+    depe: any;
+    detalle: any;
+    detalle2: any;
+    cdp_marca: any;
+    cdp_documento: any;
+    cdp_ano: any;
+    fecrad: any;
+    soportes: any;
+    teso10: teso10;
+    array_fecrad: any = [];
+    longitud: any = '';
+    impreseion: Impresion;
 
+    constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
+
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', [], '', '', '', '', '', '');
         this.teso10 = new teso10('', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
@@ -64,10 +67,31 @@ export class Teso113Component implements OnInit {
                     this.array_fecrad = this.fecrad.split('-');
                     this.data['usuela'];
                     this._teso15Service.getUsuario(new Gener02(this.data['usuela'], '')).subscribe(response => {
+
                         this.identity = response;
                         this.identity1 = this.identity[0]['nombre'];
                         let timerInterval;
                         this.traerSoportes();
+                        const { dia, mes, año } = this.extraerFecha(new Date(this.data.fecrad));
+
+                        this.impreseion.dia = dia + '';
+                        this.impreseion.mes = mes + '';
+                        this.impreseion.ano = año + '';
+                        this.impreseion.numero_factura = this.data.numfac;
+                        this.impreseion.nombre_persona = this.nit;
+                        this.impreseion.nit_persona = this.data.nit;
+                        this.impreseion.subdireccion = '' //falta
+                        this.impreseion.dependencia = this.data.coddep + ' ' + this.depe;
+                        this.impreseion.centro_costo = this.data.codcen + ' ' + this.cc;
+                        this.impreseion.clase_pago = this.data.codclas + ' ' + this.detalle;
+                        this.impreseion.documento_clase = [];
+                        this.impreseion.nombre_elaborado = this.identity1;
+                        this.impreseion.nombre_autoriza = this.data.peraut;
+                        this.impreseion.nombre_revisa = this.data.perrev;
+                        this.impreseion.codigo_barras = this.data.codclas + this.data.numero;
+                        this.impreseion.coddep = this.data.coddep;
+                        this.impreseion.fecha = this.data.fecrad;
+
                         Swal.fire({
                             title: 'Generando PDF...',
                             html: 'El proceso terminara en <b></b> milisegundos.',
@@ -81,7 +105,7 @@ export class Teso113Component implements OnInit {
                                 }, 100)
                             },
                             willClose: () => {
-                                this.setPdf();
+                                this.descargarPDF();
                                 clearInterval(timerInterval)
                             }
                         }).then((result) => {
@@ -97,6 +121,13 @@ export class Teso113Component implements OnInit {
         });
     }
 
+    extraerFecha(fecha: Date): { dia: number, mes: number, año: number } {
+        const dia = fecha.getDate() + 1;
+        const mes = fecha.getMonth() + 1;
+        const año = fecha.getFullYear();
+
+        return { dia, mes, año };
+    }
 
     setPdf() {
         setTimeout(() => {
@@ -131,6 +162,7 @@ export class Teso113Component implements OnInit {
             response => {
                 console.log("Ahhh Soportes");
                 console.log(response);
+                this.impreseion.documento_clase = response;
                 this.soportes = response;
                 for (let index = 0; index < this.soportes.length; index++) {
                     this.longitud += this.soportes[index] + ',  ';
@@ -141,5 +173,15 @@ export class Teso113Component implements OnInit {
 
 
     ngOnInit(): void { }
+
+    descargarPDF() {
+        this._PdfService.generarPDF(this.impreseion).subscribe(
+            response => {
+                const blob = new Blob([response], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                window.open(url);
+            }
+        )
+    }
 
 }

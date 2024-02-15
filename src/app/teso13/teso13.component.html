@@ -38,11 +38,9 @@
                 <label for="name">
                     <b>
                         Tipo de Pago</b></label>
-
                 <div class="col">
                     <input type="text" [value]=tpago ng-value="tpago" name="codclas" class="form-control"
                         placeholder="Tipo de Pago" #codclas="ngModel" [(ngModel)]="teso13.codclas" disabled>
-                    <!-- Usuario que se logea(usurev->usuario que revisa) (usuaut->usuario que autoriza)-->
                 </div>
             </div>
         </div>
@@ -76,12 +74,10 @@
         </div>
 
         <div class="row">
-            <!-- NIT -->
             <div class="col">
                 <div class="col">
                     <label for="name"><b>NIT</b></label>
                     <div class="col">
-
                         <div class="col">
                             <div class="form-outline">
                                 <input type="text" class="form-control" name="nit_name" placeholder="nit" for="nit"
@@ -240,7 +236,7 @@
                     <label for="name"><b>Valor</b></label>
                     <div class="col">
                         <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
-                            #valor="ngModel" [(ngModel)]="teso13.valor" maxlength="20" required pattern="[0-9]+">
+                            #valor="ngModel" [(ngModel)]="teso13.valor" maxlength="20" required pattern="[0-9]+(\.[0-9]+)?">
                     </div>
                 </div>
                 <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">

@@ -37,7 +37,7 @@ export class AppComponent implements OnInit,
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.teso10 = new teso10('', '', '', '', '');
-        
+
     }
 
     ngOnInit(): void {
@@ -55,6 +55,9 @@ export class AppComponent implements OnInit,
         this.router.navigate(['causadores'])
     }
 
+    inp_editar() {
+        this.router.navigate(['editar_teso13'])
+    }
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
