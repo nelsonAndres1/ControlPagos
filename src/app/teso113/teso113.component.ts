@@ -92,10 +92,13 @@ export class Teso113Component implements OnInit {
                         this.impreseion.coddep = this.data.coddep;
                         this.impreseion.fecha = this.data.fecrad;
 
+                        console.log("agagagagagagagagagagaggagagagag!!!!!!!!!!!!!!!!!!")
+                        console.log(this.impreseion)
+
                         if(this.cdp_documento == '00'){
                             this.impreseion.cdp = '-'
                         }else{
-                            this.impreseion.cdp = this.cdp_marca+' '+this.cdp_documento+' '+this.cdp_ano;
+                            this.impreseion.cdp = this.cdp_marca+'-'+this.cdp_documento+'-'+this.cdp_ano;
                         }
                         this.impreseion.valor = this.data.valor;
 
@@ -175,6 +178,7 @@ export class Teso113Component implements OnInit {
                 for (let index = 0; index < this.soportes.length; index++) {
                     this.longitud += this.soportes[index] + ',  ';
                 }
+                this.impreseion.documento_clase = this.longitud;
             }
         )
     }
