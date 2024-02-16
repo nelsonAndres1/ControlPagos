@@ -84,7 +84,7 @@ export class Teso113Component implements OnInit {
                         this.impreseion.dependencia = this.data.coddep + ' ' + this.depe;
                         this.impreseion.centro_costo = this.data.codcen + ' ' + this.cc;
                         this.impreseion.clase_pago = this.data.codclas + ' ' + this.detalle;
-                        this.impreseion.documento_clase = this.longitud;
+                        
                         this.impreseion.nombre_elaborado = this.identity1;
                         this.impreseion.nombre_autoriza = this.data.peraut;
                         this.impreseion.nombre_revisa = this.data.perrev;
