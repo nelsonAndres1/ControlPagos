@@ -18,7 +18,9 @@ export class Impresion {
         public nombre_autoriza: string,
         public codigo_barras:string,
         public coddep:string,
-        public fecha:string
+        public fecha:string,
+        public valor:string,
+        public cdp:string
 
     ) {
 

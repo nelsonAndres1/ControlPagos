@@ -41,7 +41,7 @@ export class Teso113Component implements OnInit {
 
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
 
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', [], '', '', '', '', '', '');
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', [], '', '', '', '', '', '','','');
         this.teso10 = new teso10('', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
@@ -91,6 +91,13 @@ export class Teso113Component implements OnInit {
                         this.impreseion.codigo_barras = this.data.codclas + this.data.numero;
                         this.impreseion.coddep = this.data.coddep;
                         this.impreseion.fecha = this.data.fecrad;
+                        if(this.cdp_documento == '00'){
+                            this.impreseion.cdp = '-'
+                        }else{
+                            this.impreseion.cdp = this.cdp_marca+' '+this.cdp_documento+' '+this.cdp_ano;
+                        }
+                        this.impreseion.valor = this.data.valor;
+                        
 
                         Swal.fire({
                             title: 'Generando PDF...',
