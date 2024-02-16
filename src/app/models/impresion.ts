@@ -12,7 +12,7 @@ export class Impresion {
         public dependencia: string,
         public centro_costo: string,
         public clase_pago: string,
-        public documento_clase: [],
+        public documento_clase: '',
         public nombre_elaborado: string,
         public nombre_revisa: string,
         public nombre_autoriza: string,
