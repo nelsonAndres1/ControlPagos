@@ -1,4 +1,70 @@
-<div>
-    <p>teso13modal works!</p>
-</div>
+<mat-dialog-content>
 
+    <div class="div1">
+        <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+            <div class="form-group col-md-12">
+                <div class="row">
+                    <div class="col">
+                        <label for="name"><b>Centro de Costo</b></label>
+                        <div class="col">
+                            <div>
+                                <div class="form-check">
+                                    <br>
+                                    <input class="form-check-input" type="checkbox" value="" (click)="centroC()"
+                                        id="defaultCheck1">
+
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        Centro de Costo - Varios
+                                    </label>
+                                </div>
+                                <input type="text" class="form-control" name="codcen_name" placeholder="Centro de Costo"
+                                    for="codcen" (input)="getConta($event)" [(ngModel)]="codcen_nombre"
+                                    disabled={{centroCostos}}>
+                                <div *ngFor="let result of data" (click)="getDetailPage(result)">
+                                    <div class="card card-body mb-1" (click)="touchCC(result)" style="cursor: pointer;"
+                                        *ngIf="bandera=='true'">
+                                        <h6>Detalle: {{result.detalle}}.</h6>
+                                        <small class="text-primary">Codcen: {{result.codcen}}.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input class="form-control" type="text" name="codcen" placeholder="" #codcen="ngModel"
+                                [(ngModel)]="teso13.codcen" readonly maxlength="6" required>
+                            <small *ngIf="!codcen.valid && codcen.touched" class="invalid-feedback d-block">
+                                Este Campo es requerido
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <label for="name"><b>Codigo de Dependencia</b></label>
+                        <div class="col">
+                            <br>
+                            <br>
+                            <input type="text" class="form-control" name="coddep_nombre" [(ngModel)]="coddep_nombre"
+                                placeholder="Codigo Dependencia" for="coddep" (input)="getConta28($event)"
+                                disabled={{centroCostos}}>
+                            <div *ngFor="let resultC2 of datac28" (click)="getDetailPageC28(resultC2)">
+                                <div class="card card-body mb-1" (click)="touch28(resultC2)" style="cursor: pointer;"
+                                    *ngIf="bandera28=='true'">
+                                    <h6>Detalle: {{resultC2.detalle}}.</h6>
+                                    <small class="text-primary">Codigo: {{resultC2.coddep}}.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <input class="form-control" type="text" name="codep" placeholder="" #coddep="ngModel"
+                                [(ngModel)]="teso13.coddep" maxlength="6" readonly required>
+                            <small *ngIf="!coddep.valid && coddep.touched" class="invalid-feedback d-block">
+                                Este Campo es requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</mat-dialog-content>

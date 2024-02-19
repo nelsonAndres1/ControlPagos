@@ -4,6 +4,7 @@ import { Gener02Service } from '../services/gener02.service';
 import { Editarteso13 } from '../models/editarteso13';
 import { Teso13modalComponent } from '../modal/teso13modal/teso13modal.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDialogContent } from '@angular/material/dialog';
 
 
 @Component({
@@ -34,11 +35,12 @@ export class Teso13editarComponent {
 
   editar(dt: any) {
     
-    const dialogRef = this.dialog.open(Teso13modalComponent, {
-      width: '100%',
-      height: '100%',
-      panelClass: 'full-screen-dialog' // Añadir una clase CSS para ocupar toda la pantalla
-    });
+    const dialogRef = this.dialog.open(Teso13modalComponent);
+    dialogRef.afterClosed().subscribe(
+      res => {
+        // Haz algo después de que se cierre el modal, si es necesario
+      }
+    );
       dialogRef.afterClosed().subscribe(
         res => {
 
