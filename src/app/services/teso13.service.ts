@@ -87,7 +87,7 @@ export class Teso13Service {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso13', params, { headers: headers });
     }
-    
+
     traerConsecutivo(user: any, gettoken: any = null): Observable<any> {
         if (gettoken != null) {
             user.gettoken = 'true';
@@ -103,6 +103,13 @@ export class Teso13Service {
         let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso13/traerCod', params, { headers: headers });
+    }
+
+    searchTeso13(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/searchTeso13', params, { headers: headers });
     }
 
     downloadFile(user: any): Observable<any> {
@@ -182,6 +189,15 @@ export class Teso13Service {
         return this._http.post(this.url + 'teso13/getAllTeso13Pri', params, { headers: headers });
     }
 
+    teso13update(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = "json=" + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/teso13update', params, { headers: headers });
+    }
+
+
+    
 
 
 

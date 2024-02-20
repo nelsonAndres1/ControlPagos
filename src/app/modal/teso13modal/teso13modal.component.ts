@@ -2,15 +2,20 @@ import { Component } from '@angular/core';
 import { Teso13 } from 'src/app/models/teso13';
 import { Teso13Service } from 'src/app/services/teso13.service';
 import { Router, NavigationExtras } from '@angular/router';
+import { SharedService } from 'src/app/services/shared.service';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-teso13modal',
   templateUrl: './teso13modal.component.html',
   styleUrls: ['./teso13modal.component.css'],
-  providers: [Teso13Service]
+  providers: [Teso13Service, SharedService]
 })
 export class Teso13modalComponent {
 
+  dataSubscription: Subscription;
+  receivedData: any;
   teso13: Teso13;
   centroCostos = false;
   codcen_nombre: any;
@@ -22,7 +27,13 @@ export class Teso13modalComponent {
   bandera28: any;
 
 
-  constructor(private _teso13Service: Teso13Service) {
+  constructor(private _teso13Service: Teso13Service, private sharedService: SharedService) {
+    this.dataSubscription = this.sharedService.data$.subscribe(data => {
+      this.receivedData = data;
+      console.log("data!!!!");
+      console.log(this.receivedData);
+    });
+
     this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0');
   }
 
@@ -32,6 +43,11 @@ export class Teso13modalComponent {
 
 
   centroC() {
+
+    console.log("atuda!")
+    console.log(this.receivedData)
+
+
     if (this.centroCostos == true) {
       this.teso13.codcen = ''
       this.codcen_nombre = '';
@@ -94,5 +110,5 @@ export class Teso13modalComponent {
     this.teso13.coddep = result.coddep;
     this.bandera28 = 'false';
     this.coddep_nombre = result.detalle;
-}
+  }
 }

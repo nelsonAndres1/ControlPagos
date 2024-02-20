@@ -1,32 +1,171 @@
 <div style="margin: 50px;">
     <h2>Editar Pago</h2>
     <br>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Codclas</th>
-                <th scope="col">Codclas Detalle</th>
-                <th scope="col">Numero</th>
-                <th scope="col">Fecha Radicado</th>
-                <th scope="col">Valor</th>
-                <th scope="col">Detalle</th>
-                <th scope="col">Opciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let dt of data_teso13">
-                <th scope="row">{{dt.id}}</th>
-                <td>{{dt.codclas}}</td>
-                <td>{{dt.codclas_detalle}}</td>
-                <td>{{dt.numero}}</td>
-                <td>{{dt.fecrad}}</td>
-                <td>{{dt.valor}}</td>
-                <td>{{dt.detalle}}</td>
-                <td>
-                    <button type="button" class="btn btn-info" (click)="editar(dt)">Editar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+
+    <input class="form-control" id="exampleAccount" placeholder="Numero del Pago" name="vacio" [(ngModel)]="vacio"
+        type="text" (input)="getTeso13($event)" required>
+    <div class="col-sm-12">
+        <div class="card card-body mb-1" *ngFor="let result of data" (click)="getPago(result)" style="cursor: pointer;">
+            <h6> Detalle: {{result.detalle}} </h6>
+            <small class="text-primary">
+                <h6>Pago: {{result.codclas}}{{result.numero}}</h6>
+            </small>
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-success">editar</button>
+            </div>
+        </div>
+    </div>
+
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" *ngIf="bandera_formulario">
+        <div class="form-group col-md-12">
+            <div class="row">
+                <div class="col">
+                    <label for="name"><b>Centro de Costo</b></label>
+                    <div class="col">
+                        <div>
+                            <div class="form-check">
+                                <br>
+                                <input class="form-check-input" type="checkbox" value="" (click)="centroC()"
+                                    id="defaultCheck1">
+
+                                <label class="form-check-label" for="defaultCheck1">
+                                    Centro de Costo - Varios
+                                </label>
+                            </div>
+                            <input type="text" class="form-control" name="codcen_name" placeholder="Centro de Costo"
+                                for="codcen" (input)="getConta($event)" [(ngModel)]="codcen_nombre"
+                                disabled={{centroCostos}}>
+                            <div *ngFor="let result of datacodcen" (click)="getDetailPage(result)">
+                                <div class="card card-body mb-1" (click)="touchCC(result)" style="cursor: pointer;"
+                                    *ngIf="bandera=='true'">
+                                    <h6>Detalle: {{result.detalle}}.</h6>
+                                    <small class="text-primary">Codcen: {{result.codcen}}.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input class="form-control" type="text" name="codcen" placeholder="" #codcen="ngModel"
+                            [(ngModel)]="teso13.codcen" readonly maxlength="6" required>
+                        <small *ngIf="!codcen.valid && codcen.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="name"><b>Codigo de Dependencia</b></label>
+                    <div class="col">
+                        <br>
+                        <br>
+                        <input type="text" class="form-control" name="coddep_nombre" [(ngModel)]="coddep_nombre"
+                            placeholder="Codigo Dependencia" for="coddep" (input)="getConta28($event)"
+                            disabled={{centroCostos}}>
+                        <div *ngFor="let resultC2 of datac28" (click)="getDetailPageC28(resultC2)">
+                            <div class="card card-body mb-1" (click)="touch28(resultC2)" style="cursor: pointer;"
+                                *ngIf="bandera28=='true'">
+                                <h6>Detalle: {{resultC2.detalle}}.</h6>
+                                <small class="text-primary">Codigo: {{resultC2.coddep}}.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <input class="form-control" type="text" name="codep" placeholder="" #coddep="ngModel"
+                            [(ngModel)]="teso13.coddep" maxlength="6" readonly required>
+                        <small *ngIf="!coddep.valid && coddep.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="name"><b>Numero de Factura</b></label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
+                                #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="15" required>
+                        </div>
+                        <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="name"><b>Fecha de Facturación</b></label>
+                        <div class="col">
+                            <div class="col">
+                                <input type="date" class="form-control" id="start" name="fecfac" value="today"
+                                    min="2018-01-01" max="2030-12-31" placeholder="Fecha de Radicado" #fecfac="ngModel"
+                                    [(ngModel)]="teso13.fecfac" required>
+                            </div>
+                        </div>
+                        <small *ngIf="!fecfac.valid && fecfac.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+
+                    <div class="col">
+                        <div class="col">
+                            <label for="name"><b>Valor</b></label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
+                                    #valor="ngModel" [(ngModel)]="teso13.valor" maxlength="20" required
+                                    pattern="[0-9]+(\.[0-9]+)?">
+                            </div>
+                        </div>
+                        <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
+                            Solo Numeros
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="name"><b>Persona quien revisa</b></label>
+                        <div class="col">
+                            <div class="col">
+                                <input type="text" class="form-control" id="start" name="perrev"
+                                    placeholder="¿Quien revisa?" #perrev="ngModel" [(ngModel)]="teso13.perrev" required>
+                            </div>
+                        </div>
+                        <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+
+                    <div class="col">
+                        <label for="name"><b>Persona quien Autoriza</b></label>
+                        <div class="col">
+                            <div class="col">
+                                <input type="text" class="form-control" id="start" name="peraut"
+                                    placeholder="¿Quien autoriza?" #peraut="ngModel" [(ngModel)]="teso13.peraut"
+                                    required>
+                            </div>
+                        </div>
+                        <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="input-group">
+                        <br>
+                        <span class="input-group-text">
+                            <b>Detalle</b></span>
+                        <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
+                            [(ngModel)]="teso13.detalle" maxlength="2000" required></textarea>
+                    </div>
+                    <small *ngIf="!detalle.valid && detalle.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <button type="submit" class="btn btn-success" disable="registerForm.invalid"
+            [disabled]="registerForm.invalid">Actualizar</button>
+
+
+    </form>
 </div>

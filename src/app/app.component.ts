@@ -59,6 +59,11 @@ export class AppComponent implements OnInit,
         this.router.navigate(['editar_teso13'])
     }
 
+    inp_reimprimir(){
+        this.router.navigate(['teso13_reimprimir'])
+    }
+
+
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {

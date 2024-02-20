@@ -25,6 +25,11 @@
                             Editar sus pagos
                         </CDBSidebarMenuItem>
                     </div>
+                    <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="print" (click)="inp_reimprimir()" *ngIf="permisosPago()">
+                           Reimprimir pago
+                        </CDBSidebarMenuItem>
+                    </div>
                     <CDBSidebarMenuItem icon="search" routerLink="teso15">
 
                         Consultar estado del Pago
