@@ -53,12 +53,6 @@ export class Teso13ReimprimirComponent {
     this._teso15Service.getAllTeso13(new Teso113(dt.codclas, dt.numero)).subscribe(
       response => {
         if (response.status != 'error') {
-          console.log("resaaaaaaaaaaaaaaaa!");
-          console.log(response);
-
-
-
-
           const { dia, mes, año } = this.extraerFecha(new Date(dt.fecrad));
           this.impreseion.dia = dia + '';
           this.impreseion.mes = mes + '';
@@ -76,26 +70,27 @@ export class Teso13ReimprimirComponent {
           this.impreseion.codigo_barras = dt.codclas + dt.numero;
           this.impreseion.coddep = dt.coddep;
           this.impreseion.fecha = dt.fecrad;
-          this.impreseion.cdp = dt.cdp_marca+dt.cdp_documento+dt.cdp_ano;
-          this.impreseion.valor = dt.valor;
+          this.impreseion.cdp = 'CDP: '+dt.cdp_marca + dt.cdp_documento + dt.cdp_ano;
+          this.impreseion.valor = 'VALOR: '+dt.valor;
           this.impreseion.documento_clase = '';
 
-
           this._utilidadesService.getAllConta04(this.impreseion).subscribe(
-            response =>{
-              alert(response)
+            response => {
+              this.impreseion.nombre_persona = response.detalle_razsoc;
+              this.impreseion.centro_costo = response.detalle_codcen;
+              this.impreseion.dependencia = dt.coddep+' - '+response.detalle_dependencia;
+              this.impreseion.clase_pago = response.detalle_pago;
+              this.impreseion.documento_clase = response.soportes;
+              this.impreseion.nombre_elaborado = response.detalle_gener02;
+              this._PdfService.generarPDF(this.impreseion).subscribe(
+                response => {
+                  const blob = new Blob([response], { type: 'application/pdf' });
+                  const url = window.URL.createObjectURL(blob);
+                  window.open(url);
+                }
+              )
             }
           )
-
-          this._PdfService.generarPDF(this.impreseion).subscribe(
-            response => {
-                const blob = new Blob([response], { type: 'application/pdf' });
-                const url = window.URL.createObjectURL(blob);
-                window.open(url);
-            }
-        )
-
-
         }
       }
     );
