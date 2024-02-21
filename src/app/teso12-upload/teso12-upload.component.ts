@@ -156,9 +156,12 @@ export class Teso12UploadComponent {
         },
         error => {
           this.uploading = false;
-          Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error');
+          Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error').then(()=>{
+            this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
+            Swal.fire('error!', this.errorMessage, 'error');
+          });
 
-          this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
+
         }
       );
   }

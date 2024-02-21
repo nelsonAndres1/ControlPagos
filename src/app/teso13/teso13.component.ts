@@ -9,13 +9,14 @@ import { Teso12Service } from '../services/teso12.service';
 import jsPDF from 'jspdf';
 import { Teso17 } from '../models/teso17';
 import { Conta71 } from '../models/conta71';
+import { UtilidadesService } from '../services/utilidades.service';
 
 
 @Component({
     selector: 'app-teso13',
     templateUrl: './teso13.component.html',
     styleUrls: ['./teso13.component.css'],
-    providers: [Teso13Service, Gener02Service, Teso10Service, Teso12Service]
+    providers: [Teso13Service, Gener02Service, Teso10Service, Teso12Service, UtilidadesService]
 })
 export class Teso13Component implements OnInit {
 
@@ -63,14 +64,13 @@ export class Teso13Component implements OnInit {
     fechaRdicado: any = '';
     centroCostos = false;
     cdp_bandera = false;
+    personas_revisa = [];
+    personas_autoriza = [];
 
     data_keyword: any = { data: '', codcen: '' }
 
-    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router) {
+    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService) {
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0');
-
-
-
 
         this.periodosT(2023, 2024);
         this.identity = this._gener02Service.getIdentity();
@@ -93,6 +93,25 @@ export class Teso13Component implements OnInit {
             Swal.fire({ icon: 'error', title: 'Oops...', text: 'No existen soportes asociados al tipo de pago!' });
             this._router.navigate(['teso10']);
         }
+
+        this._utilidadesService.getAutorizaRevisa({'opcion':'REVISA'}).subscribe(
+            response =>{
+                this.personas_revisa = response;
+                console.log("1");
+                console.log(this.personas_revisa)
+            }
+        )
+
+        this._utilidadesService.getAutorizaRevisa({'opcion':'AUTORIZA'}).subscribe(
+            response =>{
+                this.personas_autoriza = response;
+                console.log("2");
+                console.log(this.personas_autoriza)
+            }
+        )
+
+
+
 
     }
     touch(resultC: any) {

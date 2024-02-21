@@ -75,6 +75,11 @@
                         </CDBSidebarMenuItem>
                     </div>
                     <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-users" (click)="revisa()" *ngIf="permisosNuevoPago()">
+                            Revisores y Autorizadores
+                        </CDBSidebarMenuItem>
+                    </div>
+                    <div *ngIf="permisos != null">
                         <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
 
                             Reportes

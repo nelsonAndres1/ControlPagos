@@ -55,6 +55,10 @@ export class AppComponent implements OnInit,
         this.router.navigate(['causadores'])
     }
 
+    revisa() {
+        this.router.navigate(['revisa_autoriza'])
+    }
+
     inp_editar() {
         this.router.navigate(['editar_teso13'])
     }

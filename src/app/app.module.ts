@@ -55,6 +55,7 @@ import { Teso13modalComponent } from './modal/teso13modal/teso13modal.component'
 import { MatDialogModule } from '@angular/material/dialog';
 import { Teso13ReimprimirComponent } from './teso13-reimprimir/teso13-reimprimir.component';
 import { UtilidadesComponent } from './utilidades/utilidades.component';
+import { RevisoresAutorizacionComponent } from './revisores-autorizacion/revisores-autorizacion.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { UtilidadesComponent } from './utilidades/utilidades.component';
     Teso13editarComponent,
     Teso13modalComponent,
     Teso13ReimprimirComponent,
-    UtilidadesComponent
+    UtilidadesComponent,
+    RevisoresAutorizacionComponent
   ],
 
   imports: [

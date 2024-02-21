@@ -32,6 +32,7 @@ import { Teso12UploadComponent } from './teso12-upload/teso12-upload.component';
 import { Teso13editarComponent } from './teso13editar/teso13editar.component';
 import { Teso13modalComponent } from './modal/teso13modal/teso13modal.component';
 import { Teso13ReimprimirComponent } from './teso13-reimprimir/teso13-reimprimir.component';
+import { RevisoresAutorizacionComponent } from './revisores-autorizacion/revisores-autorizacion.component';
 
 const routes: Routes = [
 
@@ -65,6 +66,7 @@ const routes: Routes = [
   { path: 'causadores', component: CausadoresComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_modal', component: Teso13modalComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_reimprimir', component: Teso13ReimprimirComponent, canActivate: [IdentityGuard] },
+  { path: 'revisa_autoriza', component: RevisoresAutorizacionComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 

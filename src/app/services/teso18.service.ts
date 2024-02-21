@@ -60,6 +60,21 @@ export class Teso18Service {
     return response;
   }
 
+  searchNomin02(pclave: any) {
+    const response = new Promise(resolve => {
+      this.http.get(global.url + `teso18/searchNomin02?search=${pclave}`).subscribe(
+        data => {
+          resolve(data);
+        }, err => {
+          console.log(err);
+        });
+    });
+    return response;
+  }
+
+
+
+
 }
 
 
