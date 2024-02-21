@@ -40,8 +40,6 @@ export class RevisoresAutorizacionComponent {
 
   async agregar(dt: any) {
     this.teso19.docemp = dt.docemp;
-
-
     const { value: fruit } = await Swal.fire({
       title: "Seleccione una opción",
       input: "select",
@@ -55,8 +53,13 @@ export class RevisoresAutorizacionComponent {
       showCancelButton: true,
       inputValidator: (value) => {
         return new Promise(async (resolve) => {
-          this.teso19.opcion = value;
-          resolve();
+          // Validación de la entrada
+          if (value === "REVISA" || value === "AUTORIZA") {
+            this.teso19.opcion = value;
+            resolve(); // Resolvemos la promesa sin argumentos
+          } else {
+            resolve('Seleccione una opción válida'); // Resolvemos la promesa con un argumento (mensaje de error)
+          }
         });
       }
     });
