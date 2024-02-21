@@ -56,7 +56,7 @@ export class RevisoresAutorizacionComponent {
       inputValidator: (value) => {
         return new Promise(async (resolve) => {
           this.teso19.opcion = value;
-          resolve;
+          resolve();
         });
       }
     });
