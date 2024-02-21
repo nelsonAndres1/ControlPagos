@@ -56,11 +56,10 @@ export class RevisoresAutorizacionComponent {
       inputValidator: (value) => {
         return new Promise(async (resolve) => {
           this.teso19.opcion = value;
+          resolve;
         });
       }
     });
-
-
     const { value: email } = await Swal.fire({
       title: "Ingrese cargo",
       input: "text",
@@ -70,9 +69,6 @@ export class RevisoresAutorizacionComponent {
     if (email) {
       this.teso19.cargo = email;
     }
-
-
-
     if (fruit) {
       Swal.fire({
         title: `¿Esta seguro de guardar esta opcion: ${fruit}?`,
