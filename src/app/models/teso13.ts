@@ -31,6 +31,7 @@ export class Teso13{
         public sCDPn:boolean,
         public perrev:string,
         public peraut:string,
-        public bandera_actualizar: string
+        public bandera_actualizar: string,
+        public numcon:string
     ){}
 }

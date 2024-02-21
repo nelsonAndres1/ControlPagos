@@ -35,7 +35,7 @@ export class Teso13editarComponent {
 
 
   constructor(private router: Router, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service) {
-    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0');
+    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0','');
     this.identity = this._gener02Service.getIdentity();
     this.editarteso13 = new Editarteso13('', '', '', '', '', '', '', '', '', '', '', '', '', this.identity.sub, this.identity.sub);
     this.editarteso13.usuario = this.identity.sub;

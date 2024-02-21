@@ -21,7 +21,7 @@
 
                 <div class="col">
                     <input type="text" [value]=nconsecutivo ng-value="nconsecutivo" name="numero" class="form-control"
-                        placeholder="Consecutivo" #numero="ngModel" [(ngModel)]="teso13.numero" disabled><!-- numero -->
+                        placeholder="Consecutivo" #numero="ngModel" [(ngModel)]="teso13.numero" disabled>
                 </div>
             </div>
             <div class="col">
@@ -31,7 +31,7 @@
                 <div class="col">
                     <input type="text" [value]=usu ng-value="usu" id="{{usu}}" name="usuela" class="form-control"
                         placeholder="Usuario" #usuario="ngModel" [(ngModel)]="teso13.usuela" disabled>
-                    <!-- Usuario que se logea(usurev->usuario que revisa) (usuaut->usuario que autoriza)-->
+
                 </div>
             </div>
             <div class="col">
@@ -244,6 +244,19 @@
                     Solo Numeros
                 </small>
             </div>
+
+            <div class="col">
+                <div class="col">
+                    <label for="name"><b>Numero de Contrato</b></label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="numcon" placeholder="Numero de contrato"
+                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="20">
+                    </div>
+                </div>
+                <small *ngIf="!numcon.valid && numcon.touched" class="invalid-feedback d-block">
+                    Solo Numeros
+                </small>
+            </div>
         </div>
 
 
@@ -253,7 +266,8 @@
 
                 <select class="form-select col" id="inputGroupSelect01" name="perrev" placeholder="perrev" for="perrev"
                     #perrev="ngModel" [(ngModel)]="teso13.perrev">
-                    <option *ngFor="let pr of personas_revisa" value={{pr.nombre}}-{{pr.docemp}}>{{pr.docemp}} - {{pr.nombre}}
+                    <option *ngFor="let pr of personas_revisa" value={{pr.nombre}}-{{pr.docemp}}>{{pr.docemp}} -
+                        {{pr.nombre}}
                     </option>
                 </select>
 
@@ -268,7 +282,8 @@
 
                 <select class="form-select col" id="inputGroupSelect01" name="perrev" placeholder="peraut" for="peraut"
                     #peraut="ngModel" [(ngModel)]="teso13.peraut">
-                    <option *ngFor="let pa of personas_autoriza" value={{pa.nombre}}-{{pa.docemp}}>{{pa.docemp}} - {{pa.nombre}}
+                    <option *ngFor="let pa of personas_autoriza" value={{pa.nombre}}-{{pa.docemp}}>{{pa.docemp}} -
+                        {{pa.nombre}}
                     </option>
                 </select>
 
