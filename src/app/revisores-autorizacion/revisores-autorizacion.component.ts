@@ -56,7 +56,7 @@ export class RevisoresAutorizacionComponent {
           // Validación de la entrada
           if (value === "REVISA" || value === "AUTORIZA") {
             this.teso19.opcion = value;
-            resolve(); // Resolvemos la promesa sin argumentos
+            resolve(void 0); // Resolvemos la promesa con void
           } else {
             resolve('Seleccione una opción válida'); // Resolvemos la promesa con un argumento (mensaje de error)
           }
