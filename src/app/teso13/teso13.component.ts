@@ -313,11 +313,11 @@ export class Teso13Component implements OnInit {
             confirmButtonText: 'Iniciar'
 
         }).then(result => {
-            console.log("fecha radicaood");
+            
             this.teso13.fecrad = this.fechaRdicado;
-            console.log(this.fechaRdicado);
-            console.log(this.teso13);
-
+            if((this.teso13.numcon).trim() == ''){
+                this.teso13.numcon = '0';
+            }
             if (result.value) {
 
                 if (this.siCDPno == true) {
