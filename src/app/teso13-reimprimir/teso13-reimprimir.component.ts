@@ -84,6 +84,7 @@ export class Teso13ReimprimirComponent {
               this.impreseion.clase_pago = response.detalle_pago;
               this.impreseion.documento_clase = response.soportes;
               this.impreseion.nombre_elaborado = response.detalle_gener02;
+              this.impreseion.numcon = dt.numcon;
               this._PdfService.generarPDF(this.impreseion).subscribe(
                 response => {
                   const blob = new Blob([response], { type: 'application/pdf' });
