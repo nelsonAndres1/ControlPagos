@@ -20,7 +20,9 @@ export class Impresion {
         public coddep:string,
         public fecha:string,
         public valor:string,
-        public cdp:string
+        public cdp:string,
+        public numcon:string
+
 
     ) {
 

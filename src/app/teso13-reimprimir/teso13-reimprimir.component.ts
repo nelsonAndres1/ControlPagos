@@ -29,7 +29,7 @@ export class Teso13ReimprimirComponent {
 
   constructor(private _PdfService: PdfService, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _utilidadesService: UtilidadesService) {
     this.identity = this._gener02Service.getIdentity();
-    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
   }
 
   getTeso13(event) {
@@ -70,15 +70,17 @@ export class Teso13ReimprimirComponent {
           this.impreseion.codigo_barras = dt.codclas + dt.numero;
           this.impreseion.coddep = dt.coddep;
           this.impreseion.fecha = dt.fecrad;
-          this.impreseion.cdp = 'CDP: '+dt.cdp_marca + dt.cdp_documento + dt.cdp_ano;
-          this.impreseion.valor = 'VALOR: '+dt.valor;
+          this.impreseion.cdp = 'CDP: ' + dt.cdp_marca + dt.cdp_documento + dt.cdp_ano;
+          this.impreseion.valor = 'VALOR: ' + dt.valor;
           this.impreseion.documento_clase = '';
+          this.impreseion.numcon = dt.numcon;
+
 
           this._utilidadesService.getAllConta04(this.impreseion).subscribe(
             response => {
               this.impreseion.nombre_persona = response.detalle_razsoc;
               this.impreseion.centro_costo = response.detalle_codcen;
-              this.impreseion.dependencia = dt.coddep+' - '+response.detalle_dependencia;
+              this.impreseion.dependencia = dt.coddep + ' - ' + response.detalle_dependencia;
               this.impreseion.clase_pago = response.detalle_pago;
               this.impreseion.documento_clase = response.soportes;
               this.impreseion.nombre_elaborado = response.detalle_gener02;
