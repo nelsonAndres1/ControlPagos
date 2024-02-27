@@ -34,7 +34,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     LC-Legalización de Cheque
     CF-Cheque en Firmas
     CE-Cheque Entregado
-    VF-Verificación Estado de Transferencia
+    VF-Aprobación de transferencia
     PE-Pago Exitoso
     CA-Causación de Pago
     */
@@ -45,11 +45,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     public array4 = ['Causación de Cuenta', 'Causación de Pago', 'Anulado'];
     public array5 = ['Causación Pago', 'Devuelto Radicado', 'Anulado'];
     public array6 = ['Autorización Pago', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
-    public array7 = ['Preparación Transferencia', 'Legalización de Cheque', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
+    public array7 = ['Preparación Transferencia', 'Legalización de Cheque', 'Devuelto Causación', 'Anulado'];
     public array8 = [
-        'Verificación Estado de Transferencia',
+        'Aprobación de transferencia',
         'Devuelto Causación',
-        'Devuelto Radicado',
         'Anulado'
     ];
     public array9 = [
@@ -67,7 +66,6 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     public array11 = [
         'Pago Exitoso',
         'Devuelto Causación',
-        'Devuelto Radicado',
         'Anulado'
     ];
 
@@ -271,7 +269,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             estadoEscr = 'Cheque Entregado';
         }
         if (estado == 'VF') {
-            estadoEscr = 'Verificación Estado de Transferencia';
+            estadoEscr = 'Aprobación de transferencia';
         }
         if (estado == 'PE') {
             estadoEscr = 'Pago Exitoso';
@@ -330,7 +328,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'Cheque Entregado') {
             this.estadoActual = 'CE';
         }
-        if (estado == 'Verificación Estado de Transferencia') {
+        if (estado == 'Aprobación de transferencia') {
             this.estadoActual = 'VF';
         }
         if (estado == 'Pago Exitoso') {
