@@ -8,7 +8,8 @@ export class Teso13Teso15{
         public estant: string,
         public usurev: string,
         public usuaut: string,
-        public usuario: string
+        public usuario: string,
+        public observacion: string
     ){
 
     }

@@ -59,9 +59,19 @@
                             value="option1" (change)="cambioEstado(n)">
                         <label class="form-check-label" for="inlineRadio1"> {{n}} </label>
                     </div>
-                    <br>
-                    <br>
                 </div>
+                <br>
+                <label for="exampleFormControlTextarea1">
+                    <h5><b> Observación </b></h5>
+                </label>
+                
+                <br>
+                <p>¡Obligatorio para devoluciones!</p>
+                <div class="form-group">
+                    
+                    <textarea style="margin-left: 5%; margin-right: 5%;" class="form-control" id="exampleFormControlTextarea1" (input)="evento($event)" rows="3"></textarea>
+                </div>
+                <br>
                 <button *ngIf="btn==true" type="button" class="btn btn-success" (click)="submit()">Enviar</button>
                 <br>
                 <br>

@@ -315,7 +315,7 @@ export class Teso13Component implements OnInit {
         }).then(result => {
             
             this.teso13.fecrad = this.fechaRdicado;
-            if((this.teso13.numcon).trim() == ''){
+            if((this.teso13.numcon+'').trim() == ''){
                 this.teso13.numcon = '0';
             }
             if (result.value) {

@@ -96,6 +96,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     banderasop: any = true;
     estadoEscrito: any = '';
     conta04: Conta04;
+    observacion:string = '';
 
 
     constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _teso12Service: Teso12Service, private _teso117Service: Teso117Service, private _router: Router) {
@@ -504,6 +505,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             Swal.fire('Error', 'Usted no tiene Permisos', 'error');
         }
     }
+
+    evento(event){
+        this.observacion = event.target.value;
+    }
+
+
     submit() {
         var datoU = JSON.parse(localStorage.getItem('identity'));
 
@@ -511,7 +518,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
         this.itemF['numfac']; // actual
 
-        this.teso13teso15 = new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, datoU['sub'], '', '');
+        this.teso13teso15 = new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, datoU['sub'], '', '', this.observacion);
         Swal.fire({
             title: "¿Estas Seguro?",
             text: "Cambiaras de estado tu pago",
@@ -540,7 +547,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     this._router.navigate(['teso17']);
                 } else if (this.estadoA == 'RV') {
 
-                    this._teso117Service.updateTeso13RegisterTeso15AU(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', datoU['sub'], '')).subscribe(response => {
+                    this._teso117Service.updateTeso13RegisterTeso15AU(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', datoU['sub'], '', this.observacion)).subscribe(response => {
                         if (response.status == "success") {
                             this.status = response.status;
 
@@ -557,7 +564,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                 } else {
 
 
-                    this._teso117Service.updateTeso13(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', '', datoU['sub'])).subscribe(response => {
+                    this._teso117Service.updateTeso13(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', '', datoU['sub'], this.observacion)).subscribe(response => {
                         if (response.status == "success") {
                             this.status = response.status;
 

@@ -250,7 +250,7 @@
                     <label for="name"><b>Numero de Contrato</b></label>
                     <div class="col">
                         <input type="text" class="form-control" name="numcon" placeholder="Numero de contrato"
-                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="20">
+                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="19" >
                     </div>
                 </div>
                 <small *ngIf="!numcon.valid && numcon.touched" class="invalid-feedback d-block">
