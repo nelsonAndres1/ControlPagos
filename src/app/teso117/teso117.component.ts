@@ -38,6 +38,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     PE-Pago Exitoso
     CA-Causación de Pago
     */
+    texto: string = '';
+    maxLength: number = 299;
+
+    resultado_caracteres: any;
 
     public array1 = ['Revisión', 'Anulado'];
     public array2 = ['Autorizado', 'Anulado'];
@@ -96,7 +100,15 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     banderasop: any = true;
     estadoEscrito: any = '';
     conta04: Conta04;
-    observacion:string = '';
+    observacion: string = '';
+
+
+    title: string = 'ng2-pdf-viewer';
+    src: string = 'assets/pspdfkit-web-demo.pdf';
+
+    page: number = 1;
+    totalPages: number = 0;
+    isLoaded: boolean = false;
 
 
     constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _teso12Service: Teso12Service, private _teso117Service: Teso117Service, private _router: Router) {
@@ -132,6 +144,25 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         });
 
     }
+
+
+    
+
+    afterLoadComplete(pdfData: any) {
+        this.totalPages = pdfData.numPages;
+        this.isLoaded = true;
+    }
+
+    nextPage() {
+        this.page++;
+    }
+
+    prevPage() {
+        this.page--;
+    }
+
+
+
     manageExcel(response: any, fileName: string): void {
         const dataType = response.type;
         const binaryData = [];
@@ -489,24 +520,24 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
 
 
-/*             if (estado == 'RT') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
-                        this.arraySalida = this.array6;
-                        bandera = true;
-                        this.btn = true;
-                    }
-                }
-                if (bandera != true) {
-                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
-                }
-            } */
+            /*             if (estado == 'RT') {
+                            for (let index = 0; index < this.arrayPermisos.length; index++) {
+                                if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
+                                    this.arraySalida = this.array6;
+                                    bandera = true;
+                                    this.btn = true;
+                                }
+                            }
+                            if (bandera != true) {
+                                Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                            }
+                        } */
         } else {
             Swal.fire('Error', 'Usted no tiene Permisos', 'error');
         }
     }
 
-    evento(event){
+    evento(event) {
         this.observacion = event.target.value;
     }
 
@@ -586,6 +617,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
         })
     }
+
 
     ngOnInit(): void { }
     getConta04(nit) {
