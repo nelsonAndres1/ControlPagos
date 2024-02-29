@@ -10,7 +10,6 @@ import { global } from '../services/global';
 import { Teso12Service } from '../services/teso12.service';
 import { Documento } from '../models/documento';
 import { Conta04 } from '../models/conta04';
-import PSPDFKit from "pspdfkit";
 
 @Component({
     selector: 'app-teso117',
