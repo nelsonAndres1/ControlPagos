@@ -44,7 +44,7 @@ export class Teso10Component implements OnInit {
       n2:[''],
     });
       
-    this.teso10 = new teso10('','','','','');
+    this.teso10 = new teso10('','','','','','');
     this.teso12 = new teso12('','');
     this.onSubmit();  
   }

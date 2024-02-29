@@ -21,6 +21,7 @@ export class Teso13editarComponent {
   vacio: any = null;
   data: any = [];
   datacodcen: any = [];
+  datac2: any;
   receivedData: any;
   teso13: Teso13;
   centroCostos = false;
@@ -32,10 +33,11 @@ export class Teso13editarComponent {
   bandera28: any;
   bandera_formulario = false;
   periodos = [];
-
+  bandera2: any
+  nit_nombre:any;
 
   constructor(private router: Router, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service) {
-    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0','');
+    this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
     this.identity = this._gener02Service.getIdentity();
     this.editarteso13 = new Editarteso13('', '', '', '', '', '', '', '', '', '', '', '', '', this.identity.sub, this.identity.sub);
     this.editarteso13.usuario = this.identity.sub;
@@ -47,6 +49,14 @@ export class Teso13editarComponent {
     )
 
   }
+
+  touch(resultC: any) {
+    console.log(resultC.nit);
+    this.teso13.nit = resultC.nit;
+    this.bandera2 = 'false';
+    this.nit_nombre = resultC.razsoc;
+
+}
 
   periodosT(añoI: any, añoF: any) {
     var resultado;
@@ -98,14 +108,27 @@ export class Teso13editarComponent {
 
   onSubmit(form) {
     this.teso13.usuela = this.identity.sub;
+
+    console.log("data!!!!")
+    console.log(this.teso13);
+
     this._teso13Service.teso13update(this.teso13).subscribe(
       response => {
-        Swal.fire('Información', response.message, response.status).then(()=>{
+        Swal.fire('Información', response.message, response.status).then(() => {
           form.reset()
         });
       }
     )
   }
+
+  getConta04(pclave: any) {
+    const keyword = pclave.target.value;
+    const search = this._teso13Service.getConta04(keyword).then(response => {
+        this.datac2 = response;
+    });
+    this.bandera2 = 'true';
+}
+
   centroC() {
 
     console.log("atuda!")

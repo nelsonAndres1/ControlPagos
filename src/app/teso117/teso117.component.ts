@@ -10,6 +10,8 @@ import { global } from '../services/global';
 import { Teso12Service } from '../services/teso12.service';
 import { Documento } from '../models/documento';
 import { Conta04 } from '../models/conta04';
+import PSPDFKit from "pspdfkit";
+
 @Component({
     selector: 'app-teso117',
     templateUrl: './teso117.component.html',
@@ -145,8 +147,48 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
     }
 
-
+    downloadPDF(so: any) {
+        const url = this.global_url + 'teso12/getDocumento/' + so.archivo;
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'documento.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error al descargar el archivo:', error));
+    }
+    toggleFullScreen() {
+        const pdfViewer = document.querySelector('pdf-viewer');
+        const pdfContainer = pdfViewer.shadowRoot.querySelector('.pdfViewer');
     
+        if (pdfContainer) { // Verifica si el contenedor del PDF existe
+            if (pdfContainer.requestFullscreen) {
+                if (!document.fullscreenElement) {
+                    pdfContainer.requestFullscreen().then(() => {
+                        console.log('PDF en pantalla completa');
+                    }).catch((err) => {
+                        console.error('Error al activar pantalla completa:', err);
+                    });
+                } else {
+                    document.exitFullscreen().then(() => {
+                        console.log('Saliendo de pantalla completa');
+                    }).catch((err) => {
+                        console.error('Error al salir de pantalla completa:', err);
+                    });
+                }
+            }
+        } else {
+            console.error('El contenedor del PDF no se encontró');
+        }
+    }
+    
+
+
 
     afterLoadComplete(pdfData: any) {
         this.totalPages = pdfData.numPages;

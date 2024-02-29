@@ -21,9 +21,9 @@ export class Impresion {
         public fecha:string,
         public valor:string,
         public cdp:string,
-        public numcon:string
-
-
+        public numcon:string,
+        public numfol: string,
+        public usucau: string
     ) {
 
 

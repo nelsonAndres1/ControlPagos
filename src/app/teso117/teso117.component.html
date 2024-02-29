@@ -67,12 +67,13 @@
                 <label for="exampleFormControlTextarea1">
                     <h5><b> Observación </b></h5>
                 </label>
-                
+
                 <br>
                 <p>¡Obligatorio para devoluciones!</p>
                 <div class="form-group">
-                    
-                    <textarea style="margin-left: 5%; margin-right: 5%;" class="form-control" id="exampleFormControlTextarea1" (input)="evento($event)" rows="3" maxlength="299"></textarea>
+
+                    <textarea style="margin-left: 5%; margin-right: 5%;" class="form-control"
+                        id="exampleFormControlTextarea1" (input)="evento($event)" rows="3" maxlength="299"></textarea>
 
 
                 </div>
@@ -85,37 +86,29 @@
         </div>
         <div id="tab-two-panel" *ngIf="!banderasop">
 
-
-
             <form class="formato2">
                 <h3>Visualizar Soportes</h3>
                 <div *ngFor="let so of soportes">
                     <div id="divPadre">
                         <div id="divHijo">
                             <button class="btn"><span>{{so.detsop}}</span><i class="icons">+</i>
+
                                 <ul class="dropdown">
                                     <pdf-viewer [src]="global_url+'teso12/getDocumento/'+so.archivo" [rotation]="0"
                                         [original-size]="false" [show-all]="true" [fit-to-page]="false" [zoom]="1"
                                         [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
                                         [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
                                         style="width: 100%; height: 300px;"></pdf-viewer>
+
+                                    <button type="button" class="btn btn-primary" (click)="downloadPDF(so)">
+                                        <i class="fas fa-download"></i> Descargar
+                                    </button>
                                 </ul>
                             </button>
                         </div>
                     </div>
                     <br>
                     <br>
-
-                    <!--  <h2>{{so.detsop}}</h2>
-                    <div id="outerContainer">
-                        <div class="pdf-container">
-                            <pdf-viewer [src]="global_url+'teso12/getDocumento/'+so.archivo" [rotation]="0"
-                                [original-size]="false" [show-all]="true" [fit-to-page]="false" [zoom]="1"
-                                [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
-                                [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                                style="width: 100%; height: 600px;"></pdf-viewer>
-                        </div>
-                    </div> -->
                 </div>
             </form>
         </div>

@@ -41,8 +41,8 @@ export class Teso113Component implements OnInit {
 
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
 
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
-        this.teso10 = new teso10('', '', '', '', '');
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
+        this.teso10 = new teso10('', '', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
@@ -92,6 +92,8 @@ export class Teso113Component implements OnInit {
                         this.impreseion.coddep = this.data.coddep;
                         this.impreseion.fecha = this.data.fecrad;
                         this.impreseion.numcon = this.data.numcon;
+                        this.impreseion.numfol =this.data.numfol;
+                        this.impreseion.usucau = this.data.usucau;
 
                         console.log("agagagagagagagagagagaggagagagag!!!!!!!!!!!!!!!!!!")
                         console.log(this.impreseion)
@@ -157,7 +159,7 @@ export class Teso113Component implements OnInit {
         this._router.navigate['/principal'];
     }
     getTeso10(n: any) {
-        this._teso13Service.name_teso10(new teso10(n, '', '', '', '')).subscribe(
+        this._teso13Service.name_teso10(new teso10(n, '', '', '', '', '')).subscribe(
             response => {
                 this.detalle = response.detclas;
                 console.log(this.detalle);

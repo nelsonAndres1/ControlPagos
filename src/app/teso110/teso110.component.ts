@@ -7,8 +7,9 @@ import Swal from 'sweetalert2';
 import { Router, NavigationExtras } from '@angular/router';
 import { Teso14Service } from '../services/teso14.service';
 import { Teso110Service } from '../services/teso110.service';
-import { identity } from 'rxjs';
-
+import { MatDialog } from '@angular/material/dialog';
+/* import { Modal1Component } from '../modal/modal1/modal1.component';
+ */
 @Component({
     selector: 'app-teso110',
     templateUrl: './teso110.component.html',
@@ -18,17 +19,19 @@ import { identity } from 'rxjs';
 export class Teso110Component implements OnInit {
 
     public teso10: teso10;
+    public teso10_editar: teso10;
     public teso110: teso110;
 
     public status: any;
     public status2: any;
     data: any;
-    public identity: any;
+    public teso10_lista: any;
     public token: any;
     public v: any = true;
-    constructor(private _teso10Service: Teso10Service, private _router: Router, private _teso14Service: Teso14Service, private _teso110Service: Teso110Service) {
+    constructor(public dialog: MatDialog, private _teso10Service: Teso10Service, private _router: Router, private _teso14Service: Teso14Service, private _teso110Service: Teso110Service) {
 
-        this.teso10 = new teso10('', '', '', '', '');
+        this.teso10 = new teso10('', '', '', '', '', '');
+        this.teso10_editar = new teso10('', '', '', '', '', '');
         this.datosTabla();
 
     }
@@ -44,6 +47,20 @@ export class Teso110Component implements OnInit {
 
         });
     }
+
+
+/*     openDialog(dt): void {
+        const dialogRef = this.dialog.open(Modal1Component, {
+            width: '50%',
+            height: '50%',
+            data: "Are you sure?"
+        });
+        dialogRef.afterClosed().subscribe(
+            res => {
+
+            }
+        )
+    } */
 
     getDetailPage(result: any) {
         const navigationExtras: NavigationExtras = {
@@ -299,9 +316,9 @@ export class Teso110Component implements OnInit {
                     this.token = response;
                     this._teso10Service.signup(this.teso10, this.v).subscribe(
                         response => {
-                            this.identity = response;
+                            this.teso10_lista = response;
                             this.token;
-                            this.identity;
+                            this.teso10_lista;
                         },
                         error => {
 
@@ -316,6 +333,25 @@ export class Teso110Component implements OnInit {
                 console.log(<any>error);
             }
         );
+    }
+
+
+    editar(dt: any) {
+
+
+        console.log("agagag")
+        console.log(dt)
+        this._teso110Service.update(dt).subscribe(
+            response =>{
+                if(response.status == 'success'){
+                    Swal.fire('Información', 'Tipo de Pago actualizado', response.status);
+                }else{
+                    Swal.fire('Información', response.message, response.status);
+                }
+            }, error =>{
+                Swal.fire('Error', 'Error desconocido!', 'error');
+            }
+        )
     }
 
 }

@@ -17,24 +17,27 @@
             <label for="name">
                 <h6> Tipo de Pago </h6>
             </label>
- 
-            <input type="text" placeholder="Tipo de Pago" for="detclas" (input)="getTPagos($event)" class="form-control" #detclas="ngModel"
-                [(ngModel)]="teso10.detclas" name="detclas" required pattern="[a-zA-Z]+"><!-- numero -->
+
+            <input type="text" placeholder="Tipo de Pago" for="detclas" class="form-control" #detclas="ngModel"
+                [(ngModel)]="teso10.detclas" name="detclas"><!-- numero -->
             <small *ngIf="!detclas.valid && detclas.touched" class="invalid-feedback d-block">
                 Este Campo es Requerido
             </small>
         </div>
 
         <div *ngFor="let result of data" (click)="getDetailPage(result)">
-            <div class = "card card-body mb-1">
+            <div class="card card-body mb-1">
                 <h6>Pago: {{result.detclas}}.</h6>
                 <small class="text-primary">estado: {{result.estado}}.</small>
                 <div class="row">
-                    <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codclas, result.detclas, result.estado, result.prioridad)" style="cursor: pointer;">Modificar</button>
+                    <button type="button" class="btn btn-warning btn-sm"
+                        (click)="update(result.codclas, result.detclas, result.estado, result.prioridad)"
+                        style="cursor: pointer;">Modificar</button>
                 </div>
                 <br>
                 <div class="row">
-                    <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codclas)" style=" cursor: pointer;">Eliminar</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codclas)"
+                        style=" cursor: pointer;">Eliminar</button>
                 </div>
             </div>
         </div>
@@ -44,25 +47,39 @@
                 <h6>Seleccione Estado del Tipo de Pago </h6>
             </label>
 
-            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.estado" name="estado"
-                required>
+            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel"
+                [(ngModel)]="teso10.estado" name="estado" required>
                 <option selected>Seleccione!</option>
                 <option>Activo</option>
                 <option>Inactivo</option>
             </select>
         </div>
-        
+
         <div class="row">
             <label for="estado">
                 <h6>Prioridad </h6>
             </label>
 
-            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel" [(ngModel)]="teso10.prioridad" name="estado"
-                required>
+            <select for="estado" class="form-control" placeholder="Seleccione" #estado="ngModel"
+                [(ngModel)]="teso10.prioridad" name="estado" required>
                 <option value="" selected>Seleccione!</option>
-                <option value="A" >ALTA</option>
+                <option value="A">ALTA</option>
                 <option value="M">MEDIA</option>
                 <option value="B">BAJA</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label for="estado">
+                <h6>¿Causador?</h6>
+            </label>
+
+            <select for="estado" class="form-control" placeholder="Seleccione" #causador="ngModel"
+                [(ngModel)]="teso10.causador" name="causador" required>
+                <option value="" selected>Seleccione!</option>
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+
             </select>
         </div>
     </div>
@@ -75,21 +92,47 @@
 
 <table class="table" id="tablaT10">
     <thead>
-      <tr>
-        <th scope="col">Codclas</th>
-        <th scope="col">Detalle</th>
-        <th scope="col">Estado</th>
-        <th scope="col">Prioridad</th>
-        <th scope="col">Numero de Pagos</th>
-      </tr>
+        <tr>
+            <th scope="col">Codclas</th>
+            <th scope="col">Detalle</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Prioridad</th>
+            <th scope="col">Numero de Pagos</th>
+            <th scope="col">Causador</th>
+            <th scope="col">Editar</th>
+        </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let dt of identity">
-        <th scope="row">{{dt.codclas}}</th>
-        <td>{{dt.detclas}}</td>
-        <td>{{dt.estado}}</td>
-        <td>{{dt.prioridad}}</td>
-        <td>{{dt.numero}}</td>
-      </tr>
+        <tr *ngFor="let dt of teso10_lista">
+            <th scope="row">{{dt.codclas}}</th>
+            <td>
+                <input type="text" placeholder="Tipo de Pago" class="form-control" [(ngModel)]="dt.detclas"
+                    name="detclas">
+            </td>
+            <td>
+
+                <select class="form-control" placeholder="Seleccione"  [(ngModel)]="dt.estado" name="estado">
+                    <option [value]="'A'" [selected]="dt.estado === 'A'">ACTIVO</option>
+                    <option [value]="'I'" [selected]="dt.estado === 'I'">INACTIVO</option>
+                </select>
+            </td>
+            <td>
+                <select class="form-control" placeholder="Seleccione" [(ngModel)]="dt.prioridad" name="prioridad">
+                    <option [selected]="dt.prioridad === 'A'">ALTA</option>
+                    <option [selected]="dt.prioridad === 'M'">MEDIA</option>
+                    <option [selected]="dt.prioridad === 'B'">BAJA</option>
+                </select>
+            </td>
+            <td>{{dt.numero}}</td>
+            <td>
+                <select class="form-control" placeholder="Seleccione" [(ngModel)]="dt.causador" name="causador">
+                    <option [value]="'SI'" [selected]="dt.causador === 'SI'">SI</option>
+                    <option [value]="'NO'" [selected]="dt.causador === 'NO'">NO</option>
+                </select>
+            </td>
+            <td>
+                <button type="button" class="btn btn-warning" (click)="editar(dt)">Editar</button>
+            </td>
+        </tr>
     </tbody>
-  </table>
+</table>

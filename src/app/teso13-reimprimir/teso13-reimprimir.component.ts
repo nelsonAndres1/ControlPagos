@@ -29,7 +29,7 @@ export class Teso13ReimprimirComponent {
 
   constructor(private _PdfService: PdfService, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _utilidadesService: UtilidadesService) {
     this.identity = this._gener02Service.getIdentity();
-    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','','');
   }
 
   getTeso13(event) {
@@ -74,6 +74,7 @@ export class Teso13ReimprimirComponent {
           this.impreseion.valor = 'VALOR: ' + dt.valor;
           this.impreseion.documento_clase = '';
           this.impreseion.numcon = dt.numcon;
+          this.impreseion.numfol = dt.numfol;
 
 
           this._utilidadesService.getAllConta04(this.impreseion).subscribe(

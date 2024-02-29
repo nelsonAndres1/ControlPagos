@@ -214,6 +214,16 @@
                     Este Campo es requerido
                 </small>
             </div>
+            <div class="col">
+                <label for="name"><b>Numero de Folios</b></label>
+                <div class="col">
+                    <input type="number" class="form-control" name="numfol" placeholder="Numero de Folios"
+                        #numfol="ngModel" [(ngModel)]="teso13.numfol" maxlength="15" required>
+                </div>
+                <small *ngIf="!numfol.valid && numfol.touched" class="invalid-feedback d-block">
+                    Este Campo es requerido
+                </small>
+            </div>
         </div>
 
         <div class="row">

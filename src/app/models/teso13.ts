@@ -32,6 +32,7 @@ export class Teso13{
         public perrev:string,
         public peraut:string,
         public bandera_actualizar: string,
-        public numcon:string
+        public numcon:string,
+        public numfol:string
     ){}
 }

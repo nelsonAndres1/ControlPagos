@@ -52,6 +52,7 @@
                         </small>
                     </div>
                 </div>
+
                 <div class="col">
                     <label for="name"><b>Codigo de Dependencia</b></label>
                     <div class="col">
@@ -78,6 +79,26 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <label for="name"><b>NIT</b></label>
+                        <div class="col">
+                            <div class="col">
+                                <div class="form-outline">
+                                    <input type="text" class="form-control" name="nit_name" placeholder="nit" for="nit"
+                                        (input)="getConta04($event)" [(ngModel)]="nit_nombre">
+                                </div>
+                            </div>
+                            <div *ngFor="let resultC of datac2">
+                                <div class="card card-body mb-1" (click)="touch(resultC)" style="cursor: pointer;"
+                                    *ngIf="bandera2=='true'">
+                                    <h6>Detalle: {{resultC.razsoc}}.</h6>
+                                    <small class="text-primary">NIT: {{resultC.nit}}.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <label for="name"><b>Numero de Factura</b></label>
                         <div class="col">
                             <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
@@ -87,7 +108,7 @@
                             Este Campo es requerido
                         </small>
                     </div>
-                   
+
                 </div>
                 <div class="row">
                     <div class="col">
