@@ -11,105 +11,105 @@ import { identity } from 'rxjs';
   styleUrls: ['./teso118.component.css']
 })
 export class Teso118Component implements OnInit {
-  itemDetail:any=[];
-  array : any = [];
-  status : any = [];
-  data:any;
-  arrayP : any = [];
-  constructor(private route : ActivatedRoute, private _route : Router, private _teso16Service : Teso16Service) {
+  itemDetail: any = [];
+  array: any = [];
+  status: any = [];
+  data: any;
+  arrayP: any = [];
+  constructor(private route: ActivatedRoute, private _route: Router, private _teso16Service: Teso16Service) {
 
-    this.route.queryParams.subscribe(response =>{
-      const paramsData =  JSON.parse(response['result']);
+    this.route.queryParams.subscribe(response => {
+      const paramsData = JSON.parse(response['result']);
       this.itemDetail = paramsData;
-      
+
     })
     this.listarTeso16(this.itemDetail['usuario']);
-   }
+  }
 
   ngOnInit(): void {
   }
 
-  tipoPermisos(permisos : any){
+  tipoPermisos(permisos: any) {
 
-    if(permisos=='AD'){
-      Swal.fire('Permiso','Administrador','info');
+    if (permisos == 'AD') {
+      Swal.fire('Permiso', 'Administrador', 'info');
     }
-    if(permisos=='RA'){
-      Swal.fire('Permiso','Radicación','info');
+    if (permisos == 'RA') {
+      Swal.fire('Permiso', 'Radicación', 'info');
     }
-    if(permisos=='RV'){
-      Swal.fire('Permiso','Revisión','info');
+    if (permisos == 'RV') {
+      Swal.fire('Permiso', 'Revisión', 'info');
     }
-    if(permisos=='AU'){
-      Swal.fire('Permiso','Autorizado','info');
+    if (permisos == 'AU') {
+      Swal.fire('Permiso', 'Autorizado', 'info');
     }
-    if(permisos=='FI'){
-      Swal.fire('Permiso','Financiera','info');
+    if (permisos == 'FI') {
+      Swal.fire('Permiso', 'Financiera', 'info');
     }
-    if(permisos=='CT'){
-      Swal.fire('Permiso','Causación','info');
+    if (permisos == 'CT') {
+      Swal.fire('Permiso', 'Causación', 'info');
     }
-    if(permisos=='PC'){
-      Swal.fire('Permiso','Causación Pago','info');
+    if (permisos == 'PC') {
+      Swal.fire('Permiso', 'Causación Pago', 'info');
     }
-    if(permisos=='RT'){
-      Swal.fire('Permiso','Revision Tesoreria','info');
+    if (permisos == 'RT') {
+      Swal.fire('Permiso', 'Revision Tesoreria', 'info');
     }
-    if(permisos=='RP'){
-      Swal.fire('Permiso','Radicación Pago','info');
+    if (permisos == 'RP') {
+      Swal.fire('Permiso', 'Radicación Pago', 'info');
     }
-    if(permisos=='P'){
-      Swal.fire('Permiso','Pago','info');
+    if (permisos == 'P') {
+      Swal.fire('Permiso', 'Pago', 'info');
     }
 
   }
 
 
 
-  listarTeso16(user : any){
-    const teso16 = this._teso16Service.listarTeso16(new Gener02(user,'')).subscribe(
-      response=>{
+  listarTeso16(user: any) {
+    const teso16 = this._teso16Service.listarTeso16(new Gener02(user, '')).subscribe(
+      response => {
         this.data = response;
       });
   }
   submit() {
     if (this.array.length > 0) {
-        Swal.fire({
-            title: "¿Estas Seguro?",
-            text: "¡Eliminaras Permisos a " + this.itemDetail.nombre + "!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#4BB543',
-            cancelButtonColor: '#EA1737',
-            confirmButtonText: 'Iniciar'
-        }).then(result => {
-            if (result.value) {
-                for (let index = 0; index < this.array.length; index++) {
-                    this._teso16Service.deleteTeso16(new Teso16(this.itemDetail.usuario,this.array[index])).subscribe(response => {
-                        if (response.status == "success") {
-                            this.status = response.status;
-                        } else {
-                            this.status = 'error';
-                        }
-                    }, error => {
-                        this.status = 'error';
-                        console.log(< any > error);
-                    });
-                }
-                Swal.fire('Listo!', 'Permiso(s) Eliminados(s)', 'success');
-            
-                this._route.navigate(['teso1117']);
-                
-            } else {
-                Swal.fire('Cancelado!', 'Permiso(s) No Eliminados(s)', 'error');
-            }
-        });
-    } else {
-        Swal.fire('¡Error!', 'No ha seleccionado ningun permiso', 'error');
-    }
-}
+      Swal.fire({
+        title: "¿Estas Seguro?",
+        text: "¡Eliminaras Permisos a " + this.itemDetail.nombre + "!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4BB543',
+        cancelButtonColor: '#EA1737',
+        confirmButtonText: 'Iniciar'
+      }).then(result => {
+        if (result.value) {
+          for (let index = 0; index < this.array.length; index++) {
+            this._teso16Service.deleteTeso16(new Teso16(this.itemDetail.usuario, this.array[index])).subscribe(response => {
+              if (response.status == "success") {
+                this.status = response.status;
+              } else {
+                this.status = 'error';
+              }
+            }, error => {
+              this.status = 'error';
+              console.log(<any>error);
+            });
+          }
+          Swal.fire('Listo!', 'Permiso(s) Eliminados(s)', 'success');
 
-  onChange($event, result : any){
+          this._route.navigate(['teso1117']);
+
+        } else {
+          Swal.fire('Cancelado!', 'Permiso(s) No Eliminados(s)', 'error');
+        }
+      });
+    } else {
+      Swal.fire('¡Error!', 'No ha seleccionado ningun permiso', 'error');
+    }
+  }
+
+  onChange($event, result: any) {
     var bandera = false;
     const navigationExtras: NavigationExtras = {
       queryParams: {
@@ -119,25 +119,25 @@ export class Teso118Component implements OnInit {
 
     const isChecked = $event.target.checked;
 
-    if(isChecked == true){
-      if(this.array.length>0){
+    if (isChecked == true) {
+      if (this.array.length > 0) {
         for (let index = 0; index <= this.array.length; index++) {
-          if(this.array[index]==result){
+          if (this.array[index] == result) {
             bandera = true;
           }
         }
-        if(bandera != true){
+        if (bandera != true) {
           this.array.push(result);
         }
-      }else{
+      } else {
         this.array.push(result);
       }
-    }else{
+    } else {
       for (let index = 0; index <= this.array.length; index++) {
-        if(this.array[index]==result){
-          this.array.splice(index,1);
+        if (this.array[index] == result) {
+          this.array.splice(index, 1);
         }
-        
+
       }
     }
   }

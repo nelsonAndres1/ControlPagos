@@ -36,7 +36,7 @@ export class AppComponent implements OnInit,
     constructor(private route: ActivatedRoute, public _principalService: PrincipalService, public _gener02Service: Gener02Service, public _teso10Service: Teso10Service, private router: Router) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
-        this.teso10 = new teso10('', '', '', '', '','');
+        this.teso10 = new teso10('', '', '', '', '', '');
 
     }
 
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit,
         this.router.navigate(['editar_teso13'])
     }
 
-    inp_reimprimir(){
+    inp_reimprimir() {
         this.router.navigate(['teso13_reimprimir'])
     }
 

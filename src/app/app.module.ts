@@ -1,18 +1,16 @@
 import { NgModule } from '@angular/core';
-import { routing, appRoutingProviders } from './app-routing.module';
+import { routing } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
-//import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Teso10Component } from './teso10/teso10.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { BarcodeScannerLivestreamModule } from "ngx-barcode-scanner";
-import { BarcodeGeneratorAllModule, QRCodeGeneratorAllModule, DataMatrixGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { BarcodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
@@ -104,7 +102,6 @@ import { Modal1Component } from './modal/modal1/modal1.component';
     BarcodeGeneratorAllModule,
     BarcodeScannerLivestreamModule,
     AngularFileUploaderModule,
-    //AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -117,7 +114,6 @@ import { Modal1Component } from './modal/modal1/modal1.component';
     MatDialogModule
 
   ],
-  //appRoutingProviders sin llaves y con corchetes
   providers: [
     IdentityGuard,
     LoginGuard,

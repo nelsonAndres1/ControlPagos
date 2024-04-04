@@ -34,7 +34,7 @@ export class Teso13editarComponent {
   bandera_formulario = false;
   periodos = [];
   bandera2: any
-  nit_nombre:any;
+  nit_nombre: any;
 
   constructor(private router: Router, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service) {
     this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
@@ -56,7 +56,7 @@ export class Teso13editarComponent {
     this.bandera2 = 'false';
     this.nit_nombre = resultC.razsoc;
 
-}
+  }
 
   periodosT(añoI: any, añoF: any) {
     var resultado;
@@ -124,10 +124,10 @@ export class Teso13editarComponent {
   getConta04(pclave: any) {
     const keyword = pclave.target.value;
     const search = this._teso13Service.getConta04(keyword).then(response => {
-        this.datac2 = response;
+      this.datac2 = response;
     });
     this.bandera2 = 'true';
-}
+  }
 
   centroC() {
 
@@ -192,6 +192,7 @@ export class Teso13editarComponent {
       }
     }
   }
+
   touch28(result: any) {
     this.teso13.coddep = result.coddep;
     this.bandera28 = 'false';

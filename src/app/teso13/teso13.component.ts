@@ -70,19 +70,17 @@ export class Teso13Component implements OnInit {
     data_keyword: any = { data: '', codcen: '' }
 
     constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService) {
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0','','');
 
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
         this.periodosT(2023, 2024);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.tpago = this._teso12Service.getTpago();
-
         this._userService.fecha().subscribe(
             response => {
                 this.fechaRdicado = response;
             }
         )
-
         this.nconsecutivo = 0;
         this.usu = '1';
         this.tpago = '1';
@@ -94,24 +92,21 @@ export class Teso13Component implements OnInit {
             this._router.navigate(['teso10']);
         }
 
-        this._utilidadesService.getAutorizaRevisa({'opcion':'REVISA'}).subscribe(
-            response =>{
+        this._utilidadesService.getAutorizaRevisa({ 'opcion': 'REVISA' }).subscribe(
+            response => {
                 this.personas_revisa = response;
                 console.log("1");
                 console.log(this.personas_revisa)
             }
         )
 
-        this._utilidadesService.getAutorizaRevisa({'opcion':'AUTORIZA'}).subscribe(
-            response =>{
+        this._utilidadesService.getAutorizaRevisa({ 'opcion': 'AUTORIZA' }).subscribe(
+            response => {
                 this.personas_autoriza = response;
                 console.log("2");
                 console.log(this.personas_autoriza)
             }
         )
-
-
-
 
     }
     touch(resultC: any) {
@@ -284,9 +279,7 @@ export class Teso13Component implements OnInit {
                             this.datos_teso17.push(response.numcuo, response.cuota);
                             this.teso13.numcuo = response.numcuo;
                             this.cuota = parseInt(response.cuota) + 1;
-
                         }
-
                     },
                     error => {
                         this.bd1 = false;
@@ -313,9 +306,9 @@ export class Teso13Component implements OnInit {
             confirmButtonText: 'Iniciar'
 
         }).then(result => {
-            
+
             this.teso13.fecrad = this.fechaRdicado;
-            if((this.teso13.numcon+'').trim() == ''){
+            if ((this.teso13.numcon + '').trim() == '') {
                 this.teso13.numcon = '0';
             }
             if (result.value) {
@@ -397,12 +390,11 @@ export class Teso13Component implements OnInit {
                 this.usu = this.identity['sub'];
                 this.usuela = this.usu;
                 this.teso13.usuela = this.usuela;
-                /*   }, error => {
-                      this.status = 'error';
-                      console.log(<any>error);
-                  }); */
+
             } else {
+
                 this.status = 'error';
+
             }
         }, error => {
             this.status = 'error';

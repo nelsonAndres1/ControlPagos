@@ -120,30 +120,18 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
             this.itemDetail = paramsData;
-
             this.item1 = this.itemDetail[0];
-            console.log("item1!!!!");
-            console.log(this.item1);
             this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
             this.item2 = this.itemDetail[1][0];
-            console.log("data!!!!");
-            console.log(this.data);
             for (let index = 0; index < this.item1.length; index++) {
 
                 this.getUsuario(this.item1[index]['usuario']);
-
                 this.estadoA = this.item1[index]['estado'];
-
                 this.itemF = this.item1[index];
 
             }
-            console.log("estado!");
-            console.log(this.estadoA);
-
             this.estados(this.estadoA);
-
         });
-
     }
 
     downloadPDF(so: any) {
@@ -164,7 +152,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     toggleFullScreen() {
         const pdfViewer = document.querySelector('pdf-viewer');
         const pdfContainer = pdfViewer.shadowRoot.querySelector('.pdfViewer');
-    
+
         if (pdfContainer) { // Verifica si el contenedor del PDF existe
             if (pdfContainer.requestFullscreen) {
                 if (!document.fullscreenElement) {
@@ -185,7 +173,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             console.error('El contenedor del PDF no se encontró');
         }
     }
-    
+
 
 
 
@@ -227,19 +215,15 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     }
     sop1() {
         this.banderasop = true;
-        console.log(this.banderasop);
     }
     sop2() {
         this.banderasop = false;
-        console.log(this.banderasop);
     }
 
     nombreUsuario(user: any) {
         console.log("Buscando..")
         for (let index = 0; index < this.arrayN.length; index++) {
             if (this.arrayN[index] == user) {
-                console.log(this.arrayN[index]);
-                console.log(this.arrayN[index + 1]);
                 Swal.fire('Usuario encontrado', this.arrayN[index + 1], 'info')
                 break;
             } else {
@@ -283,8 +267,6 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         this._teso117Service.traerSoportes(this.data).subscribe(
             response => {
                 this.soportes = response;
-                console.log("soportes!");
-                console.log(this.soportes);
             }
         )
     }
@@ -559,20 +541,6 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
                 }
             }
-
-
-            /*             if (estado == 'RT') {
-                            for (let index = 0; index < this.arrayPermisos.length; index++) {
-                                if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
-                                    this.arraySalida = this.array6;
-                                    bandera = true;
-                                    this.btn = true;
-                                }
-                            }
-                            if (bandera != true) {
-                                Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
-                            }
-                        } */
         } else {
             Swal.fire('Error', 'Usted no tiene Permisos', 'error');
         }
@@ -673,5 +641,4 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
         )
     }
-
 }

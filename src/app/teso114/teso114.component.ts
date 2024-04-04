@@ -1,31 +1,32 @@
-import {Component, OnInit} from '@angular/core';
-import {Teso14Service} from '../services/teso14.service';
-import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
-import {FormGroup, UntypedFormBuilder, UntypedFormArray, FormControl} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Teso14Service } from '../services/teso14.service';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { FormGroup, UntypedFormBuilder, UntypedFormArray, FormControl } from '@angular/forms';
 import Swal from 'sweetalert2';
-import {teso112} from '../models/teso112';
+import { teso112 } from '../models/teso112';
 import { identity } from 'rxjs';
 
-@Component({selector: 'app-teso114', 
-            templateUrl: './teso114.component.html', 
-            styleUrls: ['./teso114.component.css']
+@Component({
+    selector: 'app-teso114',
+    templateUrl: './teso114.component.html',
+    styleUrls: ['./teso114.component.css']
 })
 export class Teso114Component implements OnInit {
-    data : any;
-    itemDetail : any = [];
-    grupoSoportes : any = [];
+    data: any;
+    itemDetail: any = [];
+    grupoSoportes: any = [];
     array = [];
     ao = [];
     ap = [];
-    public status : any;
-    sw : any;
-    sw1 : any;
-    public teso112 : teso112;
-    constructor(private route : ActivatedRoute,
-                private _teso14Service : Teso14Service,
-                fb : UntypedFormBuilder, 
-                private _router : Router
-                ) {
+    public status: any;
+    sw: any;
+    sw1: any;
+    public teso112: teso112;
+    constructor(private route: ActivatedRoute,
+        private _teso14Service: Teso14Service,
+        fb: UntypedFormBuilder,
+        private _router: Router
+    ) {
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
@@ -33,8 +34,8 @@ export class Teso114Component implements OnInit {
             this.itemDetail.estado;
         });
         this.grupoSoportes = this.getTsoportes();
-        
-        this.grupoSoportes = fb.group({selected: new UntypedFormArray([])});
+
+        this.grupoSoportes = fb.group({ selected: new UntypedFormArray([]) });
 
     }
 
@@ -51,7 +52,7 @@ export class Teso114Component implements OnInit {
     getTsoportes() {
         const sopor = this._teso14Service.getTsoportes({}).subscribe(response => {
             this.data = response;
-        
+
         });
         return this.data;
     }
@@ -129,7 +130,7 @@ export class Teso114Component implements OnInit {
         });
     }
 
-    onChange($event, result : any) {
+    onChange($event, result: any) {
 
         var bandera = false;
         const navigationExtras: NavigationExtras = {
@@ -143,15 +144,11 @@ export class Teso114Component implements OnInit {
             if (this.array.length > 0) {
                 for (let index = 0; index <= this.array.length; index++) {
                     if (this.array[index] == result) {
-                        console.log(this.array[index]);
-                        console.log(result);
                         bandera = true;
                     }
                 }
                 if (bandera != true) {
-        
                     this.array.push(result);
-
                     this.confirmacionesSO(this.ao, this.ap);
                 }
             } else {
@@ -170,7 +167,7 @@ export class Teso114Component implements OnInit {
         }
     }
 
-    getDetail(result : any) {
+    getDetail(result: any) {
         const navigationExtras: NavigationExtras = {
             queryParams: {
                 result: JSON.stringify(result)
@@ -178,7 +175,7 @@ export class Teso114Component implements OnInit {
         }
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     submit() {
 
@@ -195,12 +192,8 @@ export class Teso114Component implements OnInit {
                 confirmButtonText: 'Iniciar'
 
             }).then(result => {
-
                 if (result.value) {
-
                     for (let index = 0; index < this.array.length; index++) {
-                        
-         
                         this.teso112 = new teso112(this.itemDetail.codclas, this.array[index].codsop, this.ao[index], this.ap[index]);
                         this._teso14Service.setTeso12(this.teso112).subscribe(response => {
                             if (response.status == "success") {
@@ -214,14 +207,12 @@ export class Teso114Component implements OnInit {
                         }, error => {
 
                             this.status = 'error';
-                            console.log(< any > error);
 
                         })
 
                     }
                     Swal.fire('Listo!', 'Soporte(s) enviados', 'success');
                 } else {
-                    console.log('yes');
                     Swal.fire('Cancelado!', 'Soporte(s) No Enviados', 'error');
                 }
             })
@@ -235,8 +226,6 @@ export class Teso114Component implements OnInit {
                 confirmButtonAriaLabel: '¡Ok!'
             })
         }
-
-
     }
 
 }

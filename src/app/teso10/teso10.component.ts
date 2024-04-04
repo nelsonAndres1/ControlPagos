@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { teso10 } from '../models/teso10';
-import { Teso12Component } from '../teso12/teso12.component';
 import { Teso10Service } from '../services/teso10.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Teso12Service } from '../services/teso12.service';
 import { Teso13Service } from '../services/teso13.service';
-
 import { teso12 } from '../models/teso12';
+
 @Component({
   selector: 'app-teso10',
   templateUrl: './teso10.component.html',
@@ -18,67 +16,67 @@ import { teso12 } from '../models/teso12';
 })
 
 export class Teso10Component implements OnInit {
-  formGroup:UntypedFormGroup;
+  formGroup: UntypedFormGroup;
 
   public teso10: teso10;
   public teso12: teso12;
   public status: any;
   public token: any;
   public identity: any;
-  public v:any=true;
+  public v: any = true;
   public res: any;
-  
-  opcionSeleccionado: string  = '0';
-  verSeleccion: string        = '';
+
+  opcionSeleccionado: string = '0';
+  verSeleccion: string = '';
 
   constructor(
-    public formulario:UntypedFormBuilder,
+    public formulario: UntypedFormBuilder,
     private _teso10Service: Teso10Service,
-    private _teso12Service: Teso12Service, 
+    private _teso12Service: Teso12Service,
     private _userService: Teso13Service,
     private _router: Router,
     private _route: ActivatedRoute
-    ){ 
-    this.formGroup=this.formulario.group({
-      n1:[''],
-      n2:[''],
+  ) {
+    this.formGroup = this.formulario.group({
+      n1: [''],
+      n2: [''],
     });
-      
-    this.teso10 = new teso10('','','','','','');
-    this.teso12 = new teso12('','');
-    this.onSubmit();  
+
+    this.teso10 = new teso10('', '', '', '', '', '');
+    this.teso12 = new teso12('', '');
+    this.onSubmit();
   }
 
   ngOnInit(): void {
-    
+
   }
-  recibirTeso10(){
+  recibirTeso10() {
 
     console.log(this.formGroup.value);
   }
 
-  onSubmit(){
+  onSubmit() {
     this._teso10Service.signup(this.teso10).subscribe(
-      response =>{
-        if(response.status != 'error'){
+      response => {
+        if (response.status != 'error') {
           this.status = 'success';
           this.token = response;
-          this._teso10Service.signup(this.teso10,this.v).subscribe(
+          this._teso10Service.signup(this.teso10, this.v).subscribe(
             response => {
               this.identity = response;
               this.token;
               this.identity;
             },
-            error =>{
+            error => {
               this.status = 'error';
               console.log(<any>error);
             }
           );
-        }else{
+        } else {
           this.status = 'error';
         }
       },
-      error =>{
+      error => {
         this.status = 'error';
         console.log(<any>error);
       }
@@ -86,40 +84,40 @@ export class Teso10Component implements OnInit {
   }
 
 
-   capturar(){
+  capturar() {
     this.verSeleccion = this.opcionSeleccionado;
     this.traerTpago(this.verSeleccion);
     this.delay(1000);
     this.onSubmit2(this.verSeleccion);
-    localStorage.setItem('identity2', JSON.stringify(this.verSeleccion));    
+    localStorage.setItem('identity2', JSON.stringify(this.verSeleccion));
     return this.verSeleccion;
   }
 
   delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  traerTpago(detclas:any){
-    this._userService.traerCodClas({detclas}).subscribe(
+  traerTpago(detclas: any) {
+    this._userService.traerCodClas({ detclas }).subscribe(
       response => {
-        if(response.status != 'error'){
+        if (response.status != 'error') {
           this.token = response;
 
-          this._userService.traerCodClas({detclas}).subscribe(
+          this._userService.traerCodClas({ detclas }).subscribe(
             response => {
               this.identity = response;
 
               this.token;
               this.identity;
 
-              localStorage.setItem('tpa',JSON.stringify(this.identity));
+              localStorage.setItem('tpa', JSON.stringify(this.identity));
             },
             error => {
               this.status = 'error';
               console.log(<any>error);
             }
           );
-        }else{
+        } else {
           this.status = 'error';
         }
       },
@@ -130,21 +128,21 @@ export class Teso10Component implements OnInit {
     )
   }
 
-  onSubmit2(detclas: any){
-    this._teso12Service.signup({detclas}).subscribe(
+  onSubmit2(detclas: any) {
+    this._teso12Service.signup({ detclas }).subscribe(
       response => {
-        if(response.status != 'error'){
+        if (response.status != 'error') {
           this.status = 'success';
           this.token = response;
 
-          this._teso12Service.signup({detclas}, true).subscribe(
+          this._teso12Service.signup({ detclas }, true).subscribe(
             response => {
               this.identity = response;
 
               this.token;
               this.identity;
 
-              localStorage.setItem('token1',this.token);
+              localStorage.setItem('token1', this.token);
               localStorage.setItem('identity1', JSON.stringify(this.identity));
 
               this._router.navigate(['teso13']);
@@ -154,7 +152,7 @@ export class Teso10Component implements OnInit {
               console.log(<any>error);
             }
           );
-        }else{
+        } else {
           this.status = 'error';
         }
       },
@@ -164,6 +162,6 @@ export class Teso10Component implements OnInit {
       }
     );
   }
-  
-  
+
+
 }

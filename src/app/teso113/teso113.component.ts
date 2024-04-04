@@ -41,13 +41,11 @@ export class Teso113Component implements OnInit {
 
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
 
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
         this.teso10 = new teso10('', '', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
             this.itemDetail = paramsData;
-            console.log("Itemdetal!!!!!")
-            console.log(this.itemDetail);
             this.numero = this.itemDetail[0];
             this.codclas = this.itemDetail[1];
             this.nit = this.itemDetail[2];
@@ -92,11 +90,8 @@ export class Teso113Component implements OnInit {
                         this.impreseion.coddep = this.data.coddep;
                         this.impreseion.fecha = this.data.fecrad;
                         this.impreseion.numcon = this.data.numcon;
-                        this.impreseion.numfol =this.data.numfol;
+                        this.impreseion.numfol = this.data.numfol;
                         this.impreseion.usucau = this.data.usucau;
-
-                        console.log("agagagagagagagagagagaggagagagag!!!!!!!!!!!!!!!!!!")
-                        console.log(this.impreseion)
 
                         if (this.cdp_documento == '00') {
                             this.impreseion.cdp = '-'
@@ -174,8 +169,6 @@ export class Teso113Component implements OnInit {
         this.longitud = '';
         this._teso13Service.getSoportes(this.teso10).subscribe(
             response => {
-                console.log("Ahhh Soportes");
-                console.log(response);
                 this.impreseion.documento_clase = response;
                 this.soportes = response;
                 for (let index = 0; index < this.soportes.length; index++) {

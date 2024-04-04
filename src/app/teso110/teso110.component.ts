@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { teso10 } from '../models/teso10';
 import { teso110 } from '../models/teso110';
 import { Teso10Service } from '../services/teso10.service';
@@ -8,8 +7,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { Teso14Service } from '../services/teso14.service';
 import { Teso110Service } from '../services/teso110.service';
 import { MatDialog } from '@angular/material/dialog';
-/* import { Modal1Component } from '../modal/modal1/modal1.component';
- */
+
 @Component({
     selector: 'app-teso110',
     templateUrl: './teso110.component.html',
@@ -47,20 +45,6 @@ export class Teso110Component implements OnInit {
 
         });
     }
-
-
-/*     openDialog(dt): void {
-        const dialogRef = this.dialog.open(Modal1Component, {
-            width: '50%',
-            height: '50%',
-            data: "Are you sure?"
-        });
-        dialogRef.afterClosed().subscribe(
-            res => {
-
-            }
-        )
-    } */
 
     getDetailPage(result: any) {
         const navigationExtras: NavigationExtras = {
@@ -105,7 +89,6 @@ export class Teso110Component implements OnInit {
                             }
                         }, error => {
                             this.status2 = 'error';
-                            console.log(<any>error);
                         });
 
                     } else {
@@ -240,9 +223,7 @@ export class Teso110Component implements OnInit {
                         }
                     }, error => {
                         this.status2 = 'error';
-                        console.log(<any>error);
                     });
-                console.log(v1, "eliminado");
                 swalWithBootstrapButtons.fire(
                     'Eliminado!',
                     'El Pago ' + v1 + ' ha sido eliminado',
@@ -250,7 +231,6 @@ export class Teso110Component implements OnInit {
                 )
 
             } else if (
-                /* Read more about handling dismissals below */
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
@@ -281,19 +261,15 @@ export class Teso110Component implements OnInit {
                 this._teso10Service.register(this.teso10).subscribe(response => {
                     if (response.status == "success") {
                         this.status = response.status;
-                        console.log('yes');
                         Swal.fire('Listo!', 'Pago Agregado', 'success');
                         form.reset();
                     } else {
                         this.status = 'error';
-                        console.log('No!');
                         Swal.fire('Cancelado!', 'Pago No Agregado', 'error');
                     }
                 }, error => {
 
                     this.status = 'error';
-                    console.log(<any>error);
-                    console.log('No!');
                     Swal.fire('Cancelado!', 'Pago No Agregado', 'error');
                 });
 
@@ -301,7 +277,6 @@ export class Teso110Component implements OnInit {
 
             } else {
 
-                console.log('No!');
                 Swal.fire('Cancelado!', 'Pago No Agregado', 'error');
 
             }
@@ -337,21 +312,16 @@ export class Teso110Component implements OnInit {
 
 
     editar(dt: any) {
-
-
-        console.log("agagag")
-        console.log(dt)
         this._teso110Service.update(dt).subscribe(
-            response =>{
-                if(response.status == 'success'){
+            response => {
+                if (response.status == 'success') {
                     Swal.fire('Información', 'Tipo de Pago actualizado', response.status);
-                }else{
+                } else {
                     Swal.fire('Información', response.message, response.status);
                 }
-            }, error =>{
+            }, error => {
                 Swal.fire('Error', 'Error desconocido!', 'error');
             }
         )
     }
-
 }

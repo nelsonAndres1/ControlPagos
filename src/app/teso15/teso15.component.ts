@@ -12,52 +12,48 @@ import { identity } from 'rxjs';
 export class Teso15Component implements OnInit {
   data: any;
   data1: any;
-  /* current_clien = Teso15; */ 
+  /* current_clien = Teso15; */
   query: string = '';
-  
+
 
   constructor(
     private _teso15Service: Teso15Service,
     private router: Router
   ) {
 
-   }
+  }
 
   ngOnInit(): void {
 
 
   }
-  getTpago(pclave: any){
+  getTpago(pclave: any) {
     const keyword = pclave.target.value;
-    if(keyword.length==10){
+    if (keyword.length == 10) {
       const search = this._teso15Service.getTPago(keyword).then(
         response => {
           this.data = response[1];
           this.data1 = response;
 
-   
+
         },
-        error=>{
-          
+        error => {
+
         }
-        )
-    }else{
-     
+      )
+    } else {
+
     }
   }
 
-  getDetailPage(result:any, data: any){
+  getDetailPage(result: any, data: any) {
     var res: any;
     var res2: any;
     const navigationExtras: NavigationExtras = {
       queryParams: {
-
         res2: JSON.stringify(data)
       }
     }
-
-    console.log('2');
-    console.log(res2);
     this.router.navigate(['teso16'], navigationExtras);
   }
 

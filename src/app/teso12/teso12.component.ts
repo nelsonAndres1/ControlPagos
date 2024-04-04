@@ -58,12 +58,12 @@ export class Teso12Component implements OnInit {
     public confirPer: any = 0;
     files: any;
     public estedato: any;
-    public datos_actualizados:any;
+    public datos_actualizados: any;
     sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
     constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '','1','','');
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '', '1', '', '');
         this.nconsecutivo = 0;
         this.nombres = new Nombres('', 0, '');
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');
@@ -119,7 +119,7 @@ export class Teso12Component implements OnInit {
                 this.identity2 = response;
                 this.identity3 = response;
                 this.consecutivo = this.identity2[this.index]['numero'];
-   
+
                 this.nconsecutivo = + this.teso13.numero;
                 this.tpago;
                 this.nconsecutivo;
@@ -149,11 +149,6 @@ export class Teso12Component implements OnInit {
                         afterUploadMsg_error: 'Upload Failed !'
                     }
                 };
-                // Fin afuconfig
-                /*                 }, error => {
-                                    this.status = 'error';
-                
-                                }); */
             } else {
                 this.status = 'error';
             }
@@ -312,7 +307,7 @@ export class Teso12Component implements OnInit {
     }
 
 
-    randomIntFromInterval(min: number, max: number) { // min and max included
+    randomIntFromInterval(min: number, max: number) { 
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
 

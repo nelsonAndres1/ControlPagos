@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Teso15Service } from '../services/teso15.service';
-import { Teso15 } from '../models/teso15';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
-import { identity } from 'rxjs';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-teso17',
@@ -52,8 +50,6 @@ export class Teso17Component implements OnInit {
         res2: JSON.stringify(data)
       }
     }
-    console.log('2');
-    console.log(res2);
     this.router.navigate(['teso117'], navigationExtras);
   }
 }

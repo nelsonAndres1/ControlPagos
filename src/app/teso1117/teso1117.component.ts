@@ -10,28 +10,27 @@ import { identity } from 'rxjs';
   providers: [Teso16Service]
 })
 export class Teso1117Component implements OnInit {
-  
-  data : any;
-  constructor( private _teso16Service : Teso16Service, private router: Router) 
-  { 
+
+  data: any;
+  constructor(private _teso16Service: Teso16Service, private router: Router) {
 
   }
 
   ngOnInit(): void {
   }
-  getUsuarios(pclave : any){
+  getUsuarios(pclave: any) {
     const keyword = pclave.target.value;
     const search = this._teso16Service.getUsuarios(keyword).then(response => {
       this.data = response
     })
   }
-  getDetailPage(result : any){
+  getDetailPage(result: any) {
     const navigationExtras: NavigationExtras = {
       queryParams: {
-        result : JSON.stringify(result)
+        result: JSON.stringify(result)
       }
-     }
-     this.router.navigate(['teso118'], navigationExtras);
+    }
+    this.router.navigate(['teso118'], navigationExtras);
   }
 
 }

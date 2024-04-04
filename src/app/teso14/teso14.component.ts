@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
 import { teso10 } from "../models/teso10";
-import { Teso14 } from '../models/teso14';
 import { Teso14Service } from '../services/teso14.service';
-import { Teso114Service } from '../services/teso114.service';
-import { Router, ActivatedRoute ,NavigationExtras } from '@angular/router';
-import { identity } from 'rxjs';
+import { Router, NavigationExtras } from '@angular/router';
+
 @Component({
   selector: 'app-teso14',
   templateUrl: './teso14.component.html',
@@ -17,36 +14,39 @@ export class Teso14Component implements OnInit {
   public teso10;
   public status: any;
   public token: any;
-  public v:any=true;
+  public v: any = true;
+
   constructor(
-    private service: Teso14Service, 
+    private service: Teso14Service,
     private _teso14Service: Teso14Service,
-    private router:Router
-    ) {
+    private router: Router
+  ) {
 
-      this.teso10 = new teso10('','','','','','');
-     } 
-
-  ngOnInit(): void {
-    
+    this.teso10 = new teso10('', '', '', '', '', '');
   }
 
-  getTPagos(pclave: any){
+  ngOnInit(): void {
+
+  }
+
+  getTPagos(pclave: any) {
+
     const keyword = pclave.target.value;
     const search = this.service.getTPago(keyword).then(
       response => {
         this.data = response;
-     
+
       });
+
   }
-  getDetailPage(result:any){
-   
+  getDetailPage(result: any) {
+
     const navigationExtras: NavigationExtras = {
-      queryParams:  {
+      queryParams: {
         result: JSON.stringify(result)
       }
 
     }
     this.router.navigate(['teso114'], navigationExtras);
-  } 
+  }
 }
