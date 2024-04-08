@@ -5,9 +5,9 @@
         <div class="col-md-4">
             <h3>Seleccione la Clase de Pago</h3>
             <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
-            <select  [(ngModel)]="opcionSeleccionado" (change)="capturar()" id="inputState" formControlName="n1" class="form-select">
+            <select  [(ngModel)]="opcionSeleccionado" (change)="capturar($event)" id="inputState" formControlName="n1" class="form-select">
                 <option selected>Seleccione</option>
-                <option *ngFor="let dt of pagos">{{dt.detclas}}</option>
+                <option *ngFor="let dt of pagos" value={{dt.codclas}}>{{dt.detclas}}</option>
             </select> 
             <br> 
         </div> 

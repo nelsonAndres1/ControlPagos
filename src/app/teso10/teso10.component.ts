@@ -84,9 +84,10 @@ export class Teso10Component implements OnInit {
   }
 
 
-  capturar() {
+  capturar(e) {
+
     this.verSeleccion = this.opcionSeleccionado;
-    this.traerTpago(this.verSeleccion);
+    this.traerTpago(e.target.value);
     this.delay(1000);
     this.onSubmit2(this.verSeleccion);
     localStorage.setItem('identity2', JSON.stringify(this.verSeleccion));
