@@ -112,6 +112,13 @@ export class Teso13Service {
         return this._http.post(this.url + 'teso13/searchTeso13', params, { headers: headers });
     }
 
+    getEstadoActual(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/getEstadoActual', params, { headers: headers });
+    }
+
     downloadFile(user: any): Observable<any> {
         /* let json = JSON.stringify(user);
         let params = 'json=' + json; */
@@ -197,7 +204,7 @@ export class Teso13Service {
     }
 
 
-    
+
 
 
 

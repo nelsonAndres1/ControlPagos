@@ -21,4 +21,10 @@ export class UploadService {
             map(response => response)
         );
     }
+
+    uploadArchivos(formData: FormData): Observable<any> {
+        return this.http.post<any>(this.url + 'uploadArchivos', formData).pipe(
+            map(response => response)
+        );
+    }
 }

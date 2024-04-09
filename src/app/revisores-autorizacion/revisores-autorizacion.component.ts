@@ -23,6 +23,8 @@ export class RevisoresAutorizacionComponent {
     this.teso19 = new Teso19('', '', '', '', '');
     this.teso19.usuario = this.identity.sub;
 
+
+
   }
 
 
