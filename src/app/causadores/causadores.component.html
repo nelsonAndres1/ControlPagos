@@ -65,11 +65,14 @@
                             <td>{{dt.numero}}</td>
                             <td>{{dt.estado}}</td>
                             <td *ngIf="dt.estado == 'A'">
-                                <button type="button" class="btn btn-warning" (click)="estado(dt,'I')">Inactivar</button>
+                                <button type="button" class="btn btn-warning" (click)="estado(dt,'I')" style="margin: 3px;">Inactivar</button>
+                                <button type="button" class="btn btn-danger" (click)="eliminar(dt)" style="margin: 3px;">Eliminar</button>
                             </td>
                             <td *ngIf="dt.estado == 'I'">
-                                <button type="button" class="btn btn-success" (click)="estado(dt, 'A')">Activar</button>
+                                <button type="button" class="btn btn-success" (click)="estado(dt, 'A')" style="margin: 3px;">Activar</button>
+                                <button type="button" class="btn btn-danger" (click)="eliminar(dt)" style="margin: 3px;">Eliminar</button>
                             </td>
+
                         </tr>
                     </tbody>
                 </table>

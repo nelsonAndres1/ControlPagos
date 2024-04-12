@@ -51,8 +51,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     public array1 = ['Revisión', 'Anulado'];
     public array2 = ['Autorizado', 'Anulado'];
     public array3 = ['Financiera', 'Anulado'];
-    public array4 = ['Causación de Cuenta', 'Causación de Pago', 'Anulado'];
+    public array4 = ['Causación de Cuenta', 'Radicado Causación Pago', 'Anulado'];
+    public array41 = ['Radicado Causación de Cuenta', 'Radicado Causación Pago', 'Anulado'];
     public array5 = ['Causación Pago', 'Devuelto Radicado', 'Anulado'];
+    public array51 = ['Radicado Causación Pago', 'Devuelto Radicado', 'Anulado'];
     public array6 = ['Autorización Pago', 'Devuelto Causación', 'Devuelto Radicado', 'Anulado'];
     public array7 = ['Preparación Transferencia', 'Legalización de Cheque', 'Devuelto Causación', 'Anulado'];
     public array8 = [
@@ -212,14 +214,14 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                 if (this.bandera_archivo) {
                     let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
 
-                    if (this.estadoActual == 'PC' ) {
+                    if (this.estadoActual == 'PC') {
                         this.data.codtipag = '178';
                     } else if (this.estadoActual == 'PE') {
                         this.data.codtipag = '179';
-                    }else if(this.estadoActual == 'CT'){
+                    } else if (this.estadoActual == 'CT') {
                         this.data.codtipag = '177';
                     }
-                    
+
                     const formData = new FormData();
                     Object.values(this.selectedFiles).forEach(file => {
                         formData.append('files[]', file);
@@ -411,6 +413,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'CA') {
             estadoEscr = 'Causación de Pago';
         }
+        if (estado == 'RC') {
+            estadoEscr = 'Radicado Causación de Cuenta';
+        }
+        if (estado == 'CP') {
+            estadoEscr = 'Radicado Causación Pago';
+        }
 
         return estadoEscr;
     }
@@ -471,6 +479,12 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         if (estado == 'Causación de Pago') {
             this.estadoActual = 'CA';
         }
+        if (estado == 'Radicado Causación de Cuenta') {
+            this.estadoActual = 'RC';
+        }
+        if (estado == 'Radicado Causación Pago') {
+            this.estadoActual = 'CP';
+        }
         console.log(this.estadoActual);
 
         if (this.estadoActual == 'PC' || this.estadoActual == 'CT' || this.estadoActual == 'PE') {
@@ -529,6 +543,18 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             if (estado == 'FI') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'CT' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array41;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Causación', 'error');
+                }
+            }
+            if (estado == 'RC') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'CT' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array4;
                         bandera = true;
                         this.btn = true;
@@ -538,7 +564,8 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     Swal.fire('Error', 'Usted no tiene permisos para Causación', 'error');
                 }
             }
-            if (estado == 'CT' || estado == 'DC') {
+
+            if (estado == 'CP' || estado == 'DC') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'PC' || this.arrayPermisos[index] == 'AD') {
                         this.arraySalida = this.array5;
@@ -550,6 +577,22 @@ export class Teso117Component implements OnInit { /* RA - Radicado
                     Swal.fire('Error', 'Usted no tiene permisos para Causación Pago', 'error');
                 }
             }
+
+            if (estado == 'CT' || estado == 'DC') {
+                for (let index = 0; index < this.arrayPermisos.length; index++) {
+                    if (this.arrayPermisos[index] == 'PC' || this.arrayPermisos[index] == 'AD') {
+                        this.arraySalida = this.array51;
+                        bandera = true;
+                        this.btn = true;
+                    }
+                }
+                if (bandera != true) {
+                    Swal.fire('Error', 'Usted no tiene permisos para Causación Pago', 'error');
+                }
+            }
+
+
+
             if (estado == 'PC' || estado == 'CA') {
 
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
@@ -697,7 +740,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             });
 
             Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-            
+
             this._router.navigate(['teso17']);
         }
     }

@@ -10,13 +10,13 @@ import jsPDF from 'jspdf';
 import { Teso17 } from '../models/teso17';
 import { Conta71 } from '../models/conta71';
 import { UtilidadesService } from '../services/utilidades.service';
-
+import { Teso19Service } from '../services/teso19.service';
 
 @Component({
     selector: 'app-teso13',
     templateUrl: './teso13.component.html',
     styleUrls: ['./teso13.component.css'],
-    providers: [Teso13Service, Gener02Service, Teso10Service, Teso12Service, UtilidadesService]
+    providers: [Teso13Service, Gener02Service, Teso10Service, Teso12Service, UtilidadesService, Teso19Service]
 })
 export class Teso13Component implements OnInit {
 
@@ -66,10 +66,10 @@ export class Teso13Component implements OnInit {
     cdp_bandera = false;
     personas_revisa = [];
     personas_autoriza = [];
-
+    data_cant_pagos = '';
     data_keyword: any = { data: '', codcen: '' }
 
-    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService) {
+    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService, private _teso19Service: Teso19Service) {
 
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
         this.periodosT(2023, 2024);
@@ -110,6 +110,15 @@ export class Teso13Component implements OnInit {
 
     }
     touch(resultC: any) {
+
+        this._teso19Service.getAllPagos(resultC).subscribe(
+            response =>{
+                console.log("RESPONSE!!!!!  ");
+                console.log(response)
+                this.data_cant_pagos = 'Este Nit tiene esta cantidad de pagos: '+ response.total_pagos
+            }
+        )
+
         console.log(resultC.nit);
         this.teso13.nit = resultC.nit;
         this.bandera2 = 'false';

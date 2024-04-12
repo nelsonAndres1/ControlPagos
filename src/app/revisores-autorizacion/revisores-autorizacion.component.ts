@@ -16,6 +16,7 @@ export class RevisoresAutorizacionComponent {
   identity: any;
   usuarios: any = [];
   teso19: Teso19;
+  data: any = [];
 
   constructor(private _teso18Service: Teso18Service, private _teso19Service: Teso19Service, private _gener02Service: Gener02Service) {
 
@@ -24,7 +25,16 @@ export class RevisoresAutorizacionComponent {
     this.teso19.usuario = this.identity.sub;
 
 
+    this.getAll();
+  }
 
+
+  getAll() {
+    this._teso19Service.getAllteso19({}).subscribe(
+      response => {
+        this.data = response;
+      }
+    )
   }
 
 
@@ -96,6 +106,35 @@ export class RevisoresAutorizacionComponent {
         }
       });
     }
+  }
+
+  eliminar(dt) {
+
+    Swal.fire({
+      icon: 'question',
+      title: "¿Esta seguro de eliminar sus datos?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this._teso19Service.delete(dt).subscribe(
+          response => {
+            Swal.fire("Datos eliminados!", "", "success").then(()=>{
+              this.getAll();
+            });
+          }
+        )
+      } else if (result.isDenied) {
+        Swal.fire("Datos no eliminados!", "", "info");
+      }
+    });
+
+
+
+
 
   }
 }

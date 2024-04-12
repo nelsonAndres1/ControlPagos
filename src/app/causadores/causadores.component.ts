@@ -95,7 +95,26 @@ export class CausadoresComponent {
         Swal.fire('Cambio de estado NO realizado!', '', 'info');
       }
     });
+  }
 
+  eliminar(dt: any) {
+    this._teso18Service.deleteTeso18(dt).subscribe(
+      response => {
+        if (response.status == 'success') {
+          Swal.fire('Información', response.message, response.status).then(() => {
+            this.traerDatos()
+          });
+        } else {
+          Swal.fire('Información', response.message, response.status).then(() => {
+            this.traerDatos()
+          });
+        }
+      }, error => {
+        Swal.fire('Información', "Error desconocido!", 'error').then(() => {
+          this.traerDatos()
+        });
+      }
+    )
   }
 
 }

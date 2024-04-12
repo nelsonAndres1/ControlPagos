@@ -27,6 +27,22 @@ export class Teso19Service {
     return this.http.post(this.url + 'teso19/delete', params, { headers: headers });
   }
 
+  getAllteso19(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso19/getAllteso19', params, { headers: headers });
+  }
+
+  getAllPagos(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso19/getAllPagos', params, { headers: headers });
+  }
+
+
+
 }
 
 

@@ -48,6 +48,14 @@ export class Teso18Service {
     return this.http.post(this.url + 'teso18/estadoTeso18', params, { headers: headers });
   }
 
+  deleteTeso18(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso18/deleteTeso18', params, { headers: headers });
+  }
+  
+
   getUsers(pclave: any) {
     const response = new Promise(resolve => {
       this.http.get(global.url + `teso18/searchUsers?search=${pclave}`).subscribe(
