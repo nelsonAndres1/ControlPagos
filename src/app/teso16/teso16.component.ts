@@ -118,6 +118,12 @@ export class Teso16Component implements OnInit {
     if (estado == 'CA') {
       estadoEscr = 'Causación de Pago';
     }
+    if (estado == 'RC') {
+      estadoEscr = 'Radicado Causación de Cuenta';
+    }
+    if (estado == 'CP') {
+      estadoEscr = 'Radicado Causación Pago';
+    }
 
     return estadoEscr;
   }

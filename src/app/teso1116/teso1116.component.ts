@@ -29,7 +29,7 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
         'Causación Pago',
         'Autorización Pago',
         'Preparación Transferencia',
-        'Verificación Estado de Transferencia',
+        'Aprobación de transferencia',
         'Pago',
         'Cheque en Firmas'
     ];
@@ -119,7 +119,7 @@ export class Teso1116Component implements OnInit { /* public array1 = ['Revisió
             result = 'P';
         }
 
-        if (result == 'Verificación Estado de Transferencia') {
+        if (result == 'Aprobación de transferencia') {
             result = 'VF';
         }
 
