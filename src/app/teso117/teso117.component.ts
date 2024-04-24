@@ -499,6 +499,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         var bandera: any;
         this.permisos = localStorage.getItem('permisos');
 
+        console.log("Holaaa!")
+        console.log(this.permisos)
+        console.log(estado)
+
         if (this.permisos != null) {
             this.arrayPermisos = this.permisos.split(',');
 
@@ -621,14 +625,18 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
             if (estado == 'RP') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'P' || this.arrayPermisos[index] == 'AD') {
+                    console.log("Holaaa!!! :D");
+                    console.log(this.arrayPermisos[index]);
+                    if (this.arrayPermisos[index].trim() == 'P' || this.arrayPermisos[index] == 'AD') {
+                        console.log("Holaaa!!! :D 2");
+
                         this.arraySalida = this.array8;
                         bandera = true;
                         this.btn = true;
                     }
                 }
                 if (bandera != true) {
-                    Swal.fire('Error', 'Usted no tiene permisos para Pago', 'error');
+                    Swal.fire('Error', 'Usted no tiene permisos para Pago 1', 'error');
                 }
             }
 
