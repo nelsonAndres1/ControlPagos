@@ -33,6 +33,8 @@ import { Teso13editarComponent } from './teso13editar/teso13editar.component';
 import { Teso13modalComponent } from './modal/teso13modal/teso13modal.component';
 import { Teso13ReimprimirComponent } from './teso13-reimprimir/teso13-reimprimir.component';
 import { RevisoresAutorizacionComponent } from './revisores-autorizacion/revisores-autorizacion.component';
+import { Teso20Component } from './teso20/teso20.component';
+import { Teso21Component } from './teso21/teso21.component';
 
 const routes: Routes = [
 
@@ -67,8 +69,9 @@ const routes: Routes = [
   { path: 'teso13_modal', component: Teso13modalComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_reimprimir', component: Teso13ReimprimirComponent, canActivate: [IdentityGuard] },
   { path: 'revisa_autoriza', component: RevisoresAutorizacionComponent, canActivate: [IdentityGuard] },
+  { path: 'teso20', component: Teso20Component, canActivate: [IdentityGuard] },
+  { path: 'teso21', component: Teso21Component, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
-
 
 ];
 //Exportar configuración 

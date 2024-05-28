@@ -80,6 +80,17 @@
                         </CDBSidebarMenuItem>
                     </div>
                     <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-wrench" (click)="crear_opciones()" *ngIf="permisosNuevoPago()">
+                            Crear Opciones
+                        </CDBSidebarMenuItem>
+                    </div>
+                    <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-tree" (click)="crear_arbol()" *ngIf="permisosNuevoPago()">
+                            Crear Arbol
+                        </CDBSidebarMenuItem>
+                    </div>
+                    
+                    <div *ngIf="permisos != null">
                         <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
 
                             Reportes

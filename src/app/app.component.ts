@@ -63,6 +63,13 @@ export class AppComponent implements OnInit,
         this.router.navigate(['editar_teso13'])
     }
 
+    crear_opciones() {
+        this.router.navigate(['teso20'])
+    }
+    crear_arbol() {
+        this.router.navigate(['teso21'])
+    }
+
     inp_reimprimir() {
         this.router.navigate(['teso13_reimprimir'])
     }

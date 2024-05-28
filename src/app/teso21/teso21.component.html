@@ -1,0 +1,147 @@
+<div class="row mt-12">
+    <div class="col-sm-10 pb-3">
+        <ngx-graph class="chart-container" [view]="[1000, 1000]" [links]="links_" [nodes]="nodes_" [curve]="curve"
+            [layout]="layout" [nodeWidth]="250" [nodeHeight]="100" [layoutSettings]="layoutSettings" [enableZoom]="true"
+            [autoZoom]="true" [clusters]="clusters_fin" layout="dagreCluster">
+            <ng-template #defsTemplate>
+                <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+                    orient="auto">
+                    <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+                </svg:marker>
+            </ng-template>
+            <ng-template #clusterTemplate let-cluster>
+                <svg:g class="node cluster">
+                    <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width"
+                        [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
+                </svg:g>
+            </ng-template>
+            <ng-template #nodeTemplate let-node>
+                <svg:g class="node">
+                    <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
+                        [attr.fill]="node.data.color" />
+                    <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 5">
+                        {{node.label}}
+                    </svg:text>
+                    <svg:foreignObject [attr.x]="node.dimension.width - 40" [attr.y]="node.dimension.height / 2"
+                        [attr.width]="40" [attr.height]="20">
+                        <xhtml:div xmlns="http://www.w3.org/1999/xhtml"
+                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                            <button
+                                style="font-size: 12px; padding: 2px 5px; border: 1px solid #000000; border-radius: 3px; background-color: #000000; cursor: pointer;"
+                                class="btn btn-primary" (click)="eliminar_nodo(node)">Eliminar</button>
+                        </xhtml:div>
+                    </svg:foreignObject>
+                </svg:g>
+            </ng-template>
+            <ng-template #linkTemplate let-link>
+                <svg:g class="edge">
+                    <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" [attr.id]="'link-' + link.id">
+                    </svg:path>
+                    <svg:text class="edge-label" text-anchor="middle">
+                        <textPath class="text-path" [attr.href]="'#link-' + link.id"
+                            [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                            {{link.label}}
+                        </textPath>
+                    </svg:text>
+                </svg:g>
+            </ng-template>
+        </ngx-graph>
+    </div>
+    <div class="col-sm-2 pb-3">
+        <div class="col-md-10 offset-md-1">
+            <span class="anchor" id="formComplex"></span>
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+                    <h6 class="mb-0">Procesos</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-12">
+                        <form style="margin: 1%;">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Proceso</label>
+                                <select class="form-control" id="exampleFormControlSelect1" (change)="ingrese($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option *ngFor="let dt of data_teso20" [value]="dt.id">{{dt.proceso}}</option>
+                                </select>
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary" (click)="enviar()">Agregar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-10 offset-md-1">
+            <span class="anchor" id="formComplex"></span>
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+                    <h6 class="mb-0">Enlaces</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-12">
+                        <form style="margin: 5%;">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Enlace 1</label>
+                                <select class="form-control" id="exampleFormControlSelect1" (change)="enlace1($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option *ngFor="let dt of nodes_" [value]="dt.id">{{dt.label}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Enlace 2</label>
+                                <select class="form-control" id="exampleFormControlSelect1" (change)="enlace2($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option *ngFor="let dt of nodes_" [value]="dt.id">{{dt.label}}</option>
+                                </select>
+                                <label for="exampleFormControlSelect1">Observación</label>
+                                <input class="form-control" type="text" placeholder="Observación..."
+                                    (input)="input_obs($event)">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">¿Observación?</label>
+                                <select class="form-control" id="exampleFormControlSelect1"
+                                    (change)="observacion($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option value="SI">SI</option>
+                                    <option value="NO" selected>NO</option>
+                                </select>
+                                <label for="exampleFormControlSelect1">¿Archivo?</label>
+                                <select class="form-control" id="exampleFormControlSelect1" (change)="archivo($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option value="SI">SI</option>
+                                    <option value="NO" selected>NO</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary" (click)="enviar_enlaces()">Agregar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 offset-md-1">
+            <span class="anchor" id="formComplex"></span>
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+
+                    <h6 class="mb-0">Guardar</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-12">
+                        <label for="exampleFormControlSelect1">Nombre Proceso</label>
+                        <input type="text" class="form-control" placeholder="Nombre Proceso"
+                            (input)="addProceso($event)">
+                        <br>
+                        <button style="margin-top: 3%;" type="button" class="btn btn-warning"
+                            (click)="guardar()">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -55,6 +55,12 @@ import { Teso13ReimprimirComponent } from './teso13-reimprimir/teso13-reimprimir
 import { UtilidadesComponent } from './utilidades/utilidades.component';
 import { RevisoresAutorizacionComponent } from './revisores-autorizacion/revisores-autorizacion.component';
 import { Modal1Component } from './modal/modal1/modal1.component';
+import { Teso20Component } from './teso20/teso20.component';
+import { Teso21Component } from './teso21/teso21.component';
+import { Teso21hijoComponent } from './teso21hijo/teso21hijo.component';
+import { DynamicSelectComponent } from './dynamic-select/dynamic-select.component';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 @NgModule({
   declarations: [
@@ -90,11 +96,16 @@ import { Modal1Component } from './modal/modal1/modal1.component';
     Teso13ReimprimirComponent,
     UtilidadesComponent,
     RevisoresAutorizacionComponent,
-    Modal1Component
+    Modal1Component,
+    Teso20Component,
+    Teso21Component,
+    Teso21hijoComponent,
+    DynamicSelectComponent
   ],
 
   imports: [
-
+    NgxGraphModule,
+    BrowserAnimationsModule,
     BadgeModule,
     IconModule,
     SidebarModule,
