@@ -50,6 +50,9 @@ export class Teso17Component implements OnInit {
         res2: JSON.stringify(data)
       }
     }
-    this.router.navigate(['teso117'], navigationExtras);
+
+    
+
+    this.router.navigate(['teso117/super'], navigationExtras);
   }
 }

@@ -35,6 +35,8 @@ import { Teso13ReimprimirComponent } from './teso13-reimprimir/teso13-reimprimir
 import { RevisoresAutorizacionComponent } from './revisores-autorizacion/revisores-autorizacion.component';
 import { Teso20Component } from './teso20/teso20.component';
 import { Teso21Component } from './teso21/teso21.component';
+import { Teso22Component } from './teso22/teso22.component';
+import { Teso117SuperComponent } from './teso117-super/teso117-super.component';
 
 const routes: Routes = [
 
@@ -71,6 +73,8 @@ const routes: Routes = [
   { path: 'revisa_autoriza', component: RevisoresAutorizacionComponent, canActivate: [IdentityGuard] },
   { path: 'teso20', component: Teso20Component, canActivate: [IdentityGuard] },
   { path: 'teso21', component: Teso21Component, canActivate: [IdentityGuard] },
+  { path: 'teso22', component: Teso22Component, canActivate: [IdentityGuard] },
+  { path: 'teso117/super', component: Teso117SuperComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];

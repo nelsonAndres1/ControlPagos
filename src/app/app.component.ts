@@ -74,6 +74,9 @@ export class AppComponent implements OnInit,
         this.router.navigate(['teso13_reimprimir'])
     }
 
+    vincular(){
+        this.router.navigate(['teso22'])
+    }
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({

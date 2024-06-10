@@ -1,17 +1,19 @@
 import { Component } from '@angular/core';
 import { Teso20Service } from '../services/teso20.service';
+import { Teso21Service } from '../services/teso21.service';
 import { Gener02Service } from '../services/gener02.service';
 import * as shape from 'd3-shape';
 import { DagreNodesOnlyLayout } from './customDagreNodesOnly';
 import { Layout } from '@swimlane/ngx-graph';
 import { Teso21 } from '../models/teso21';
+import Swal from 'sweetalert2';
 
 
 @Component({
   selector: 'app-teso21',
   templateUrl: './teso21.component.html',
   styleUrls: ['./teso21.component.css'],
-  providers: [Gener02Service, Teso20Service]
+  providers: [Gener02Service, Teso20Service, Teso21Service]
 })
 export class Teso21Component {
 
@@ -39,7 +41,7 @@ export class Teso21Component {
   teso21_: Teso21;
   identity: any;
 
-  constructor(private _Gener02Service: Gener02Service, private _Teso20Service: Teso20Service) {
+  constructor(private _Gener02Service: Gener02Service, private _Teso20Service: Teso20Service, private _Teso21Service: Teso21Service) {
     this.allTeso20();
     this.identity = this._Gener02Service.getIdentity();
     this.teso21_ = new Teso21('', '', []);
@@ -110,6 +112,10 @@ export class Teso21Component {
 
     this.links_.push(newEnlace);
     this.links_ = Object.values(this.links_);
+
+
+    console.log("enlaces!");
+    console.log(this.links_)
   }
 
   enlace1(event) {
@@ -126,7 +132,7 @@ export class Teso21Component {
 
   addProceso(event) {
     this.nombre_proceso = event.target.value;
-    this.teso21_.nomre_proceso = this.nombre_proceso;
+    this.teso21_.nombre_proceso = this.nombre_proceso;
   }
 
   guardar() {
@@ -134,6 +140,18 @@ export class Teso21Component {
     console.log(this.links_)
 
     this.teso21_.array = this.links_;
+
+
+    this._Teso21Service.save(this.teso21_).subscribe(
+      response => {
+        if (response.status == 'success') {
+          Swal.fire("Cambios guardados!", "", "success");
+        } else {
+          Swal.fire("Cambios No guardados!", "", "error");
+        }
+      }
+    )
+
 
     console.log("información nodes!");
     console.log(this.teso21_)

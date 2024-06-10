@@ -25,6 +25,7 @@
                             Editar sus pagos
                         </CDBSidebarMenuItem>
                     </div>
+
                     <div *ngIf="permisos != null">
                         <CDBSidebarMenuItem icon="print" (click)="inp_reimprimir()" *ngIf="permisosPago()">
                             Reimprimir pago
@@ -38,6 +39,8 @@
 
                         Modificar estado del Pago
                     </CDBSidebarMenuItem>
+                    
+                    
                     <div *ngIf="permisosNuevoPago()">
                         <CDBSidebarMenuItem icon="shopping-cart" routerLink="teso110">
 
@@ -89,7 +92,13 @@
                             Crear Arbol
                         </CDBSidebarMenuItem>
                     </div>
-                    
+
+                    <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-wrench" (click)="vincular()" *ngIf="permisosNuevoPago()">
+                            Arbol y Pagos
+                        </CDBSidebarMenuItem>
+                    </div>
+
                     <div *ngIf="permisos != null">
                         <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
 

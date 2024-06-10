@@ -60,7 +60,9 @@ import { Teso21Component } from './teso21/teso21.component';
 import { Teso21hijoComponent } from './teso21hijo/teso21hijo.component';
 import { DynamicSelectComponent } from './dynamic-select/dynamic-select.component';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Teso22Component } from './teso22/teso22.component';
+import { Teso117SuperComponent } from './teso117-super/teso117-super.component'
 
 @NgModule({
   declarations: [
@@ -100,7 +102,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     Teso20Component,
     Teso21Component,
     Teso21hijoComponent,
-    DynamicSelectComponent
+    DynamicSelectComponent,
+    Teso22Component,
+    Teso117SuperComponent
   ],
 
   imports: [
