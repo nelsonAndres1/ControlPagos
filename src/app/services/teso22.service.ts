@@ -53,7 +53,14 @@ export class Teso22Service {
     let params = 'json=' + json;
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.post(this.url + 'teso22/getEstadoPago', params, { headers: headers });
-}
+  }
+
+  getHistoriaPago(user: any, gettoken = null): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso22/getHistoriaPago', params, { headers: headers });
+  }
 
 }
 

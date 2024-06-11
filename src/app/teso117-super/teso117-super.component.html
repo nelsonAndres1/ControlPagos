@@ -42,6 +42,23 @@
                                 <td>{{r.fecha}}</td>
                                 <td>{{r.observacion}}</td>
                             </tr>
+
+                            <tr *ngFor="let list of lista_historia_pago">
+                                <td>{{list.numero}}</td>
+                                <td>{{list.codclas_detalle}}</td>
+                                <td>{{data.detalle}}</td>
+                                <td>{{list.estado_detalle}}</td>
+                                <td><a (click)="nombreUsuario(list.usuario)" style="cursor: pointer;">{{list.usuario}}</a>
+                                </td>
+                                <td>{{item1[0].numfac}}</td>
+                                <td>
+                                    <a (click)="getConta04(data.nit)" style="cursor: pointer;">{{data.nit}}
+                                    </a>
+                                </td>
+                                <td>${{data.valor}}</td>
+                                <td>{{list.fecha}}</td>
+                                <td>{{list.observacion}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </form>

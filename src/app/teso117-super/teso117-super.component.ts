@@ -113,7 +113,7 @@ export class Teso117SuperComponent {
   isLoaded: boolean = false;
   nombre_archivo: any;
   teso117: Teso117;
-
+  lista_historia_pago: any = [];
   seleccion_selected: any = '';
   estado_actual_actual: any = '';
 
@@ -139,6 +139,7 @@ export class Teso117SuperComponent {
       this.teso15.codclas = this.item1[0]['codclas'];
       this.teso15.numero = this.item1[0]['numero']
       this.item2 = this.itemDetail[1][0];
+      this.getHistoriaPago();
       for (let index = 0; index < this.item1.length; index++) {
         this.getUsuario(this.item1[index]['usuario']);
         this.estadoA = this.item1[index]['estado'];
@@ -195,8 +196,6 @@ export class Teso117SuperComponent {
     if (file) {
       this.selectedFiles[filename] = file;
     }
-    console.log(dt);
-    console.log(filename);
     this.datos_pago = dt;
 
   }
@@ -275,50 +274,41 @@ export class Teso117SuperComponent {
     this.page--;
   }
 
+  getHistoriaPago() {
+
+    this._teso22Service.getHistoriaPago(this.teso15).subscribe(
+      response => {
+        console.log("res!");
+        console.log(response);
+        this.lista_historia_pago= response;
+      }
+    );
+  }
+
+
   getTeso22First() {
-    //agregar el tipo de pago: si es RA que escoja lo primero y si es otro que busque en la tabla
     this._teso22Service.getTeso22First(this.teso117).subscribe(
       response => {
         this.arbol_proceso = response;
         this.opcion1 = response[1]['source'];
-
         this._teso22Service.getEstadoPago(this.teso15).subscribe(
           response => {
-            console.log("estado del pago!!!!!!!*****")
-            console.log(response);
             this.estado_actual_actual = response.estado;
-
-            if(this.estado_actual_actual == 'RA'){
-              console.log("auii!")
+            if (this.estado_actual_actual == 'RA') {
               for (let index = 0; index < this.arbol_proceso.length; index++) {
                 if (this.arbol_proceso[index]['source'] == this.opcion1) {
-                  console.log(index);
-                  console.log(this.arbol_proceso[index]);
                   this.opciones_general.push(this.arbol_proceso[index]);
                 }
               }
-            }else{
-              console.log("auaaaa!")
+            } else {
               for (let index = 0; index < this.arbol_proceso.length; index++) {
-                console.log(this.arbol_proceso[index]['source'] +" - "+ this.estado_actual_actual)
                 if (this.arbol_proceso[index]['source'].trim() == this.estado_actual_actual.trim()) {
-                  console.log("auaaaa!")
-                  console.log(index);
-                  console.log(this.arbol_proceso[index]);
                   this.opciones_general.push(this.arbol_proceso[index]);
                 }
               }
             }
           }
         )
-
-
-
-
-
-
-        console.log("pruebaaa! :d");
-        console.log(this.opciones_general);
       }
     )
   }
@@ -338,8 +328,6 @@ export class Teso117SuperComponent {
   getAllTeso13(codclas: any, numero: any) {
     this._teso15Service.getAllTeso13(new Teso113(codclas, numero)).subscribe(response => {
       this.data = response;
-      console.log('jjjj');
-      console.log(this.data);
       this.traerSoportes();
     });
     return this.data;
@@ -352,7 +340,6 @@ export class Teso117SuperComponent {
   }
 
   nombreUsuario(user: any) {
-    console.log("Buscando..")
     for (let index = 0; index < this.arrayN.length; index++) {
       if (this.arrayN[index] == user) {
         Swal.fire('Usuario encontrado', this.arrayN[index + 1], 'info')
@@ -393,8 +380,6 @@ export class Teso117SuperComponent {
   }
 
   traerSoportes() {
-    console.log("data!");
-    console.log(this.data);
     this._teso117Service.traerSoportes(this.data).subscribe(
       response => {
         this.soportes = response;
@@ -580,8 +565,6 @@ export class Teso117SuperComponent {
   getEstadoPago() {
     this._teso22Service.getEstadoPago(this.teso15).subscribe(
       response => {
-        console.log("estado del pago!!!!!!!*****")
-        console.log(response);
         this.estado_actual_actual = response.estado;
       }
     )
@@ -589,20 +572,29 @@ export class Teso117SuperComponent {
 
   enviar() {
 
-    this.teso15.usuario = this.identity_real.sub;
-    this.teso15.relacion = '0';
-
-    console.log(this.teso15);
-
-
-
-
-    this._teso15Service.save(this.teso15).subscribe(
-      response => {
-        console.log("res!!!");
-        console.log(response);
+    Swal.fire({
+      title: "¿Esta seguro de guardar?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Si",
+      denyButtonText: `No`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.teso15.usuario = this.identity_real.sub;
+        this.teso15.relacion = '0';
+        this._teso15Service.save(this.teso15).subscribe(
+          response => {
+            if (response.status == 'success') {
+              Swal.fire('Información', 'Cambios guardados!', 'success');
+            } else {
+              Swal.fire('Información', 'Cambios NO guardados!', 'error');
+            }
+          }
+        )
+      } else if (result.isDenied) {
+        Swal.fire("Cambios no guardados", "", "info");
       }
-    )
+    });
 
   }
 }
