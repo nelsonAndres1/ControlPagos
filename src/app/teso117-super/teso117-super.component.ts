@@ -289,6 +289,7 @@ export class Teso117SuperComponent {
             this.estado_actual_actual = response.estado;
 
             if(this.estado_actual_actual == 'RA'){
+              console.log("auii!")
               for (let index = 0; index < this.arbol_proceso.length; index++) {
                 if (this.arbol_proceso[index]['source'] == this.opcion1) {
                   console.log(index);
@@ -297,7 +298,16 @@ export class Teso117SuperComponent {
                 }
               }
             }else{
-              
+              console.log("auaaaa!")
+              for (let index = 0; index < this.arbol_proceso.length; index++) {
+                console.log(this.arbol_proceso[index]['source'] +" - "+ this.estado_actual_actual)
+                if (this.arbol_proceso[index]['source'].trim() == this.estado_actual_actual.trim()) {
+                  console.log("auaaaa!")
+                  console.log(index);
+                  console.log(this.arbol_proceso[index]);
+                  this.opciones_general.push(this.arbol_proceso[index]);
+                }
+              }
             }
           }
         )
