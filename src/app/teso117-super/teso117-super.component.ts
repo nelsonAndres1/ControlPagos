@@ -16,12 +16,13 @@ import { Teso22Service } from '../services/teso22.service';
 import { Teso117 } from '../models/teso117';
 import { Teso15new } from '../models/teso15new';
 import { Gener02Service } from '../services/gener02.service';
+import { Teso23Service } from '../services/teso23.service';
 
 @Component({
   selector: 'app-teso117-super',
   templateUrl: './teso117-super.component.html',
   styleUrls: ['./teso117-super.component.scss'],
-  providers: [Teso15Service, Teso117Service, Teso12Service, Teso13Service, UploadService, Teso22Service, Gener02Service]
+  providers: [Teso15Service, Teso117Service, Teso12Service, Teso13Service, UploadService, Teso22Service, Gener02Service, Teso23Service]
 })
 export class Teso117SuperComponent {
 
@@ -123,9 +124,11 @@ export class Teso117SuperComponent {
     private _teso117Service: Teso117Service,
     private _teso22Service: Teso22Service,
     private _gener02Service: Gener02Service,
+    private _teso23Service: Teso23Service,
     private _router: Router) {
     this.teso15 = new Teso15new('', '', '', '', '', '', 0, '', '', '', '');
     this.identity_real = this._gener02Service.getIdentity();
+    this.teso15.usuario = this.identity_real.sub;
     this.conta04 = new Conta04('', '');
     this.pdfSource = global.url + 'teso12/getDocumento/' + '009000004085Javeriana001.pdf'
     this.teso117 = new Teso117('');
@@ -171,7 +174,7 @@ export class Teso117SuperComponent {
     const pdfViewer = document.querySelector('pdf-viewer');
     const pdfContainer = pdfViewer.shadowRoot.querySelector('.pdfViewer');
 
-    if (pdfContainer) { // Verifica si el contenedor del PDF existe
+    if (pdfContainer) {
       if (pdfContainer.requestFullscreen) {
         if (!document.fullscreenElement) {
           pdfContainer.requestFullscreen().then(() => {
@@ -195,6 +198,7 @@ export class Teso117SuperComponent {
     const file = event.target.files[0];
     if (file) {
       this.selectedFiles[filename] = file;
+      this.bandera_archivo = true;
     }
     this.datos_pago = dt;
 
@@ -202,62 +206,71 @@ export class Teso117SuperComponent {
 
   uploadFiles() {
 
-    Swal.fire({
-      title: "¿Estas Seguro?",
-      text: "Cambiaras de estado tu pago",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#4BB543',
-      cancelButtonColor: '#EA1737',
-      confirmButtonText: 'Iniciar'
-    }).then(result => {
-      if (result.value) {
+    this._teso23Service.getPermisoForUsuario(this.teso15).subscribe(
+      response => {
+        if (response.estado == true) {
+          Swal.fire({
+            title: "¿Estas Seguro?",
+            text: "Cambiaras de estado tu pago",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4BB543',
+            cancelButtonColor: '#EA1737',
+            confirmButtonText: 'Iniciar'
+          }).then(result => {
+            if (result.value) {
 
 
-        if (this.bandera_archivo) {
-          let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
+              if (this.bandera_archivo) {
+                let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
 
-          if (this.estadoActual == 'PC') {
-            this.data.codtipag = '178';
-          } else if (this.estadoActual == 'PE') {
-            this.data.codtipag = '179';
-          } else if (this.estadoActual == 'CT') {
-            this.data.codtipag = '177';
-          }
+                this.data.codtipag = '180';
 
-          const formData = new FormData();
-          Object.values(this.selectedFiles).forEach(file => {
-            formData.append('files[]', file);
-            formData.append('data[]', JSON.stringify(this.data));
-          });
 
-          this.uploadService.uploadArchivos(formData)
-            .subscribe(
-              response => {
-                this.uploading = false;
-                if (response.success) {
-                  Swal.fire('info', 'Archivos subidos exitosamente:' + response.files, 'info').then(() => {
-                    this.submit();
-                  })
-                } else {
-                  this.errorMessage = response.message;
-                  Swal.fire('Error!', 'Error al subir archivos:' + this.errorMessage, 'error');
-                }
-              }, error => {
-                this.uploading = false;
-                Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error').then(() => {
-                  this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
-                  Swal.fire('error!', this.errorMessage, 'error');
+                const formData = new FormData();
+                Object.values(this.selectedFiles).forEach(file => {
+                  formData.append('files[]', file);
+                  formData.append('data[]', JSON.stringify(this.data));
                 });
+
+                this.uploadService.uploadArchivos(formData)
+                  .subscribe(
+                    response => {
+                      this.uploading = false;
+                      if (response.success) {
+                        Swal.fire('info', 'Archivos subidos exitosamente:' + response.files, 'info').then(() => {
+                          this.enviar();
+                        })
+                      } else {
+                        this.errorMessage = response.message;
+                        Swal.fire('Error!', 'Error al subir archivos:' + this.errorMessage, 'error');
+                      }
+                    }, error => {
+                      this.uploading = false;
+                      Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error').then(() => {
+                        this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
+                        Swal.fire('error!', this.errorMessage, 'error');
+                      });
+                    }
+                  )
+              } else {
+                this.enviar();
               }
-            )
+            } else {
+              Swal.fire('error!', 'Datos no enviados!', 'error');
+            }
+          })
         } else {
-          this.submit();
+          Swal.fire({
+            title: "Información!",
+            text: "No tiene permisos para realizar este proceso!",
+            icon: "info"
+          }).then(() => {
+            window.location.reload();
+          });
         }
-      } else {
-        Swal.fire('error!', 'Datos no enviados!', 'error');
       }
-    })
+    )
   }
 
 
@@ -280,7 +293,7 @@ export class Teso117SuperComponent {
       response => {
         console.log("res!");
         console.log(response);
-        this.lista_historia_pago= response;
+        this.lista_historia_pago = response;
       }
     );
   }
@@ -585,7 +598,9 @@ export class Teso117SuperComponent {
         this._teso15Service.save(this.teso15).subscribe(
           response => {
             if (response.status == 'success') {
-              Swal.fire('Información', 'Cambios guardados!', 'success');
+              Swal.fire('Información', 'Cambios guardados!', 'success').then(() => {
+                window.location.reload();
+              });
             } else {
               Swal.fire('Información', 'Cambios NO guardados!', 'error');
             }

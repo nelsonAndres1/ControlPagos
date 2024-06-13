@@ -26,6 +26,14 @@ export class Gener02Service {
 
         return this._http.post(this.url + 'login', params, { headers: headers });
     }
+
+    getUsuario(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'user/getUsuario', params, { headers: headers });
+    }
+
     getIdentity() {
 
         let identity = JSON.parse(localStorage.getItem('identity') + '');
