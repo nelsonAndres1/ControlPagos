@@ -1,0 +1,60 @@
+<h2>Consultar Estado del Pago por Nit</h2>
+
+<form class="col-md-5 ml-0 pl-0">
+    <div class="form-group col-md-12">
+        <div class="row">
+            <label for="name">
+                <h6>Buscar Estado del Pago</h6>
+            </label>
+            <input type="text" placeholder="Ingresar Nit" (input)="llenarNit($event)">
+            <button type="button" class="btn btn-primary" (click)="getAllPagosForNit()">Buscar</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Fecha de Radicado</th>
+                <th scope="col">Nit</th>
+                <th scope="col">Razon Social</th>
+                <th scope="col">Tipo de Pago</th>
+                <th scope="col">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let dt of teso15All; let i = index">
+                <tr style="cursor: pointer;" (click)="consultar(i, dt)">
+                    <th scope="row">{{dt.fecrad}}</th>
+                    <td>{{dt.nit}}</td>
+                    <td>{{dt.razon_social}}</td>
+                    <td>{{dt.codclas_detalle}}</td>
+                    <td>{{dt.valor}}</td>
+                </tr>
+                <tr *ngIf="selectedRow === i">
+                    <td colspan="5">
+                        <div>
+                            <table class="table table-success">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col">Observación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let dt of datos_" class="table-success">
+                                        <td>{{dt.fecha}}</td>
+                                        <td>{{dt.estado}}</td>
+                                        <td>{{dt.usuario}}</td>
+                                        <td>{{dt.observacion}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+</form>

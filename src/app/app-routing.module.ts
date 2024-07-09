@@ -38,6 +38,7 @@ import { Teso21Component } from './teso21/teso21.component';
 import { Teso22Component } from './teso22/teso22.component';
 import { Teso117SuperComponent } from './teso117-super/teso117-super.component';
 import { Teso23Component } from './teso23/teso23.component';
+import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
 
 const routes: Routes = [
 
@@ -77,6 +78,7 @@ const routes: Routes = [
   { path: 'teso22', component: Teso22Component, canActivate: [IdentityGuard] },
   { path: 'teso117/super', component: Teso117SuperComponent, canActivate: [IdentityGuard] },
   { path: 'teso23', component: Teso23Component, canActivate: [IdentityGuard] },
+  { path: 'teso15Nit', component: Teso15NitComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];

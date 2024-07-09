@@ -50,6 +50,22 @@ export class Teso15Service {
         return this.http.post(this.url + 'teso15/save', params, { headers: headers });
     }
 
+    getAllPagosForNit(user: any, gettoken = null): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this.http.post(this.url + 'teso15/getAllPagosForNit', params, { headers: headers });
+    }
+
+    getAllEstadosPagos(user: any, gettoken = null): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this.http.post(this.url + 'teso15/getAllEstadosPagos', params, { headers: headers });
+    }
+
+
+
 
 
 }
