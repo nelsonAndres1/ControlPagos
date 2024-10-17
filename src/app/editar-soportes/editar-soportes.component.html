@@ -1,0 +1,55 @@
+<div style="margin: 50px;">
+    <h2>Editar soportes de pago</h2>
+    <br>
+    <input class="form-control" id="exampleAccount" placeholder="Numero del Pago" name="vacio" [(ngModel)]="vacio"
+        type="text" (input)="getTeso13($event)" required>
+    <div class="col-sm-12">
+        <div class="card card-body mb-1" *ngFor="let result of data"
+            (click)="getTeso13_all(result.codclas, result.numero)" style="cursor: pointer;">
+            <h6> Detalle: {{result.detalle}} </h6>
+            <small class="text-primary">
+                <h6>Pago: {{result.codclas}}{{result.numero}}</h6>
+            </small>
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-success">editar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin: 50px;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Codigo del soporte</th>
+                <th scope="col">Detalle del soporte</th>
+                <th scope="col">Nombre Archivo</th>
+                <th scope="col">Ver</th>
+                <th scope="col">Reemplazar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let dt of soportes_">
+                <th scope="row">{{dt.codsop}}</th>
+                <td>{{dt.detalle_codsop}}</td>
+                <td>{{dt.archivo}}</td>
+                <td><button type="button" class="btn btn-info" (click)="ver(dt.archivo)">Ver</button>
+                </td>
+                <td>
+                <input class="form-control" type="file" id="formFile" (change)="onFileSelected($event, dt.detalle_codsop,dt)">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="uploading">Subiendo archivos...</div>
+    <div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+
+
+    <div *ngIf="bandera">
+        <pdf-viewer [src]="global_url+'teso12/getDocumento/'+link" [rotation]="0" [original-size]="false"
+            [show-all]="true" [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'" [stick-to-page]="false"
+            [render-text]="true" [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+            style="width: 100%; height: 300px;"></pdf-viewer>
+    </div>
+
+</div>

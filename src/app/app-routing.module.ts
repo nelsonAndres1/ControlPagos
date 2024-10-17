@@ -39,6 +39,7 @@ import { Teso22Component } from './teso22/teso22.component';
 import { Teso117SuperComponent } from './teso117-super/teso117-super.component';
 import { Teso23Component } from './teso23/teso23.component';
 import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
+import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component';
 
 const routes: Routes = [
 
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'editar_teso12', component: EditarTeso12Component, canActivate: [IdentityGuard] },
   { path: 'teso13', component: Teso13Component, canActivate: [IdentityGuard] },
   { path: 'editar_teso13', component: Teso13editarComponent, canActivate: [IdentityGuard] },
+  { path: 'EditarSoportes', component: EditarSoportesComponent, canActivate: [IdentityGuard] },
   { path: 'teso14', component: Teso14Component, canActivate: [IdentityGuard] },
   { path: 'teso114', component: Teso114Component, canActivate: [IdentityGuard] },
   { path: 'teso15', component: Teso15Component, canActivate: [IdentityGuard] },

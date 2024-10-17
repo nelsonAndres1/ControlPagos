@@ -63,6 +63,10 @@ export class AppComponent implements OnInit,
         this.router.navigate(['editar_teso13'])
     }
 
+    inp_editar_soportes() {
+        this.router.navigate(['EditarSoportes'])
+    }
+
     teso23(){
         this.router.navigate(['teso23'])
     }

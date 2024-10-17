@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Teso15Service } from '../services/teso15.service';
 import { Router, NavigationExtras } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-teso17',
@@ -28,31 +29,24 @@ export class Teso17Component implements OnInit {
     if(keyword.length==10){
       const search = this._teso15Service.getTPago(keyword).then(
         response => {
-
           this.data= response[1];
           this.data1 = response;
-
         },
         error=>{
+          Swal.fire('Información', 'Error inesperado', 'error');
         }
       )
-    }else{
     }
   }
 
   getDetailPage(result: any, data: any){
     var res: any;
     var res2: any;
-
     const navigationExtras: NavigationExtras = {
       queryParams: {
-
         res2: JSON.stringify(data)
       }
     }
-
-    
-
     this.router.navigate(['teso117/super'], navigationExtras);
   }
 }
