@@ -1,4 +1,5 @@
 export var global = {
 
-    url: 'https://apps.comfamiliarnarino.com/ControlBack/'
+    url: 'https://apps.comfamiliarnarino.com/ControlBack/api/'
+
 }
