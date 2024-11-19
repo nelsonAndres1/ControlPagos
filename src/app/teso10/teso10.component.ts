@@ -44,7 +44,7 @@ export class Teso10Component implements OnInit {
 
     this.teso10 = new teso10('', '', '', '', '', '');
     this.teso12 = new teso12('', '');
-    this.onSubmit();
+    this.traerPagos();
   }
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class Teso10Component implements OnInit {
     console.log(this.formGroup.value);
   }
 
-  onSubmit() {
+  traerPagos() {
     this._teso10Service.signup(this.teso10).subscribe(
       response => {
         if (response.status != 'error') {
@@ -64,8 +64,6 @@ export class Teso10Component implements OnInit {
           this._teso10Service.signup(this.teso10, this.v).subscribe(
             response => {
               this.identity = response;
-              this.token;
-              this.identity;
             },
             error => {
               this.status = 'error';

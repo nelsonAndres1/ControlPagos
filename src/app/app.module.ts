@@ -65,10 +65,14 @@ import { Teso22Component } from './teso22/teso22.component';
 import { Teso117SuperComponent } from './teso117-super/teso117-super.component';
 import { Teso23Component } from './teso23/teso23.component';
 import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
-import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component'
+import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component';
+import { LoadingComponent } from './loading/loading.component'
+
+import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 
 @NgModule({
   declarations: [
+    ThousandSeparatorPipe,
     AppComponent,
     Teso10Component,
     PrincipalComponent,
@@ -110,7 +114,8 @@ import { EditarSoportesComponent } from './editar-soportes/editar-soportes.compo
     Teso117SuperComponent,
     Teso23Component,
     Teso15NitComponent,
-    EditarSoportesComponent
+    EditarSoportesComponent,
+    LoadingComponent
   ],
 
   imports: [
@@ -142,5 +147,6 @@ import { EditarSoportesComponent } from './editar-soportes/editar-soportes.compo
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent],
+  exports:[ThousandSeparatorPipe]
 })
 export class AppModule { }

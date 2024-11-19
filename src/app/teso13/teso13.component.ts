@@ -11,6 +11,8 @@ import { Teso17 } from '../models/teso17';
 import { Conta71 } from '../models/conta71';
 import { UtilidadesService } from '../services/utilidades.service';
 import { Teso19Service } from '../services/teso19.service';
+import { Numfac } from '../models/numfac';
+import { error } from 'console';
 
 @Component({
     selector: 'app-teso13',
@@ -20,7 +22,7 @@ import { Teso19Service } from '../services/teso19.service';
 })
 export class Teso13Component implements OnInit {
 
-
+    bandera_loading = false;
     teso13: Teso13;
     status: any;
     token2: any;
@@ -68,15 +70,17 @@ export class Teso13Component implements OnInit {
     personas_autoriza = [];
     data_cant_pagos = '';
     data_keyword: any = { data: '', codcen: '' }
+    numfac: Numfac;
 
-    constructor(private _userService: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService, private _teso19Service: Teso19Service) {
+    constructor(private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService, private _teso19Service: Teso19Service) {
 
+        this.numfac = new Numfac('');
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
         this.periodosT(2023, 2024);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.tpago = this._teso12Service.getTpago();
-        this._userService.fecha().subscribe(
+        this._teso13Service.fecha().subscribe(
             response => {
                 this.fechaRdicado = response;
             }
@@ -112,10 +116,10 @@ export class Teso13Component implements OnInit {
     touch(resultC: any) {
 
         this._teso19Service.getAllPagos(resultC).subscribe(
-            response =>{
+            response => {
                 console.log("RESPONSE!!!!!  ");
                 console.log(response)
-                this.data_cant_pagos = 'Este Nit tiene esta cantidad de pagos: '+ response.total_pagos
+                this.data_cant_pagos = 'Este Nit tiene esta cantidad de pagos: ' + response.total_pagos
             }
         )
 
@@ -166,11 +170,15 @@ export class Teso13Component implements OnInit {
     }
 
     getConta(pclave: any) {
-        const keyword = pclave.target.value;
-        const search = this._userService.getConta06(keyword).then(response => {
-            this.data = response;
-            this.data;
-        });
+        this.bandera_loading = true; const keyword = pclave.target.value;
+        const search = this._teso13Service.getConta06(keyword).then(
+            response => {
+                this.bandera_loading = false;
+                this.data = response;
+                this.data;
+            }, error => {
+                this.bandera_loading = false;
+            });
         this.bandera = 'true';
     }
 
@@ -178,18 +186,25 @@ export class Teso13Component implements OnInit {
 
         this.data_keyword.data = pclave.target.value;
         this.data_keyword.codcen = this.teso13.codcen;
-        const search = this._userService.getConta28(this.data_keyword).subscribe(response => {
+        const search = this._teso13Service.getConta28(this.data_keyword).subscribe(response => {
             this.datac28 = response;
             this.datac28;
         });
         this.bandera28 = 'true';
     }
     getConta04(pclave: any) {
+        this.bandera_loading = true;
         const keyword = pclave.target.value;
-        const search = this._userService.getConta04(keyword).then(response => {
-            this.datac2 = response;
-            this.datac2;
-        });
+        const search = this._teso13Service.getConta04(keyword).then(
+            response => {
+                this.bandera_loading = false;
+                this.datac2 = response;
+                this.datac2;
+
+            }, error => {
+                this.bandera_loading = false;
+            }
+        );
         this.bandera2 = 'true';
     }
     getDetailPage(result: any) {
@@ -218,7 +233,7 @@ export class Teso13Component implements OnInit {
     getC71(marca: string, documento: any) {
         const keyword = [marca, documento];
 
-        const search = this._userService.getC71(keyword).then(response => {
+        const search = this._teso13Service.getC71(keyword).then(response => {
             this.data71 = response;
             console.log(this.data71);
         });
@@ -233,7 +248,7 @@ export class Teso13Component implements OnInit {
     }
 
     ngOnInit(): void {
-        this._userService.test();
+        this._teso13Service.test();
     }
     periodosT(añoI: any, añoF: any) {
         var resultado;
@@ -263,7 +278,7 @@ export class Teso13Component implements OnInit {
 
 
     buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
-        this._userService.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
+        this._teso13Service.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
 
             if (response) {
                 this.cdp_marca = cdp_marca;
@@ -271,7 +286,7 @@ export class Teso13Component implements OnInit {
                 this.cdp_ano = cdp_ano;
                 this.nit = nit;
 
-                this._userService.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(
+                this._teso13Service.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(
                     response => {
                         this.siCDPno = true;
                         this.bd1 = true;
@@ -324,7 +339,7 @@ export class Teso13Component implements OnInit {
 
                 if (this.siCDPno == true) {
                     this.teso13.sCDPn = true;
-                    this._userService.valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit)).subscribe(response => {
+                    this._teso13Service.valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit)).subscribe(response => {
 
                         if (response >= parseInt(this.teso13.valor)) {
 
@@ -385,10 +400,10 @@ export class Teso13Component implements OnInit {
         this.tpago = this.tpago[0]['codclas'];
         this.codclas = this.tpago;
         this.teso13.codclas = this.codclas;
-        this._userService.traerConsecutivo(this.teso13).subscribe(response => {
+        this._teso13Service.traerConsecutivo(this.teso13).subscribe(response => {
             if (response.status != 'error') {
                 this.token2 = response;
-                /*                 this._userService.traerConsecutivo(this.teso13).subscribe(response => { */
+                /*                 this._teso13Service.traerConsecutivo(this.teso13).subscribe(response => { */
                 this.identity2 = response;
                 this.identity3 = response;
                 this.consecutivo = this.identity2[0]['numero'];
@@ -410,4 +425,48 @@ export class Teso13Component implements OnInit {
             console.log(<any>error);
         });
     }
+    verificarNumero(event) {
+        this.bandera_loading = true;
+        this.numfac.numfac = event.target.value;
+        this._teso13Service.verificarNumero(this.numfac).subscribe(
+            response => {
+                this.bandera_loading = false;
+                if (response.status == 'success') {
+                    if (response.bandera == '1') {
+                        Swal.fire('Información', 'Este numero de factura ya existe en un pago!');
+                    } else {
+
+                    }
+                }
+
+            }, error => {
+                this.bandera_loading = false;
+            }
+        )
+    }
+
+    onInputChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        let value = input.value;
+      
+        // Eliminar todos los puntos existentes para evitar duplicados
+        value = value.replace(/\./g, '');
+      
+        // Permitir solo números y una coma como separador decimal
+        value = value.replace(/[^0-9,]/g, '');
+      
+        // Separar parte entera y decimal
+        const [integerPart, decimalPart] = value.split(',');
+      
+        // Formatear la parte entera con puntos de miles
+        const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      
+        // Reconstruir el número completo en formato europeo
+        input.value = decimalPart !== undefined ? `${formattedIntegerPart},${decimalPart}` : formattedIntegerPart;
+      
+        // Actualizar el modelo
+        this.teso13.valor = input.value;
+      }
+      
+      
 }

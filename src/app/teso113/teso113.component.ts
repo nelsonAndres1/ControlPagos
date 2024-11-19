@@ -183,6 +183,7 @@ export class Teso113Component implements OnInit {
     ngOnInit(): void { }
 
     descargarPDF() {
+        console.log(this.impreseion);
         this._PdfService.generarPDF(this.impreseion).subscribe(
             response => {
                 const blob = new Blob([response], { type: 'application/pdf' });

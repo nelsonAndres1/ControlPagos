@@ -1,3 +1,7 @@
+<div *ngIf="bandera_loading">
+    <app-loading></app-loading>
+</div>
+
 <h2>Formato de Pago</h2>
 
 <br>
@@ -105,7 +109,7 @@
                     <button type="button"
                         (click)="buscarT17(teso13.cdp_marca,teso13.cdp_documento,teso13.cdp_ano,teso13.nit)"
                         class="btn btn-primary">
-                        <i class="fa fa-search" a   ria-hidden="true">
+                        <i class="fa fa-search" a ria-hidden="true">
                             <span class="nav-text">
                                 Buscar Pagos asociados a NIT Y CDP
                             </span></i>
@@ -198,7 +202,8 @@
                 <label for="name"><b>Numero de Factura</b></label>
                 <div class="col">
                     <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
-                        #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="15" required>
+                        #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="50" (blur)="verificarNumero($event)"
+                        required>
                 </div>
                 <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
                     Este Campo es requerido
@@ -244,25 +249,22 @@
             </div>
 
             <div class="col">
+                <label for="name"><b>Valor</b></label>
                 <div class="col">
-                    <label for="name"><b>Valor</b></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
-                            #valor="ngModel" [(ngModel)]="teso13.valor" maxlength="20" required
-                            pattern="[0-9]+(\.[0-9]+)?">
-                    </div>
+                    <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
+                        [(ngModel)]="teso13.valor" maxlength="20" required #valor="ngModel"
+                        (input)="onInputChange($event)" >
                 </div>
-                <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
-                    Solo Numeros
-                </small>
             </div>
+
+
 
             <div class="col">
                 <div class="col">
                     <label for="name"><b>Numero de Contrato</b></label>
                     <div class="col">
                         <input type="text" class="form-control" name="numcon" placeholder="Numero de contrato"
-                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="19" >
+                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="19">
                     </div>
                 </div>
                 <small *ngIf="!numcon.valid && numcon.touched" class="invalid-feedback d-block">
