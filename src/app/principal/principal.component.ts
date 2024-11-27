@@ -57,8 +57,6 @@ export class PrincipalComponent implements OnInit {
             }else{
                 this.arrayPermisos = [this.permisos]
             }
-            console.log("hshs");
-            console.log(this.arrayPermisos);
             if (estado == 'RA' || estado == 'DR') {
                 for (let index = 0; index < this.arrayPermisos.length; index++) {
                     if (this.arrayPermisos[index] == 'RV' || this.arrayPermisos[index] == 'AD') {

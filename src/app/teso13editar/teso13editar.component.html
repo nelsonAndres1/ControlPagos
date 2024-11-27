@@ -108,7 +108,6 @@
                             Este Campo es requerido
                         </small>
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="col">
@@ -136,6 +135,16 @@
                         </div>
                         <small *ngIf="!valor.valid && valor.touched" class="invalid-feedback d-block">
                             Solo Numeros
+                        </small>
+                    </div>
+                    <div class="col">
+                        <label for="name"><b>Numero de folios</b></label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="numfol" placeholder="Numero de Factura"
+                                #numfol="ngModel" [(ngModel)]="teso13.numfol" maxlength="15" required>
+                        </div>
+                        <small *ngIf="!numfol.valid && numfol.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
                         </small>
                     </div>
                 </div>
@@ -181,6 +190,7 @@
                         Este Campo es requerido
                     </small>
                 </div>
+
             </div>
         </div>
         <br><br>

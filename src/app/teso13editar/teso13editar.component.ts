@@ -90,6 +90,10 @@ export class Teso13editarComponent {
     const keyword: any = {};
     keyword.keyword = event.target.value;
     keyword.usuario = this.identity.sub;
+
+    console.log("key!")
+    console.log(keyword)
+
     const search = this._teso13Service.searchTeso13(keyword).subscribe(response => {
       this.data = response;
 
@@ -99,6 +103,7 @@ export class Teso13editarComponent {
   }
 
   getPago(dt) {
+    console.log("hola")
     this.data = [];
     this.teso13 = dt;
     this.vacio = dt.codclas + dt.numero;

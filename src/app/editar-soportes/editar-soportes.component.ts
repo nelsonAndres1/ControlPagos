@@ -41,15 +41,13 @@ export class EditarSoportesComponent {
     const keyword = codclas + numero;
     this.codclas = codclas;
     this.numero = numero;
-    console.log("info")
-    console.log(keyword);
-    if (keyword.length == 10) {
+    if (keyword.length >= 10) {
       this.editarSoportes.numero = keyword;
       this._editarSoportesService.getInfoPago(this.editarSoportes).subscribe(
         response => {
-          console.log("ayudaaa!");
-          console.log(response);
           this.soportes_ = response;
+        }, error => {
+          console.log(error);
         }
       )
     }
@@ -113,14 +111,18 @@ export class EditarSoportesComponent {
         }
       }
     }
-
-    console.log("fuera!");
-    console.log(this.datosArchivos);
+    console.log("archivosss!!!!")
+    console.log(this.datosArchivos)
+    console.log("fileee!!!!")
+    console.log(this.selectedFiles)
     this.uploadFiles()
   }
 
   uploadFiles() {
-
+    console.log("archivosss2!!!!")
+    console.log(this.datosArchivos)
+    console.log("fileee2!!!!")
+    console.log(this.selectedFiles)
     const formData = new FormData();
     Object.values(this.selectedFiles).forEach(file => {
       formData.append('files[]', file);
@@ -129,18 +131,19 @@ export class EditarSoportesComponent {
 
     this.uploading = true;
 
+    console.log("form!")
+    console.log(formData)
+
     this.uploadService.uploadUpdate(formData)
       .subscribe(
         response => {
           this.uploading = false;
           if (response.success) {
-            Swal.fire('info', 'Archivos subidos exitosamente:' + response.files, 'info').then(()=>{
-              window.location.reload()
+            Swal.fire('info', 'Archivos subidos exitosamente:' + response.files, 'info').then(() => {
+              /* window.location.reload() */
             });
           } else {
             this.errorMessage = response.message;
-            console.log("error!")
-            console.log(this.errorMessage);
             Swal.fire('Error!', 'Error al subir archivos:' + this.errorMessage, 'error');
           }
 
@@ -154,8 +157,5 @@ export class EditarSoportesComponent {
         }
       )
   }
-
-
-
 
 }
