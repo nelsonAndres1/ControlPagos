@@ -20,6 +20,8 @@ export class Teso15Service {
         const response = new Promise(resolve => {
             this.http.get(global.url + `teso15/search?search=${pclave}`).subscribe(
                 data => {
+                    console.log("data!!!!!!!!!!!")
+                    console.log(data)
                     resolve(data);
 
                 }, err => {

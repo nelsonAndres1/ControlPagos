@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Teso15Service } from '../services/teso15.service';
 import { Gener02 } from '../models/gener02';
-import { identity } from 'rxjs';
 import { Teso13Service } from '../services/teso13.service';
 import { Teso14Service } from '../services/teso14.service';
 import { Teso113 } from '../models/teso113';
+import { Teso20Service } from '../services/teso20.service';
+import { Estado } from '../models/estado';
 
 @Component({
   selector: 'app-teso16',
   templateUrl: './teso16.component.html',
   styleUrls: ['./teso16.component.css'],
-  providers: [Teso15Service, Teso13Service, Teso14Service]
+  providers: [Teso15Service, Teso13Service, Teso14Service, Teso20Service]
 })
 export class Teso16Component implements OnInit {
 
@@ -29,9 +29,11 @@ export class Teso16Component implements OnInit {
   v: any = true;
   public arrayN = Array();
   public data: any = '';
-
-  constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _route: Router, private _teso13Service: Teso13Service, private _teso14Service: Teso14Service) {
-
+  public estado: Estado;
+  estadosMap: { [key: string]: string } = {};
+  
+  constructor(private route: ActivatedRoute, private _teso15Service: Teso15Service, private _route: Router, private _teso13Service: Teso13Service, private _teso14Service: Teso14Service, private _teso20Service: Teso20Service) {
+    this.estado = new Estado('', '');
     this.route.queryParams.subscribe(response => {
       const paramsData = JSON.parse(response['res2']);
       this.itemDetail = paramsData;
@@ -45,6 +47,7 @@ export class Teso16Component implements OnInit {
       }
       this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
     })
+    this.prepararEstados();
 
   }
   getAllTeso13(codclas: any, numero: any) {
@@ -59,74 +62,47 @@ export class Teso16Component implements OnInit {
   ngOnInit(): void { }
 
   cambioEstadoNombre(estado: any) {
-    var estadoEscr
-
-    if (estado == 'RV') {
-      estadoEscr = 'Revisión';
-    }
+    var estadoEscr = '';
     if (estado == 'RA') {
-      estadoEscr = 'Radicado';
+      estadoEscr = 'Radicado';    return estadoEscr;
+    } else {
+      this.estado.estado = estado;
+      this._teso20Service.getOne(this.estado).subscribe(
+        response => {
+          console.log("holaa>!>");
+          console.log(response);
+          estadoEscr = response.estado;
+          
+        }
+      )
+      return estadoEscr;
     }
-    if (estado == 'AN') {
-      estadoEscr = 'Anulado';
-    }
-    if (estado == 'AU') {
-      estadoEscr = 'Autorizado';
-    }
-    if (estado == 'FI') {
-      estadoEscr = 'Financiera';
-    }
-    if (estado == 'CT') {
-      estadoEscr = 'Causación de Cuenta';
-    }
-    if (estado == 'PC') {
-      estadoEscr = 'Causación Pago';
-    }
-    if (estado == 'DR') {
-      estadoEscr = 'Devuelto Radicado';
-    }
-    if (estado == 'RT') {
-      estadoEscr = 'Autorización Pago';
-    }
-    if (estado == 'DC') {
-      estadoEscr = 'Devuelto Causación';
-    }
-    if (estado == 'PB') {
-      estadoEscr = 'Pago Banco';
-    }
-    if (estado == 'PP') {
-      estadoEscr = 'Pago Portal';
-    }
-    if (estado == 'RP') {
-      estadoEscr = 'Preparación Transferencia';
-    }
-    if (estado == 'LC') {
-      estadoEscr = 'Legalización de Cheque';
-    }
-    if (estado == 'CF') {
-      estadoEscr = 'Cheque en Firmas';
-    }
-    if (estado == 'CE') {
-      estadoEscr = 'Cheque Entregado';
-    }
-    if (estado == 'VF') {
-      estadoEscr = 'Verificación Estado de Transferencia';
-    }
-    if (estado == 'PE') {
-      estadoEscr = 'Pago Exitoso';
-    }
-    if (estado == 'CA') {
-      estadoEscr = 'Causación de Pago';
-    }
-    if (estado == 'RC') {
-      estadoEscr = 'Radicado Causación de Cuenta';
-    }
-    if (estado == 'CP') {
-      estadoEscr = 'Radicado Causación Pago';
-    }
-
-    return estadoEscr;
   }
+
+
+
+  prepararEstados() {
+    this.item1.forEach((r) => {
+      if (r.estado === 'RA') {
+        this.estadosMap[r.estado] = 'Radicado';
+      } else {
+        this._teso20Service.getOne({ estado: r.estado }).subscribe(
+          (response) => {
+            this.estadosMap[r.estado] = response.estado;
+          },
+          (error) => {
+            console.error('Error al obtener el estado:', error);
+          }
+        );
+      }
+    });
+  }
+
+  obtenerNombreEstado(estado: string): string {
+    return this.estadosMap[estado] || 'Desconocido';
+  }
+
+
 
   downloadFile(array: any) {
     console.log(array.archivo)
@@ -205,5 +181,7 @@ export class Teso16Component implements OnInit {
         console.log(<any>error);
       });
   }
+
+
 
 }

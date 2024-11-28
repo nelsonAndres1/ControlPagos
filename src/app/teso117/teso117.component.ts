@@ -132,6 +132,8 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
+            console.log("params data!!!")
+            
             this.itemDetail = paramsData;
             this.item1 = this.itemDetail[0];
             this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
@@ -302,6 +304,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     }
 
     nombreUsuario(user: any) {
+        console.log(this.item1)
         console.log("Buscando..")
         for (let index = 0; index < this.arrayN.length; index++) {
             if (this.arrayN[index] == user) {

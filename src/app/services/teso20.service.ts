@@ -41,7 +41,13 @@ export class Teso20Service {
     return this.http.post(this.url + 'teso20/getAll', params, { headers: headers });
   }
 
-
+  getOne(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso20/getOne', params, { headers: headers });
+  }
+  
 }
 
 
