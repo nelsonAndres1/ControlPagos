@@ -75,14 +75,14 @@ export class RevisoresAutorizacionComponent {
         });
       }
     });
-    const { value: email } = await Swal.fire({
+    const { value: cargo } = await Swal.fire({
       title: "Ingrese cargo",
       input: "text",
       inputLabel: "Cargo",
       inputPlaceholder: "Ingrese el cargo"
     });
-    if (email) {
-      this.teso19.cargo = email;
+    if (cargo) {
+      this.teso19.cargo = cargo;
     }
     if (fruit) {
       Swal.fire({

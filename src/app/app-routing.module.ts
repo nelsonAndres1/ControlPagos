@@ -40,11 +40,13 @@ import { Teso117SuperComponent } from './teso117-super/teso117-super.component';
 import { Teso23Component } from './teso23/teso23.component';
 import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
 import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 
 const routes: Routes = [
 
   { path: '', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: 'notificaciones', component: NotificacionesComponent, canActivate: [IdentityGuard] },
   { path: 'principal', component: PrincipalComponent, canActivate: [IdentityGuard] },
   { path: 'logout/:sure', component: LoginComponent, canActivate: [IdentityGuard] },
   { path: 'teso10', component: Teso10Component, canActivate: [IdentityGuard] },

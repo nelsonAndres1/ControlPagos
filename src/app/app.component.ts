@@ -86,6 +86,11 @@ export class AppComponent implements OnInit,
         this.router.navigate(['teso22'])
     }
 
+    notificaciones(){
+        alert("Holaaaaa!")
+        this.router.navigate(['notificaciones'])
+    }
+
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {

@@ -165,5 +165,6 @@ export class Teso21Component {
   archivo(event) {
     this.archivo_ = event.target.value;
   }
+  
 
 }

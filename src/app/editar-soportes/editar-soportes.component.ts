@@ -42,6 +42,7 @@ export class EditarSoportesComponent {
     this.codclas = codclas;
     this.numero = numero;
     if (keyword.length >= 10) {
+      console.log("!holaaa")
       this.editarSoportes.numero = keyword;
       this._editarSoportesService.getInfoPago(this.editarSoportes).subscribe(
         response => {

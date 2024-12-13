@@ -69,6 +69,7 @@ import { EditarSoportesComponent } from './editar-soportes/editar-soportes.compo
 import { LoadingComponent } from './loading/loading.component'
 
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
+import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
     Teso23Component,
     Teso15NitComponent,
     EditarSoportesComponent,
-    LoadingComponent
+    LoadingComponent,
+    NotificacionesComponent
   ],
 
   imports: [

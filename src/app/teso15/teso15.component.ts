@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Teso15Service } from '../services/teso15.service';
 import { Teso15 } from '../models/teso15';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
@@ -10,9 +10,9 @@ import { identity } from 'rxjs';
   providers: [Teso15Service]
 })
 export class Teso15Component implements OnInit {
+  @ViewChild('searchInput', { static: true }) searchInput!: ElementRef;
   data: any;
   data1: any;
-  /* current_clien = Teso15; */
   query: string = '';
 
 
@@ -24,9 +24,13 @@ export class Teso15Component implements OnInit {
   }
 
   ngOnInit(): void {
-
-
+    this.focusSearchInput();
   }
+
+  focusSearchInput(): void {
+    this.searchInput.nativeElement.focus();
+  }
+
   getTpago(pclave: any) {
     const keyword = pclave.target.value;
     if (keyword.length == 10) {
