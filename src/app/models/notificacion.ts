@@ -1,6 +1,7 @@
 export class Notificacion{
 
     constructor(
+        public id:number,
         public usuario: string,
         public nombre:string,
         public correo: string,

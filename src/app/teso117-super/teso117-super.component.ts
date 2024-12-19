@@ -223,10 +223,7 @@ export class Teso117SuperComponent {
 
               if (this.bandera_archivo) {
                 let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
-
                 this.data.codtipag = '180';
-
-
                 const formData = new FormData();
                 Object.values(this.selectedFiles).forEach(file => {
                   formData.append('files[]', file);

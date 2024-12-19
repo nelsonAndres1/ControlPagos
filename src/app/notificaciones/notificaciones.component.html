@@ -1,13 +1,17 @@
 <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
     <div class="card p-4 shadow mb-4" style="width: 700px;">
+        <br>
         <h4 class="text-center mb-4">Parametrizar Notificaciones</h4>
+        <b>Importante: </b> Para la notificación se debe de utilizar un paso anterior al de interes.
+        <br>
+        <br>
         <form #registerForm (ngSubmit)="onSubmit(registerForm)">
             <!-- Campo Usuario -->
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario</label>
                 <input type="text" id="nombre" class="form-control" (input)="input($event)"
                     placeholder="Buscar por documento..." name="nombre" #nombre="ngModel"
-                    [(ngModel)]="notificacion.nombre">
+                    [(ngModel)]="notificacion.nombre"  [disabled]=bandera_actualizar>
                 <div *ngFor="let dt of usuarios">
                     <div class="card card-body mb-1">
                         <h6>Documento: {{dt.cedtra}}</h6>
@@ -28,46 +32,49 @@
             <!-- Campo Pago -->
             <div class="mb-3">
                 <label for="pago" class="form-label">Pago</label>
-                <select class="form-select col" id="inputGroupSelect01" name="pago" placeholder="pago" for="pago"
-                    #pago="ngModel" [(ngModel)]="notificacion.pago" required>
-                    <option *ngFor="let td of pagos" value={{td.codclas}}>{{td.detclas}}</option>
+                <select class="form-select col" name="pago" [(ngModel)]="notificacion.pago" required>
+                    <option *ngFor="let td of pagos" [value]="td.codclas">{{td.detclas}}</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label for="paso" class="form-label">Paso</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="pago" placeholder="paso" for="paso"
-                    #paso="ngModel" [(ngModel)]="notificacion.paso">
-                    <option selected>Seleccione!</option>
+                <select class="form-control" name="paso" [(ngModel)]="notificacion.paso">
                     <option *ngFor="let dt of data_teso20" [value]="dt.id">{{dt.proceso}}</option>
                 </select>
             </div>
             <!-- Botón Guardar -->
-            <button type="submit" class="btn btn-primary w-100">Guardar</button>
+            <button *ngIf="!bandera_actualizar" type="submit" class="btn btn-primary w-100">Guardar</button>
+
         </form>
+        <button *ngIf="bandera_actualizar" (click)="editar_data()" class="btn btn-warning w-100">Editar</button>
     </div>
 
     <!-- Tabla -->
-    <div class="card p-4 shadow" style="width: 700px;">
+    <div class="card p-4 shadow" style="width: 800px;">
         <h4 class="text-center mb-4">Tabla de Datos</h4>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Campo 1</th>
-                    <th>Campo 2</th>
-                    <th>Campo 3</th>
+                    <th>Pago</th>
+                    <th>Paso</th>
+                    <th>Correo</th>
+                    <th>Usuario</th>
+                    <th>Creado por</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-               <!--  <tr *ngFor="let item of tablaDatos">
-                    <td>{{item.campo1}}</td>
-                    <td>{{item.campo2}}</td>
-                    <td>{{item.campo3}}</td>
+                <tr *ngFor="let item of data_notificacion">
+                    <td>{{item.detalle_pago}}</td>
+                    <td>{{item.detalle_paso}}</td>
+                    <td>{{item.correo}}</td>
+                    <td>{{item.detalle_usuario}}</td>
+                    <td>{{item.usuario}}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" (click)="editar(item)">Editar</button>
                         <button class="btn btn-danger btn-sm" (click)="eliminar(item)">Eliminar</button>
                     </td>
-                </tr> -->
+                </tr>
             </tbody>
         </table>
     </div>
