@@ -41,7 +41,7 @@ export class Teso13editarComponent {
     this.identity = this._gener02Service.getIdentity();
     this.editarteso13 = new Editarteso13('', '', '', '', '', '', '', '', '', '', '', '', '', this.identity.sub, this.identity.sub);
     this.editarteso13.usuario = this.identity.sub;
-    this.periodosT(2022, 2024);
+    this.periodosT(2025, 2025);
     this._teso13Service.getTeso13Editar(this.editarteso13).subscribe(
       response => {
         this.data_teso13 = response;

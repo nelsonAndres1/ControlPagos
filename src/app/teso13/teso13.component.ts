@@ -76,7 +76,7 @@ export class Teso13Component implements OnInit {
 
         this.numfac = new Numfac('');
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
-        this.periodosT(2023, 2024);
+        this.periodosT(2024, 2025);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.tpago = this._teso12Service.getTpago();
