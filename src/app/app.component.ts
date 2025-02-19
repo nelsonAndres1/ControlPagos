@@ -33,9 +33,9 @@ export class AppComponent implements OnInit,
     itemDetail: any = [];
     arrayPermisos: any = [];
 
-    constructor(private route: ActivatedRoute, private _principalService: PrincipalService, 
-                private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, 
-                private router: Router) {
+    constructor(private route: ActivatedRoute, private _principalService: PrincipalService,
+        private _gener02Service: Gener02Service, private _teso10Service: Teso10Service,
+        private router: Router) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.teso10 = new teso10('', '', '', '', '', '');
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit,
         this.router.navigate(['EditarSoportes'])
     }
 
-    teso23(){
+    teso23() {
         this.router.navigate(['teso23'])
     }
 
@@ -84,12 +84,16 @@ export class AppComponent implements OnInit,
         this.router.navigate(['teso13_reimprimir'])
     }
 
-    vincular(){
+    vincular() {
         this.router.navigate(['teso22'])
     }
 
-    notificaciones(){
+    notificaciones() {
         this.router.navigate(['notificaciones'])
+    }
+
+    pasosgenerales() {
+        this.router.navigate(['PasosGenerales'])
     }
 
     opciones() {

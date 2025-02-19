@@ -23,7 +23,8 @@ export class Impresion {
         public cdp:string,
         public numcon:string,
         public numfol: string,
-        public usucau: string
+        public usucau: string,
+        public detalle: string
     ) {
 
 

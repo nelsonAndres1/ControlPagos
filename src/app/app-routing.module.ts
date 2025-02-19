@@ -41,6 +41,7 @@ import { Teso23Component } from './teso23/teso23.component';
 import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
 import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
+import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
 
 const routes: Routes = [
 
@@ -83,6 +84,7 @@ const routes: Routes = [
   { path: 'teso117/super', component: Teso117SuperComponent, canActivate: [IdentityGuard] },
   { path: 'teso23', component: Teso23Component, canActivate: [IdentityGuard] },
   { path: 'teso15Nit', component: Teso15NitComponent, canActivate: [IdentityGuard] },
+  { path: 'PasosGenerales', component: PasosGeneralesComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];

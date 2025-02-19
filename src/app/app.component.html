@@ -49,8 +49,8 @@
 
                         Modificar estado del Pago
                     </CDBSidebarMenuItem>
-                    
-                    
+
+
                     <div *ngIf="permisosNuevoPago()">
                         <CDBSidebarMenuItem icon="shopping-cart" routerLink="teso110">
 
@@ -127,7 +127,11 @@
                         </CDBSidebarMenuItem>
                     </div>
 
-
+                    <div *ngIf="permisos != null">
+                        <CDBSidebarMenuItem icon="fa fa-battery-full" (click)="pasosgenerales()" *ngIf="permisosNuevoPago()">
+                            Pasos Generales
+                        </CDBSidebarMenuItem>
+                    </div>
 
                     <CDBSidebarMenuItem icon="fa fa-times-circle" [routerLink]="['/logout/1']">
 

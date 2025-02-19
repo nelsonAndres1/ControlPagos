@@ -41,7 +41,7 @@ export class Teso113Component implements OnInit {
 
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
 
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
         this.teso10 = new teso10('', '', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
@@ -58,6 +58,9 @@ export class Teso113Component implements OnInit {
             this.teso10.codclas = this.codclas;
             this.teso10.numero = this.numero;
             this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
+
+                console.log('responseTeso13');
+                console.log(response);
 
                 if (response.status != 'error') {
                     this.data = response;
@@ -92,6 +95,7 @@ export class Teso113Component implements OnInit {
                         this.impreseion.numcon = this.data.numcon;
                         this.impreseion.numfol = this.data.numfol;
                         this.impreseion.usucau = this.data.usucau;
+                        this.impreseion.detalle = this.data.detalle;
 
                         if (this.cdp_documento == '00') {
                             this.impreseion.cdp = '-'
@@ -183,6 +187,7 @@ export class Teso113Component implements OnInit {
     ngOnInit(): void { }
 
     descargarPDF() {
+        console.log("ayudaaaaaaaaa!")
         console.log(this.impreseion);
         this._PdfService.generarPDF(this.impreseion).subscribe(
             response => {
