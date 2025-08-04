@@ -33,6 +33,7 @@ export class Teso13{
         public peraut:string,
         public bandera_actualizar: string,
         public numcon:string,
-        public numfol:string
+        public numfol:string,
+        public anexos_magneticos:string
     ){}
 }

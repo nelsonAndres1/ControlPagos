@@ -63,7 +63,7 @@ export class Teso12Component implements OnInit {
 
     constructor(public formulario: UntypedFormBuilder, private _teso12Service: Teso12Service, private _router: Router, private _route: ActivatedRoute, private sanitizer: DomSanitizer, private _userService: Teso13Service, private _gener02Service: Gener02Service) {
 
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '', '1', '', '');
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', 4, 3, 2, '', '', '', '', null, '', '', '1', '', '','');
         this.nconsecutivo = 0;
         this.nombres = new Nombres('', 0, '');
         this.tpago = JSON.parse(localStorage.getItem("tpa") + '');

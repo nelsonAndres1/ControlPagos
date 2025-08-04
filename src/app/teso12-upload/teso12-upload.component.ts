@@ -22,6 +22,7 @@ export class Teso12UploadComponent {
   banderaPermisos: any = true;
   contarPer: any = 0;
   datosArchivos: any = [];
+  maxFileSize = 10000000; // 10MB en bytes
 
   constructor(
     private uploadService: UploadService,
@@ -50,9 +51,16 @@ export class Teso12UploadComponent {
 
   }
 
-  onFileSelected(event: any, filename: string, dt: any) {
+  onFileSelected(event: any, filename: string, dt: any, fileInput: HTMLInputElement) {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > this.maxFileSize) {
+        Swal.fire('Archivo muy grande', 'El archivo supera los 10MB permitidos, por favor comprimir el archivo e intentar de nuevo!', 'warning');
+        fileInput.value = '';
+        return;
+      }
+
+
       this.selectedFiles[filename] = file;
 
       var bandera = false;
@@ -156,7 +164,7 @@ export class Teso12UploadComponent {
         },
         error => {
           this.uploading = false;
-          Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error').then(()=>{
+          Swal.fire('Error!', 'Error al subir archivos: ' + error.error.message, 'error').then(() => {
             this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
             Swal.fire('error!', this.errorMessage, 'error');
           });

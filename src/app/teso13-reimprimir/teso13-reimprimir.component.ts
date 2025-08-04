@@ -29,7 +29,7 @@ export class Teso13ReimprimirComponent {
 
   constructor(private _PdfService: PdfService, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _utilidadesService: UtilidadesService) {
     this.identity = this._gener02Service.getIdentity();
-    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
+    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
   }
 
   getTeso13(event) {
@@ -54,9 +54,16 @@ export class Teso13ReimprimirComponent {
       response => {
         if (response.status != 'error') {
           const { dia, mes, año } = this.extraerFecha(new Date(dt.fecrad));
+
+
+
           this.impreseion.dia = dia + '';
           this.impreseion.mes = mes + '';
           this.impreseion.ano = año + '';
+
+          console.log("Impresion!!!");
+          console.log(this.impreseion);
+
           this.impreseion.numero_factura = dt.numfac;
           this.impreseion.nit_persona = dt.nit;
           this.impreseion.nombre_persona = '';
@@ -120,12 +127,13 @@ export class Teso13ReimprimirComponent {
 
 
   extraerFecha(fecha: Date): { dia: number, mes: number, año: number } {
-    const dia = fecha.getDate() + 1;
-    const mes = fecha.getMonth() + 1;
-    const año = fecha.getFullYear();
+    const dia = fecha.getUTCDate();
+    const mes = fecha.getUTCMonth() + 1;
+    const año = fecha.getUTCFullYear();
 
     return { dia, mes, año };
   }
+
 
 
   descargarPDF() {

@@ -75,7 +75,7 @@ export class Teso13Component implements OnInit {
     constructor(private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _teso10Service: Teso10Service, private _teso12Service: Teso12Service, private _router: Router, private _utilidadesService: UtilidadesService, private _teso19Service: Teso19Service) {
 
         this.numfac = new Numfac('');
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '');
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', "", null, '', '', '0', '', '','');
         this.periodosT(2024, 2025);
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();

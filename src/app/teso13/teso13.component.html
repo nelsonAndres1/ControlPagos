@@ -231,6 +231,20 @@
                     Este Campo es requerido
                 </small>
             </div>
+            <div class="row">
+                <div class="col">
+                    <label for="name"><b>Numero de anexos magneticos</b></label>
+                    <div class="col">
+                        <input type="number" class="form-control" name="anexos_magneticos" placeholder="Numero de anexos magneticos"
+                            #anexos_magneticos="ngModel" [(ngModel)]="teso13.anexos_magneticos" maxlength="15" required>
+                    </div>
+                    <small *ngIf="!anexos_magneticos.valid && anexos_magneticos.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+            </div>
+
+
         </div>
 
         <div class="row">
@@ -253,7 +267,7 @@
                 <div class="col">
                     <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
                         [(ngModel)]="teso13.valor" maxlength="20" required #valor="ngModel"
-                        (input)="onInputChange($event)" >
+                        (input)="onInputChange($event)">
                 </div>
             </div>
 
