@@ -47,8 +47,33 @@ export class Teso13ReimprimirComponent {
   }
 
 
-  getPago(dt) {
-    console.log("agagagagagag")
+  async getPago(dt) {
+    console.log("agagagagagag!!!")
+    console.log(dt.codclas);
+    console.log(dt.numero);
+    console.log("agagagagagag!!!")
+
+    var soportes_pago: any;
+    var nombre_soportes_pago: any = '';
+
+    await this._teso13Service.getSoportesForPago(new Teso113(dt.codclas, dt.numero)).subscribe(
+      response => {
+        console.log("Soportes for pago");
+        console.log(response);
+        soportes_pago = response;
+        for (let index = 0; index < soportes_pago.length; index++) {
+          if (nombre_soportes_pago !== '') {
+            nombre_soportes_pago += ', ';
+          }
+          nombre_soportes_pago += soportes_pago[index].detalle_codsop;
+        }
+        console.log("Soportes for pago");
+        console.log(nombre_soportes_pago);
+      }
+    )
+
+
+
     console.log(dt.fecrad);
     this._teso15Service.getAllTeso13(new Teso113(dt.codclas, dt.numero)).subscribe(
       response => {
@@ -79,7 +104,7 @@ export class Teso13ReimprimirComponent {
           this.impreseion.fecha = dt.fecrad;
           this.impreseion.cdp = 'CDP: ' + dt.cdp_marca + dt.cdp_documento + dt.cdp_ano;
           this.impreseion.valor = 'VALOR: ' + dt.valor;
-          this.impreseion.documento_clase = '';
+          this.impreseion.documento_clase = nombre_soportes_pago;
           this.impreseion.numcon = dt.numcon;
           this.impreseion.numfol = dt.numfol;
           this.impreseion.detalle = response.detalle;
@@ -90,7 +115,7 @@ export class Teso13ReimprimirComponent {
               this.impreseion.centro_costo = response.detalle_codcen;
               this.impreseion.dependencia = dt.coddep + ' - ' + response.detalle_dependencia;
               this.impreseion.clase_pago = response.detalle_pago;
-              this.impreseion.documento_clase = response.soportes;
+              this.impreseion.documento_clase = nombre_soportes_pago;
               this.impreseion.nombre_elaborado = response.detalle_gener02;
               this.impreseion.numcon = dt.numcon;
               this._PdfService.generarPDF(this.impreseion).subscribe(
