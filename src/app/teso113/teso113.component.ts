@@ -43,7 +43,7 @@ export class Teso113Component implements OnInit {
 
     constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
 
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
         this.teso10 = new teso10('', '', '', '', '', '');
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['result']);
@@ -126,6 +126,7 @@ export class Teso113Component implements OnInit {
                     this.impreseion.numfol = this.data.numfol;
                     this.impreseion.usucau = this.data.usucau;
                     this.impreseion.detalle = this.data.detalle;
+                    this.impreseion.anexos_magneticos = this.data.anexos_magneticos;
 
                     if (this.cdp_documento == '00') {
                         this.impreseion.cdp = '-'

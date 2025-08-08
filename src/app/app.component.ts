@@ -8,11 +8,13 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { identity } from 'rxjs';
+import { AppVersionService } from './services/app-version.service';
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    providers: [Gener02Service, Teso10Service, PrincipalService]
+    providers: [Gener02Service, Teso10Service, PrincipalService, AppVersionService]
 })
 
 export class AppComponent implements OnInit,
@@ -33,12 +35,13 @@ export class AppComponent implements OnInit,
     itemDetail: any = [];
     arrayPermisos: any = [];
 
-    constructor(private route: ActivatedRoute, private _principalService: PrincipalService,
+    constructor(private ver: AppVersionService, private route: ActivatedRoute, private _principalService: PrincipalService,
         private _gener02Service: Gener02Service, private _teso10Service: Teso10Service,
         private router: Router) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.teso10 = new teso10('', '', '', '', '', '');
+        this.ver.init(60_000); // 1 min
 
     }
 

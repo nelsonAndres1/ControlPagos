@@ -5,6 +5,7 @@ export class Teso14{
         public codsop: string,
         public obliga: string,
         public prvez: string,
+        public orden: string
     ){
 
     }

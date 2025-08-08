@@ -46,9 +46,9 @@ export class EditarTeso12Component implements OnInit {
       n2: [''],
     });
 
-    this.teso10 = new teso10('', '', '', '','','');
-    this.teso12 = new teso12('','');
-    this.teso14 = new Teso14('', '', '', '', '');
+    this.teso10 = new teso10('', '', '', '', '', '');
+    this.teso12 = new teso12('', '');
+    this.teso14 = new Teso14('', '', '', '', '', '');
     this.onSubmit();
   }
 
@@ -100,7 +100,7 @@ export class EditarTeso12Component implements OnInit {
   }
 
 
-  editar(codclas: any, codsop: any, obliga: any) {
+  editar(codclas: any, codsop: any, obliga: any, orden: any) {
     Swal.fire({
       title: 'Editar soporte',
       text: "¿El soporte sera obligatorio?",
@@ -113,21 +113,17 @@ export class EditarTeso12Component implements OnInit {
       denyButtonText: 'No!',
     }).then((result) => {
       this.obligatorio = obliga;
-      if (result.isConfirmed) {
-        this.obligatorio = 'S';
-        console.log("obligatorio")
-        console.log(this.obligatorio);
-      } else {
-        console.log(" No obligatorio")
-        this.obligatorio = 'N';
-      }
       this.teso14.codclas = codclas;
       this.teso14.codsop = codsop;
       this.teso14.obliga = this.obligatorio;
+      this.teso14.orden = orden;
+
+      console.log("this.teso14");
+      console.log(this.teso14);
 
       this._teso12Service.editarObligacionSoportes(this.teso14).subscribe(
         response => {
-          if(response.status=='success'){
+          if (response.status == 'success') {
             Swal.fire({
               position: 'top-end',
               icon: 'success',
@@ -137,8 +133,8 @@ export class EditarTeso12Component implements OnInit {
             })
             setTimeout(() => {
               window.location.reload();
-            }, 1000); 
-          }else{
+            }, 1000);
+          } else {
             Swal.fire({
               position: 'top-end',
               icon: 'error',
@@ -146,9 +142,9 @@ export class EditarTeso12Component implements OnInit {
               showConfirmButton: false,
               timer: 1500
             })
-            setTimeout(() => {
+            /* setTimeout(() => {
               window.location.reload();
-            }, 1000); 
+            }, 1000); */
           }
         }
       )
@@ -212,4 +208,123 @@ export class EditarTeso12Component implements OnInit {
       }
     );
   }
+
+  async guardarCambios() {
+    const cambios = this.soporte.filter(so =>
+      so.obliga && so.orden !== null && so.orden !== undefined
+    );
+
+    if (cambios.length === 0) {
+      Swal.fire('Sin cambios', 'No hay soportes modificados para guardar.', 'info');
+      return;
+    }
+
+    Swal.fire({
+      title: '¿Guardar todos los cambios?',
+      text: `Se guardarán ${cambios.length} soportes.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        let exitos = 0;
+        let errores = 0;
+        const total = cambios.length;
+
+        this.mostrarBarraProgreso(total);
+
+        for (let i = 0; i < total; i++) {
+          const so = cambios[i];
+          const teso14 = {
+            codclas: so.codclas,
+            codsop: so.codsop,
+            obliga: so.obliga,
+            orden: so.orden
+          };
+
+          try {
+            const response: any = await this.enviarConEspera(teso14);
+            if (response.status === 'success') {
+              exitos++;
+            } else {
+              errores++;
+            }
+          } catch (err) {
+            errores++;
+          }
+
+          this.actualizarBarraProgreso(i + 1, total);
+          await this.esperar(1000); // espera 1 segundo
+        }
+
+        Swal.close();
+        this.finalizarGuardado(exitos, errores);
+      }
+    });
+  }
+
+  esperar(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+  finalizarGuardado(exitos: number, errores: number) {
+    Swal.fire({
+      title: 'Resultado del guardado',
+      icon: errores === 0 ? 'success' : 'warning',
+      html: `
+      <p><strong>${exitos}</strong> soportes actualizados correctamente.</p>
+      <p><strong>${errores}</strong> con errores.</p>
+    `,
+      confirmButtonText: 'Aceptar'
+    }).then(() => {
+      if (errores === 0) {
+        window.location.reload();
+      }
+    });
+  }
+
+  enviarConEspera(teso14: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this._teso12Service.editarObligacionSoportes(teso14).subscribe(
+        res => resolve(res),
+        err => reject(err)
+      );
+    });
+  }
+  mostrarBarraProgreso(total: number) {
+    Swal.fire({
+      title: 'Guardando cambios...',
+      html: `
+      <div style="margin-top: 20px;">
+        <div class="progress">
+          <div id="barra-progreso" class="progress-bar progress-bar-striped progress-bar-animated" 
+               role="progressbar" style="width: 0%">
+            0%
+          </div>
+        </div>
+      </div>
+    `,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        // Nada aún, lo controlaremos manualmente
+      }
+    });
+  }
+
+  actualizarBarraProgreso(actual: number, total: number) {
+    const porcentaje = Math.round((actual / total) * 100);
+    const barra = document.getElementById("barra-progreso");
+    if (barra) {
+      barra.style.width = `${porcentaje}%`;
+      barra.textContent = `${porcentaje}%`;
+    }
+  }
+
+
+
+
 }

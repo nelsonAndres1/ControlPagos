@@ -24,7 +24,8 @@ export class Impresion {
         public numcon:string,
         public numfol: string,
         public usucau: string,
-        public detalle: string
+        public detalle: string,
+        public anexos_magneticos: string
     ) {
 
 

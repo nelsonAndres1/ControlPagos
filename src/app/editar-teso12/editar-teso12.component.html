@@ -1,36 +1,47 @@
 <br>
 <br>
 <div class="div1">
-    <form  [formGroup]="formGroup" class="row g-3">
-        <div class="col-md-4">
-            <h3>Seleccione la Clase de Pago</h3>
-            <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
-            <select  [(ngModel)]="opcionSeleccionado" (change)="capturar($event)" id="inputState" formControlName="n1" class="form-select">
-                <option selected>Seleccione</option>
-                <option *ngFor="let dt of pagos" value={{dt.codclas}}>{{dt.detclas}}</option>
-            </select> 
-            <br> 
-        </div> 
-    </form>
-    <div>
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Soporte</th>
-                <th scope="col">Obligatorio?</th>
-                <th scope="col">Editar</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let so of soporte">
-                <th scope="row">{{so.codsop}} {{so.detalle_codsop}}</th>
-                <td>{{so.obliga}}</td>
-                <td><button type="button" class="btn btn-warning" (click)="editar(so.codclas, so.codsop, so.obliga)">Editar</button></td>
-              </tr>
-            </tbody>
-          </table>
-
+  <form [formGroup]="formGroup" class="row g-3">
+    <div class="col-md-4">
+      <h3>Seleccione la Clase de Pago</h3>
+      <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
+      <select [(ngModel)]="opcionSeleccionado" (change)="capturar($event)" id="inputState" formControlName="n1"
+        class="form-select">
+        <option selected>Seleccione</option>
+        <option *ngFor="let dt of pagos" value={{dt.codclas}}>{{dt.detclas}}</option>
+      </select>
+      <br>
     </div>
+  </form>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Soporte</th>
+          <th scope="col">Obligatorio?</th>
+          <th scope="col">Orden</th>
+          <th scope="col">Editar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let so of soporte">
+          <th scope="row">{{so.codsop}} {{so.detalle_codsop}}</th>
+          <td><select class="form-select" [(ngModel)]="so.obliga" name="obliga_{{so.codsop}}">
+              <option [value]="'S'">SI</option>
+              <option [value]="'N'">NO</option>
+            </select></td>
+          <td> <input type="number" class="form-control" [(ngModel)]="so.orden" name="orden_{{so.codsop}}">
+          </td>
+          <td><button type="button" class="btn btn-warning"
+              (click)="editar(so.codclas, so.codsop, so.obliga, so.orden)">Editar</button></td>
+        </tr>
+      </tbody>
+    </table>
 
-
+  </div>
+  <div class="text-end">
+    <button type="button" class="btn btn-primary mt-3" (click)="guardarCambios()">
+      Guardar todos los cambios
+    </button>
+  </div>
 </div>

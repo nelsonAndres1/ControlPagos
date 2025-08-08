@@ -29,7 +29,7 @@ export class Teso13ReimprimirComponent {
 
   constructor(private _PdfService: PdfService, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _utilidadesService: UtilidadesService) {
     this.identity = this._gener02Service.getIdentity();
-    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
   }
 
   getTeso13(event) {
@@ -48,10 +48,6 @@ export class Teso13ReimprimirComponent {
 
 
   async getPago(dt) {
-    console.log("agagagagagag!!!")
-    console.log(dt.codclas);
-    console.log(dt.numero);
-    console.log("agagagagagag!!!")
 
     var soportes_pago: any;
     var nombre_soportes_pago: any = '';
@@ -71,10 +67,6 @@ export class Teso13ReimprimirComponent {
         console.log(nombre_soportes_pago);
       }
     )
-
-
-
-    console.log(dt.fecrad);
     this._teso15Service.getAllTeso13(new Teso113(dt.codclas, dt.numero)).subscribe(
       response => {
         if (response.status != 'error') {
@@ -108,6 +100,7 @@ export class Teso13ReimprimirComponent {
           this.impreseion.numcon = dt.numcon;
           this.impreseion.numfol = dt.numfol;
           this.impreseion.detalle = response.detalle;
+          this.impreseion.anexos_magneticos = response.anexos_magneticos;
 
           this._utilidadesService.getAllConta04(this.impreseion).subscribe(
             response => {
