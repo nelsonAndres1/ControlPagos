@@ -41,21 +41,37 @@ export class Teso113Component implements OnInit {
     impreseion: Impresion;
     nombre_soportes_pago: any = '';
 
-    constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
-
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
+    constructor(
+        private route: ActivatedRoute,
+        private _router: Router,
+        private _teso15Service: Teso15Service,
+        private _teso13Service: Teso13Service,
+        private _PdfService: PdfService
+    ) {
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
         this.teso10 = new teso10('', '', '', '', '', '');
-        this.route.queryParams.subscribe(response => {
-            const paramsData = JSON.parse(response['result']);
+
+        this.route.queryParams.subscribe(q => {
+            const paramsData = q['result'] ? JSON.parse(q['result']) : [];
+            const numeroPago = q['numeroPago'];
             this.itemDetail = paramsData;
-            this.numero = this.itemDetail[0];
-            this.codclas = this.itemDetail[1];
-            this.nit = this.itemDetail[2];
-            this.cc = this.itemDetail[3];
-            this.depe = this.itemDetail[4];
-            this.cdp_marca = this.itemDetail[5];
-            this.cdp_documento = this.itemDetail[6];
-            this.cdp_ano = this.itemDetail[7];
+
+            // 1) Numero real desde query param (o respaldo de session)
+            this.numero = numeroPago;
+            sessionStorage.setItem('ultimo_numero_pago', this.numero);
+
+            // 2) Nuevo mapeo consistente con arrayD
+            // arrayD = [codclas, nit_nombre, codcen_nombre, coddep_nombre, cdp_marca, cdp_documento, cdp_ano, nit, uploadToken]
+            this.codclas = this.itemDetail[0];
+            const nitNombre = this.itemDetail[1]; // por si lo necesitas en UI
+            this.cc = this.itemDetail[2];
+            this.depe = this.itemDetail[3];
+            this.cdp_marca = this.itemDetail[4];
+            this.cdp_documento = this.itemDetail[5];
+            this.cdp_ano = this.itemDetail[6];
+            this.nit = this.itemDetail[7]; // NIT numérico/real
+
+            // 3) Preparar servicios dependientes
             this.getTeso10(this.codclas);
             this.teso10.codclas = this.codclas;
             this.teso10.numero = this.numero;
@@ -85,6 +101,13 @@ export class Teso113Component implements OnInit {
                 console.log(this.nombre_soportes_pago);
             }
         )
+
+        console.log("codclas");
+        console.log(this.codclas);
+        console.log("numero");
+        console.log(this.numero);
+        console.log("nombre_soportes_pago");
+        console.log(this.itemDetail);
 
 
         this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {

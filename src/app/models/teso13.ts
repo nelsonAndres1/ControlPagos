@@ -34,6 +34,7 @@ export class Teso13{
         public bandera_actualizar: string,
         public numcon:string,
         public numfol:string,
-        public anexos_magneticos:string
+        public anexos_magneticos:string,
+        public upload_token: string
     ){}
 }
