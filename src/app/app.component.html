@@ -1,146 +1,112 @@
 <div class="dashboard d-flex">
-    <div *ngIf="identity != null" class="app" style="display: flex; height: 100vh;">
+    <div *ngIf="identity" class="app app-shell">
         <CDBSidebar textColor="#000000" backgroundColor="#c6d7e4">
-
             <CDBSidebarHeader [prefix]="icon">
                 <ng-template #icon>
                     <CDBIcon icon="bars" size="lg"></CDBIcon>
                 </ng-template>
-
                 Control de Pagos
             </CDBSidebarHeader>
 
             <CDBSidebarContent>
                 <CDBSidebarMenu>
-                    <CDBSidebarMenuItem icon="home" routerLink="principal">
+                    <CDBSidebarMenuItem icon="home" routerLink="/principal" routerLinkActive="active">
                         Pagina Principal
                     </CDBSidebarMenuItem>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="play" (click)="inp()" *ngIf="permisosPago()">
-                            Inicie el Pago
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="pen" (click)="inp_editar()" *ngIf="permisosPago()">
-                            Editar sus pagos
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="pen" (click)="inp_editar_soportes()" *ngIf="permisosPago()">
-                            Editar soportes de pago
-                        </CDBSidebarMenuItem>
-                    </div>
 
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="print" (click)="inp_reimprimir()" *ngIf="permisosPago()">
-                            Reimprimir pago
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <CDBSidebarMenuItem icon="search" routerLink="teso15">
+                    <!-- Bloque pagos -->
+                    <CDBSidebarMenuItem *ngIf="canPagar" icon="play" (click)="inp()">
+                        Inicie el Pago
+                    </CDBSidebarMenuItem>
 
+                    <CDBSidebarMenuItem *ngIf="canPagar" icon="pen" (click)="inp_editar()">
+                        Editar sus pagos
+                    </CDBSidebarMenuItem>
+
+                    <CDBSidebarMenuItem *ngIf="canPagar" icon="pen" (click)="inp_editar_soportes()">
+                        Editar soportes de pago
+                    </CDBSidebarMenuItem>
+
+                    <CDBSidebarMenuItem *ngIf="canPagar" icon="print" (click)="inp_reimprimir()">
+                        Reimprimir pago
+                    </CDBSidebarMenuItem>
+
+                    <!-- Consultas -->
+                    <CDBSidebarMenuItem icon="search" routerLink="/teso15" routerLinkActive="active">
                         Consultar estado del Pago
                     </CDBSidebarMenuItem>
 
-                    <CDBSidebarMenuItem icon="search" routerLink="teso15Nit">
+                    <CDBSidebarMenuItem icon="search" routerLink="/teso15Nit" routerLinkActive="active">
                         Consultar por Nit
                     </CDBSidebarMenuItem>
 
-                    <CDBSidebarMenuItem icon="cogs" routerLink="teso17">
-
+                    <!-- Modificar estado -->
+                    <CDBSidebarMenuItem icon="cogs" routerLink="/teso17" routerLinkActive="active">
                         Modificar estado del Pago
                     </CDBSidebarMenuItem>
 
+                    <!-- Admin/Nuevo pago -->
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="shopping-cart" routerLink="/teso110"
+                        routerLinkActive="active">
+                        Tipos de Pago
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisosNuevoPago()">
-                        <CDBSidebarMenuItem icon="shopping-cart" routerLink="teso110">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="file" routerLink="/teso112" routerLinkActive="active">
+                        Tipos de Soportes
+                    </CDBSidebarMenuItem>
 
-                            Tipos de Pago
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisosNuevoPago()">
-                        <CDBSidebarMenuItem icon="file" routerLink="teso112">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="cog" routerLink="/editar_teso12"
+                        routerLinkActive="active">
+                        Editar Soportes
+                    </CDBSidebarMenuItem>
 
-                            Tipos de Soportes
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="link" routerLink="/teso14" routerLinkActive="active">
+                        Vincular Pagos y Soportes
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisosNuevoPago()">
-                        <CDBSidebarMenuItem icon="cog" routerLink="editar_teso12">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="lock" (click)="opciones()">
+                        Administrador
+                    </CDBSidebarMenuItem>
 
-                            Editar Soportes
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisosNuevoPago()">
-                        <CDBSidebarMenuItem icon="fa fa-link" routerLink="teso14">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="users" (click)="causadores()">
+                        Agregar Causadores
+                    </CDBSidebarMenuItem>
 
-                            Vincular Pagos y Soportes
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-lock" (click)="opciones()" *ngIf="permisosNuevoPago()">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="users" (click)="revisa()">
+                        Revisores y Autorizadores
+                    </CDBSidebarMenuItem>
 
-                            Administrador
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-users" (click)="causadores()" *ngIf="permisosNuevoPago()">
-                            Agregar Causadores
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-users" (click)="revisa()" *ngIf="permisosNuevoPago()">
-                            Revisores y Autorizadores
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-wrench" (click)="crear_opciones()" *ngIf="permisosNuevoPago()">
-                            Crear Opciones
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-tree" (click)="crear_arbol()" *ngIf="permisosNuevoPago()">
-                            Crear Arbol
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="wrench" (click)="crear_opciones()">
+                        Crear Opciones
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-wrench" (click)="vincular()" *ngIf="permisosNuevoPago()">
-                            Arbol y Pagos
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="tree" (click)="crear_arbol()">
+                        Crear Arbol
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-lock" (click)="teso23()" *ngIf="permisosNuevoPago()">
-                            Permisos
-                        </CDBSidebarMenuItem>
-                    </div>
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-bell" (click)="notificaciones()" *ngIf="permisosNuevoPago()">
-                            Notificaciones
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="wrench" (click)="vincular()">
+                        Arbol y Pagos
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-file-excel" (click)="reportes()" *ngIf="permisosNuevoPago()">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="lock" (click)="teso23()">
+                        Permisos
+                    </CDBSidebarMenuItem>
 
-                            Reportes
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="bell" (click)="notificaciones()">
+                        Notificaciones
+                    </CDBSidebarMenuItem>
 
-                    <div *ngIf="permisos != null">
-                        <CDBSidebarMenuItem icon="fa fa-battery-full" (click)="pasosgenerales()" *ngIf="permisosNuevoPago()">
-                            Pasos Generales
-                        </CDBSidebarMenuItem>
-                    </div>
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-excel" (click)="reportes()">
+                        Reportes
+                    </CDBSidebarMenuItem>
 
-                    <CDBSidebarMenuItem icon="fa fa-times-circle" [routerLink]="['/logout/1']">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="pasosgenerales()">
+                        Pasos Generales
+                    </CDBSidebarMenuItem>
 
+                    <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]">
                         Salir
                     </CDBSidebarMenuItem>
-                </CDBSidebarMenu>
-
-                <CDBSidebarMenu>
-
                 </CDBSidebarMenu>
             </CDBSidebarContent>
 
@@ -154,7 +120,7 @@
         </CDBSidebar>
     </div>
 
-    <div style="flex:1 1 auto; display:flex; flex-flow:column; height:100vh; overflow-y:scroll">
+    <div class="app-content">
         <router-outlet></router-outlet>
     </div>
 </div>

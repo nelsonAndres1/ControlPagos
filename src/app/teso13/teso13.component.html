@@ -17,25 +17,19 @@
 <form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
     <div class="form-group col-md-12">
 
+        <!-- Usuario y Tipo de Pago -->
         <div class="row">
-            <div class="col">
-                <label><b>Consecutivo</b></label>
-                <div class="col">
-                    <input type="text" [value]="nconsecutivo" name="numero" class="form-control"
-                        placeholder="Consecutivo" #numero="ngModel" [(ngModel)]="teso13.numero" disabled>
-                </div>
-            </div>
-
             <div class="col">
                 <label><b>Usuario</b></label>
                 <div class="col">
+                    <b>{{nombre_usuario}}</b>
                     <input type="text" [value]="usu" id="{{usu}}" name="usuela" class="form-control"
                         placeholder="Usuario" #usuario="ngModel" [(ngModel)]="teso13.usuela" disabled>
                 </div>
             </div>
-
             <div class="col">
                 <label><b>Tipo de Pago</b></label>
+                <b>{{nombre_pago}}</b>
                 <div class="col">
                     <input type="text" [value]="tpago" name="codclas" class="form-control" placeholder="Tipo de Pago"
                         #codclas="ngModel" [(ngModel)]="teso13.codclas" disabled>
@@ -43,6 +37,7 @@
             </div>
         </div>
 
+        <!-- CDP -->
         <div class="row">
             <br>
             <div class="form-check">
@@ -73,6 +68,7 @@
             </div>
         </div>
 
+        <!-- NIT -->
         <div class="row">
             <div class="col">
                 <div class="col">
@@ -130,28 +126,22 @@
             </div>
         </div>
 
+        <!-- SUBDIRECCIÓN (single) + DEPENDENCIA (single) -->
         <div class="row">
 
+            <!-- Subdirección (usa teso13.codcen) -->
             <div class="col">
-                <label><b>Centro de Costo</b></label>
+                <label><b>Subdirección</b></label>
                 <div class="col">
-                    <div>
-                        <div class="form-check">
-                            <br>
-                            <input class="form-check-input" type="checkbox" (change)="centroC()"
-                                id="chkCentroCostoVarios">
-                            <label class="form-check-label" for="chkCentroCostoVarios">Centro de Costo - Varios</label>
-                        </div>
+                    <input type="text" class="form-control" name="subdir_name" placeholder="Buscar Subdirección"
+                        (input)="buscarSubdir($event)" [(ngModel)]="subdir_nombre" [disabled]="subdir_locked">
 
-                        <input type="text" class="form-control" name="codcen_name" placeholder="Centro de Costo"
-                            (input)="getConta($event)" [(ngModel)]="codcen_nombre" [disabled]="centroCostos">
-
-                        <div *ngFor="let result of data" (click)="getDetailPage(result)">
-                            <div class="card card-body mb-1" (click)="touchCC(result)" style="cursor: pointer;"
-                                *ngIf="bandera">
-                                <h6>Detalle: {{result.detalle}}.</h6>
-                                <small class="text-primary">Codcen: {{result.codcen}}.</small>
-                            </div>
+                    <!-- resultados subdirección -->
+                    <div *ngFor="let r of dataSubdir" (click)="getDetailPage(r)">
+                        <div class="card card-body mb-1" (click)="touchSubdir(r)" style="cursor: pointer;"
+                            *ngIf="banderaSubdir">
+                            <h6>Detalle: {{r.detalle}}.</h6>
+                            <small class="text-primary">Código: {{r.codcen}}</small>
                         </div>
                     </div>
                 </div>
@@ -165,18 +155,20 @@
                 </div>
             </div>
 
+            <!-- Dependencia (usa teso13.coddep) -->
             <div class="col">
-                <label><b>Codigo de Dependencia</b></label>
+                <label><b>Dependencia</b></label>
                 <div class="col">
-                    <br><br>
-                    <input type="text" class="form-control" name="coddep_nombre" placeholder="Codigo Dependencia"
-                        (input)="getConta28($event)" [(ngModel)]="coddep_nombre" [disabled]="centroCostos">
+                
+                    <input type="text" class="form-control" name="dep_nombre" placeholder="Buscar Dependencia"
+                        (input)="buscarDep($event)" [(ngModel)]="dep_nombre" [disabled]="dep_locked">
 
-                    <div *ngFor="let resultC2 of datac28" (click)="getDetailPageC28(resultC2)">
-                        <div class="card card-body mb-1" (click)="touch28(resultC2)" style="cursor: pointer;"
+                    <!-- resultados dependencia -->
+                    <div *ngFor="let r2 of datac28" (click)="getDetailPageC28(r2)">
+                        <div class="card card-body mb-1" (click)="touchDep(r2)" style="cursor: pointer;"
                             *ngIf="bandera28">
-                            <h6>Detalle: {{resultC2.detalle}}.</h6>
-                            <small class="text-primary">Codigo: {{resultC2.coddep}}.</small>
+                            <h6>Detalle: {{r2.detalle}}.</h6>
+                            <small class="text-primary">Código: {{r2.coddep}}</small>
                         </div>
                     </div>
                 </div>
@@ -192,7 +184,78 @@
 
         </div>
 
-        <div class="row">
+        <!-- CENTRO DE COSTO (VARIOS) independiente -->
+        <div class="row mt-3">
+            <div class="col">
+                <label><b>Centro de Costo (varios)</b></label>
+
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" (change)="toggleCCVarios()" id="chkCCVarios">
+                    <label class="form-check-label" for="chkCCVarios">Habilitar múltiples Centros de Costo</label>
+                </div>
+
+                <div class="col">
+                    <input type="text" class="form-control" name="cc_name" placeholder="Buscar Centro de Costo"
+                        (input)="buscarCC($event)" [(ngModel)]="cc_nombre" [disabled]="!ccVarios">
+
+                    <!-- resultados CC -->
+                    <div *ngFor="let rc of dataCC" (click)="getDetailPage(rc)">
+                        <div class="card card-body mb-1" (click)="touchCCVarios(rc)" style="cursor: pointer;"
+                            *ngIf="banderaCC">
+                            <h6>Detalle: {{rc.detalle}}.</h6>
+                            <small class="text-primary">Código: {{rc.codcen}}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-1">
+                    <input class="form-control" type="text" name="cc_cod_visual" placeholder="Código seleccionado"
+                        [(ngModel)]="cc_actual_cod" readonly maxlength="6">
+                </div>
+
+                <div class="mt-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addCentro()"
+                        [disabled]="!ccVarios">
+                        + Agregar centro de costo
+                    </button>
+                </div>
+
+                <!-- Tabla de centros agregados -->
+                <div class="mt-3" *ngIf="centros?.length > 0">
+                    <h6>Centros de Costo agregados ({{ centros.length }})</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 110px;">Cod. Centro</th>
+                                    <th>Detalle Centro</th>
+                                    <th style="width: 70px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let c of centros; let i = index">
+                                    <td>{{ c.codcen }}</td>
+                                    <td>{{ c.detalleCC }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-danger" (click)="removeCentro(i)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <small class="text-muted">Estos centros son independientes de Subdirección/Dependencia.</small>
+                </div>
+
+                <!-- Campo oculto con el JSON para backend -->
+                <input type="hidden" name="centros_json" [ngModel]="teso13.centros_json">
+            </div>
+        </div>
+
+        <!-- FACTURA, PERIODO, FOLIOS, ANEXOS -->
+        <div class="row mt-4">
 
             <div class="col">
                 <label><b>Numero de Factura</b></label>
@@ -247,6 +310,7 @@
 
         </div>
 
+        <!-- FECHA, VALOR, CONTRATO -->
         <div class="row">
 
             <div class="col">
@@ -285,6 +349,7 @@
             </div>
         </div>
 
+        <!-- Personas -->
         <div class="row">
             <div class="col">
                 <label><b>Persona quien revisa</b></label>

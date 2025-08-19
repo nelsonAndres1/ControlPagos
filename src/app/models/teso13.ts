@@ -1,4 +1,4 @@
-export class Teso13{
+export class Teso13 {
     constructor(
         public id: string,
         public codclas: string,
@@ -28,13 +28,15 @@ export class Teso13{
         public cdp_marca: string,
         public cdp_documento: string,
         public cdp_ano: string,
-        public sCDPn:boolean,
-        public perrev:string,
-        public peraut:string,
+        public sCDPn: boolean,
+        public perrev: string,
+        public peraut: string,
         public bandera_actualizar: string,
-        public numcon:string,
-        public numfol:string,
-        public anexos_magneticos:string,
-        public upload_token: string
-    ){}
+        public numcon: string,
+        public numfol: string,
+        public anexos_magneticos: string,
+        public upload_token: string,
+        public centros_json?: string
+
+    ) { }
 }

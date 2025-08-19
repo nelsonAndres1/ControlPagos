@@ -30,6 +30,12 @@ export class Teso10Service {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'getPagos', params, { headers: headers });
     }
+    getFirstPago(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso10/getFirstPago', params, { headers: headers });
+    }
 
     signup(user: any, gettoken = null): Observable<any> {
         if (gettoken != null) {

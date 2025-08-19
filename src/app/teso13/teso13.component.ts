@@ -22,72 +22,78 @@ import { Numfac } from '../models/numfac';
 export class Teso13Component implements OnInit {
 
     bandera_loading = false;
-
-    teso13: Teso13;
+    // Usaremos "any" para no modificar el modelo Teso13 y poder setear centros_json dinámicamente
+    teso13: any;
     status: 'success' | 'error' | undefined;
-
     token: any;
     identity: any;
-
-    // Consecutivo solo informativo (lo asigna backend en register)
     consecutivo = '';
-    nconsecutivo = 0; // CHG: queda 0/ vacío hasta que backend asigne
-
+    nconsecutivo = 0;
     usu = '';
     tpago: any;
-
-    // Mantengo los nombres originales de tus flags/props
-    num: any;            // CHG: ya no se usa para enviar
+    num: any;
     usuela: any;
     codclas: any;
-
     periodos: string[] = [];
-
-    data: any;
-    datac2: any;
-    datac28: any;
-
     valor: any;
 
-    bandera = false;
+    // NIT
+    datac2: any;
     bandera2 = false;
-    bandera28 = false;
-
     nit_nombre: any;
-    codcen_nombre: any;
-    coddep_nombre: any;
 
-    marca: string[] = ['AC', 'OP', 'SU'];
+    // Personas
+    personas_revisa: any[] = [];
+    personas_autoriza: any[] = [];
 
-    data71: any;
+    // Info pagos
+    data_cant_pagos = '';
     datos_teso17: any = [];
     cuota: any;
 
+    // CDP
+    marca: string[] = ['AC', 'OP', 'SU'];
     cdp_marca: any;
     cdp_documento: any;
     cdp_ano: any;
     nit: any;
-
-    bd1 = true;
     siCDPno = false;
-
-    valor_CDP: any;
-    valor_a: any;
-
-    datoSoportes: any;
-
-    fechaRdicado: any = '';
-
-    centroCostos = false;
     cdp_bandera = false;
 
-    personas_revisa: any[] = [];
-    personas_autoriza: any[] = [];
+    // Soportes / fecha
+    datoSoportes: any;
+    fechaRdicado: any = '';
+    bd1 = true;
 
-    data_cant_pagos = '';
+    // ===== Subdirección (single) =====
+    subdir_nombre = '';
+    dataSubdir: any[] = [];
+    banderaSubdir = false;
+    subdir_locked = false;  // si quieres bloquear tras elegir
+
+    // ===== Dependencia (single) =====
+    dep_nombre = '';
+    datac28: any;
+    bandera28 = false;
+    dep_locked = false;
+
+    // ===== Centro de Costo (varios) =====
+    ccVarios = false;
+    cc_nombre = '';
+    dataCC: any[] = [];
+    banderaCC = false;
+    cc_actual_cod = '';
+    cc_actual_detalle = '';
+    centros: Array<{ codcen: string; detalleCC: string; }> = [];
+
+    // Reuso
+    data: any; // no lo usamos ahora para subdir/cc (mantenido por compatibilidad)
+    data71: any;
     data_keyword: any = { data: '', codcen: '' };
-
     numfac: Numfac;
+
+    nombre_usuario: string = '';
+    nombre_pago: string = '';
 
     constructor(
         private _teso13Service: Teso13Service,
@@ -98,21 +104,21 @@ export class Teso13Component implements OnInit {
         private _utilidadesService: UtilidadesService,
         private _teso19Service: Teso19Service
     ) {
-
         this.numfac = new Numfac('');
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', ''); // asegúrate que tu modelo tenga upload_token
+        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', '');
+        this.teso13.centros_json = ''; // campo dinámico (sin modificar el modelo)
 
         // Periodos del año actual
         const currentYear = new Date().getFullYear();
         this.periodosT(currentYear, currentYear);
 
-        // Identidad / usuario // CHG: setear aquí (antes estaba en traerConsecutivo)
+        // Identidad / usuario //
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.usu = this.identity?.sub || this.identity?.usuario || this.identity?.username || '';
         this.teso13.usuela = this.usu;
 
-        // Tipo de pago / codclas // CHG: setear aquí
+        // Tipo de pago / codclas //
         try {
             const raw = localStorage.getItem('tpa');
             const tpa = raw ? JSON.parse(raw) : null;
@@ -123,9 +129,6 @@ export class Teso13Component implements OnInit {
 
         // Fecha de radicado
         this._teso13Service.fecha().subscribe(response => { this.fechaRdicado = response; });
-
-        // ❌ CHG: NO pedir consecutivo al cargar (lo asigna backend al guardar)
-        // this.traerConsecutivo();
 
         // Soportes
         try {
@@ -141,14 +144,21 @@ export class Teso13Component implements OnInit {
         // Listas de personas
         this._utilidadesService.getAutorizaRevisa({ 'opcion': 'REVISA' }).subscribe(r => this.personas_revisa = r || []);
         this._utilidadesService.getAutorizaRevisa({ 'opcion': 'AUTORIZA' }).subscribe(r => this.personas_autoriza = r || []);
+        this.getUsuario();
+        this.getFirstPago();
     }
 
     ngOnInit(): void { this._teso13Service.test(); }
 
-    // UI helpers
+    // ===== UI helpers =====
     CDP() { this.cdp_bandera = !this.cdp_bandera; }
-    centroC() { this.centroCostos = !this.centroCostos; }
 
+    toggleCCVarios() {
+        this.ccVarios = !this.ccVarios;
+        // No borramos lo agregado; solo deshabilitamos agregar más si está apagado.
+    }
+
+    // ===== NIT =====
     touch(resultC: any) {
         this._teso19Service.getAllPagos(resultC).subscribe(response => {
             this.data_cant_pagos = 'Este Nit tiene esta cantidad de pagos: ' + (response?.total_pagos ?? 0);
@@ -157,28 +167,128 @@ export class Teso13Component implements OnInit {
         this.nit_nombre = resultC.razsoc;
         this.bandera2 = false;
     }
-    touchCC(result: any) { this.teso13.codcen = result.codcen; this.codcen_nombre = result.detalle; this.bandera = false; }
-    touch28(result: any) { this.teso13.coddep = result.coddep; this.coddep_nombre = result.detalle; this.bandera28 = false; }
 
-    // Búsquedas
-    getConta(e: any) {
+    // ===== SUBDIRECCIÓN (single) =====
+
+    buscarSubdir(e: any) {
         this.bandera_loading = true;
         const keyword = e.target.value;
+
         this._teso13Service.getConta06(keyword).then(
-            r => { this.bandera_loading = false; this.data = r; this.bandera = true; },
+            (r: unknown) => {
+                this.bandera_loading = false;
+                // Si la API retorna un array directo
+                if (Array.isArray(r)) {
+                    this.dataSubdir = r;
+                }
+                // Si la API retorna un objeto con la lista adentro (por ejemplo { data: [...] })
+                else if (r && typeof r === 'object' && Array.isArray((r as any).data)) {
+                    this.dataSubdir = (r as any).data;
+                }
+                else {
+                    this.dataSubdir = [];
+                }
+                this.banderaSubdir = true;
+            },
+            _ => { this.bandera_loading = false; }
+        );
+    }
+
+    touchSubdir(r: any) {
+        // setea subdirección (usa teso13.codcen como antes)
+        this.teso13.codcen = r.codcen;
+        this.subdir_nombre = r.detalle;
+        this.banderaSubdir = false;
+
+        // al elegir subdirección, limpia dependencia para forzar selección válida
+        this.teso13.coddep = '';
+        this.dep_nombre = '';
+        this.dep_locked = false;
+    }
+
+    // ===== DEPENDENCIA (single) =====
+    buscarDep(e: any) {
+        this.data_keyword = { data: e.target.value, codcen: this.teso13.codcen }; // filtra por subdirección elegida
+        this._teso13Service.getConta28(this.data_keyword).subscribe(
+            r => { this.datac28 = r || []; this.bandera28 = true; }
+        );
+    }
+
+    touchDep(r2: any) {
+        this.teso13.coddep = r2.coddep;
+        this.dep_nombre = r2.detalle;
+        this.bandera28 = false;
+        // si quieres bloquear la edición tras elegir:
+        // this.dep_locked = true;
+    }
+
+    // ===== CENTRO DE COSTO (varios) =====
+    // En el componente
+
+
+    buscarCC(e: any) {
+        this.bandera_loading = true;
+        const keyword = e.target.value;
+
+        this._teso13Service.getConta06(keyword).then(
+            (r: any[] | null) => {
+                this.bandera_loading = false;
+                this.dataCC = r ?? [];   // si viene null o undefined, queda []
+                this.banderaCC = true;
+            },
             _ => this.bandera_loading = false
         );
     }
-    getConta28(e: any) {
-        this.data_keyword = { data: e.target.value, codcen: this.teso13.codcen };
-        this._teso13Service.getConta28(this.data_keyword).subscribe(r => { this.datac28 = r; this.bandera28 = true; });
+
+
+    touchCCVarios(rc: any) {
+        this.cc_actual_cod = rc.codcen;
+        this.cc_actual_detalle = rc.detalle;
+        this.banderaCC = false;
     }
+
+    addCentro() {
+        if (!this.ccVarios) return;
+        const cod = (this.cc_actual_cod || '').trim();
+        if (!cod) {
+            Swal.fire('Faltan datos', 'Selecciona un Centro de Costo de la lista.', 'warning');
+            return;
+        }
+        const dup = this.centros.some(c => c.codcen === cod);
+        if (dup) {
+            Swal.fire('Duplicado', 'Ese Centro de Costo ya fue agregado.', 'info');
+            return;
+        }
+        this.centros.push({ codcen: cod, detalleCC: this.cc_actual_detalle || '' });
+        // limpiar selección actual
+        this.cc_actual_cod = '';
+        this.cc_actual_detalle = '';
+        this.cc_nombre = '';
+    }
+
+    removeCentro(i: number) { this.centros.splice(i, 1); }
+
+    // ===== Otras búsquedas reusadas =====
     getConta04(e: any) {
         this.bandera_loading = true;
         const keyword = e.target.value;
         this._teso13Service.getConta04(keyword).then(
             r => { this.bandera_loading = false; this.datac2 = r; this.bandera2 = true; },
             _ => this.bandera_loading = false
+        );
+    }
+
+    getUsuario() {
+        this._gener02Service.getUsuario({ usuper: this.usu }).subscribe(
+            response => { this.nombre_usuario = response.nombre; },
+            _ => Swal.fire('Error', 'Error al obtener el usuario', 'error')
+        );
+    }
+
+    getFirstPago() {
+        this._teso10Service.getFirstPago(this.teso13).subscribe(
+            response => { this.nombre_pago = response.data.detclas; },
+            _ => { Swal.fire('Error', 'Error al obtener el primer pago', 'error'); }
         );
     }
 
@@ -191,10 +301,14 @@ export class Teso13Component implements OnInit {
     }
     getDetailPageC71(_r: any) { }
 
-    // Lógica
+    // ===== Lógica previa existente =====
     periodosT(añoI: number, añoF: number) {
         if (añoI > añoF) { console.log('No se puede con un año menor'); return; }
-        for (let y = añoI; y <= añoF; y++) for (let m = 1; m <= 12; m++) this.periodos.push(`${y}${m < 10 ? '0' + m : m}`);
+        for (let y = añoI; y <= añoF; y++) {
+            for (let m = 1; m <= 12; m++) {
+                this.periodos.push(`${y}${m < 10 ? '0' + m : m}`);
+            }
+        }
     }
 
     buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
@@ -256,17 +370,19 @@ export class Teso13Component implements OnInit {
 
             const valorNum = this.normalizeCurrency(this.teso13.valor);
 
-            // Generar token y llevarlo a la siguiente pantalla (y en el payload)
+            // Token de upload
             const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
-            this.teso13.upload_token = uploadToken;
+            this.teso13.upload_token = uploadToken; // si tu modelo no lo tiene, es campo dinámico
+
+            // Empaquetar CC varios en JSON (único sitio donde se usa para backend)
+            this.teso13.centros_json = JSON.stringify(this.centros || []);
 
             const navegar = () => {
-                // NO incluir consecutivo; el backend lo asigna
                 const arrayD = [
                     this.tpago,
                     this.nit_nombre,
-                    this.codcen_nombre,
-                    this.coddep_nombre,
+                    this.subdir_nombre,  // solo informativo
+                    this.dep_nombre,     // solo informativo
                     this.siCDPno ? this.cdp_marca : 'OP',
                     this.siCDPno ? this.cdp_documento : '00',
                     this.siCDPno ? this.cdp_ano : '0',
@@ -276,7 +392,7 @@ export class Teso13Component implements OnInit {
                 const navigationExtras: NavigationExtras = {
                     queryParams: {
                         result: JSON.stringify([this.teso13, arrayD]),
-                        uploadToken // <-- SIEMPRE por query param
+                        uploadToken
                     }
                 };
 
@@ -303,7 +419,6 @@ export class Teso13Component implements OnInit {
         });
     }
 
-
     download() {
         const img = new Image();
         img.src = '../../assets/logo.png';
@@ -314,8 +429,6 @@ export class Teso13Component implements OnInit {
         doc.save('reporte_pago.pdf');
     }
 
-    // CHG: dejar traerConsecutivo solo para setear codclas desde localStorage si quieres,
-    // pero NO llamar backend ni asignar numero en el front.
     traerConsecutivo() {
         try {
             const raw = localStorage.getItem('tpa');
@@ -324,15 +437,11 @@ export class Teso13Component implements OnInit {
         } catch { this.tpago = null; }
         this.codclas = this.tpago;
         this.teso13.codclas = this.codclas;
-
-        /* ❌ Ya no se usa para traer numero
-        this._teso13Service.traerConsecutivo(this.teso13)...
-        */
     }
 
     verificarNumero(event: any) {
         this.bandera_loading = true;
-        this.numfac.numfac = event.target.value;
+        this.numfac = new Numfac(event.target.value);
         this._teso13Service.verificarNumero(this.numfac).subscribe(
             response => {
                 this.bandera_loading = false;
