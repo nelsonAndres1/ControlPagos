@@ -9,6 +9,46 @@ import { UtilidadesService } from '../services/utilidades.service';
 
 type CentroCosto = { codcen: string; detalleCC: string };
 
+/* ===== Helpers para normalizar y parsear centros_costos ===== */
+function trimAll(v: any): string {
+  return (v ?? '').toString().trim();
+}
+function trimPad(v: any): string {
+  // recorta espacios a izquierda/derecha (muchos campos vienen con relleno)
+  return (v ?? '').toString().replace(/^\s+|\s+$/g, '');
+}
+/** 
+ * Extrae el array JSON de centros desde un string con relleno, 
+ * recorta, parsea (incluye doble-encode) y normaliza claves/espacios.
+ */
+function parseCentrosCostos(raw: any): CentroCosto[] {
+  if (!raw) return [];
+  try {
+    let s = typeof raw === 'string' ? raw.trim() : raw;
+
+    if (typeof s !== 'string') return [];
+
+    // Tomar solo el JSON si hay basura alrededor
+    const i = s.indexOf('[');
+    const j = s.lastIndexOf(']');
+    if (i >= 0 && j >= i) s = s.slice(i, j + 1);
+
+    let arr: any = JSON.parse(s);
+    // Doble encode
+    if (typeof arr === 'string') arr = JSON.parse(arr);
+
+    if (!Array.isArray(arr)) return [];
+
+    return arr.map((x: any) => {
+      const cod = trimPad(x?.codcen ?? x?.codigo ?? x?.cc ?? '');
+      const det = trimPad(x?.detalleCC ?? x?.detalle ?? x?.nombre ?? '');
+      return cod ? { codcen: cod, detalleCC: det } : null;
+    }).filter(Boolean) as CentroCosto[];
+  } catch {
+    return [];
+  }
+}
+
 @Component({
   selector: 'app-teso13editar',
   templateUrl: './teso13editar.component.html',
@@ -64,7 +104,8 @@ export class Teso13editarComponent {
     private _utilidadesService: UtilidadesService,
   ) {
     this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', '');
-    this.teso13.centros_json = ''; // campo dinámico sin modificar el modelo
+    // si tu modelo no tiene centros_costos/centros_json, Angular igual añadirá la propiedad dinámica
+    this.teso13.centros_costos = '';
 
     this.identity = this._gener02Service.getIdentity();
     this.editarteso13 = new Editarteso13('', '', '', '', '', '', '', '', '', '', '', '', '', this.identity.sub, this.identity.sub);
@@ -79,7 +120,7 @@ export class Teso13editarComponent {
       (response: any[]) => { this.data_teso13 = response || []; }
     );
 
-    // Listas de personas
+    // Listas de personas (si aplican en tu UI)
     this._utilidadesService.getAutorizaRevisa({ 'opcion': 'REVISA' }).subscribe(r => this.personas_revisa = r || []);
     this._utilidadesService.getAutorizaRevisa({ 'opcion': 'AUTORIZA' }).subscribe(r => this.personas_autoriza = r || []);
   }
@@ -108,43 +149,41 @@ export class Teso13editarComponent {
   getPago(dt: any) {
     this.data = [];
     this.teso13 = { ...dt }; // clonar
-    this.vacio = dt.codclas + dt.numero;
+    this.vacio = trimAll(dt.codclas) + trimAll(dt.numero);
     this.bandera_formulario = true;
 
+    // Normaliza campos con espacios
+    this.teso13.codcen = trimPad(dt.codcen);
+    this.teso13.coddep = trimPad(dt.coddep);
+    this.teso13.nit = trimPad(dt.nit);
+    this.teso13.numfac = trimAll(dt.numfac);
+    this.teso13.perfac = trimAll(dt.perfac);
+    this.teso13.numfol = Number(trimAll(dt.numfol)); // input type=number
+    this.teso13.valor = trimAll(dt.valor);
+    this.teso13.numcon = trimAll(dt.numcon);
 
-    console.log('Pago seleccionado:', dt);
-    // CDP (SIN CDP si marca=OP y doctos "00"/año=0)
+    // CDP (SIN CDP si marca=OP y doc "00" y año "0")
+    this.teso13.cdp_marca = trimAll(dt.cdp_marca);
+    this.teso13.cdp_documento = trimAll(dt.cdp_documento);
+    this.teso13.cdp_ano = trimAll(dt.cdp_ano);
     this.cdp_bandera = (this.teso13.cdp_marca === 'OP'
-      && (this.teso13.cdp_documento === '00' || this.teso13.cdp_documento === 0)
-      && (this.teso13.cdp_ano === '0' || this.teso13.cdp_ano === 0));
+      && (this.teso13.cdp_documento === '00')
+      && (this.teso13.cdp_ano === '0'));
 
-    // Subdirección / Dependencia nombres
-    this.subdir_nombre = dt.detalle_codcen || '';
-    this.coddep_nombre = dt.detalle_coddep || '';
+    // Subdirección / Dependencia nombres (si los tienes en la data)
+    this.subdir_nombre = trimAll(dt.detalle_codcen || '');
+    this.coddep_nombre = trimAll(dt.detalle_coddep || '');
 
-    // NIT nombre
-    this.nit_nombre = dt.razsoc || '';
+    // NIT nombre (si viene)
+    this.nit_nombre = trimAll(dt.razsoc || '');
 
-    // Cuota actual si viene del backend
+    // Cuota actual
     this.cuotaActual = (dt.cuota ?? null);
 
-    // numfol como número si el input es type=number
-    this.teso13.numfol = (dt.numfol !== undefined && dt.numfol !== null)
-      ? Number(dt.numfol)
-      : dt.numfol;
-
-    // Precargar centros_json
-    this.centros = [];
-    try {
-      if (dt.centros_json) {
-        const arr = JSON.parse(dt.centros_json);
-        if (Array.isArray(arr)) {
-          this.centros = arr
-            .filter(x => x && typeof x.codcen === 'string')
-            .map(x => ({ codcen: x.codcen, detalleCC: x.detalleCC || '' }));
-        }
-      }
-    } catch { this.centros = []; }
+    // Precargar centros guardados desde backend (campo centros_costos del ejemplo)
+    this.centros = parseCentrosCostos(dt.centros_costos || dt.centros_json || dt.centros);
+    // Para referencia visual:
+    // console.log('Centros precargados:', this.centros);
   }
 
   // ===== CDP toggle =====
@@ -173,8 +212,8 @@ export class Teso13editarComponent {
   }
 
   touchNit(resultC: any) {
-    this.teso13.nit = resultC.nit;
-    this.nit_nombre = resultC.razsoc;
+    this.teso13.nit = trimPad(resultC.nit);
+    this.nit_nombre = trimAll(resultC.razsoc);
     this.bandera2 = false;
   }
 
@@ -194,8 +233,8 @@ export class Teso13editarComponent {
   }
 
   touchSubdir(r: any) {
-    this.teso13.codcen = r.codcen;
-    this.subdir_nombre = r.detalle;
+    this.teso13.codcen = trimPad(r.codcen);
+    this.subdir_nombre = trimAll(r.detalle);
     this.banderaSubdir = false;
 
     // al cambiar subdirección, reinicia dependencia
@@ -218,8 +257,8 @@ export class Teso13editarComponent {
   }
 
   touchDep(r2: any) {
-    this.teso13.coddep = r2.coddep;
-    this.coddep_nombre = r2.detalle;
+    this.teso13.coddep = trimPad(r2.coddep);
+    this.coddep_nombre = trimAll(r2.detalle);
     this.bandera28 = false;
   }
 
@@ -241,8 +280,8 @@ export class Teso13editarComponent {
   }
 
   touchCCVarios(rc: any) {
-    this.cc_actual_cod = rc.codcen;
-    this.cc_actual_detalle = rc.detalle;
+    this.cc_actual_cod = trimPad(rc.codcen);
+    this.cc_actual_detalle = trimAll(rc.detalle);
     this.banderaCC = false;
   }
 
@@ -280,8 +319,8 @@ export class Teso13editarComponent {
 
   // ===== Enviar actualización =====
   onSubmit(form: any) {
-    // empaquetar CC varios
-    this.teso13.centros_json = JSON.stringify(this.centros || []);
+    // empaquetar CC varios para backend (tu backend usa "centros_costos")
+    this.teso13.centros_costos = JSON.stringify(this.centros || []);
 
     // normalizar contrato vacío
     if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';

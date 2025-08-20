@@ -150,7 +150,7 @@
                                 <tbody>
                                     <tr *ngFor="let c of centros; let i = index">
                                         <td>{{ c.codcen }}</td>
-                                        <td>{{ c.detalleCC }}</td>
+                                        <td>{{ c.detalleCC || '(sin detalle)' }}</td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger"
                                                 (click)="removeCentro(i)">
@@ -166,7 +166,7 @@
                     </div>
 
                     <!-- Campo oculto JSON para backend -->
-                    <input type="hidden" name="centros_json" [ngModel]="teso13.centros_json" />
+                    <input type="hidden" name="centros_costos" [ngModel]="teso13.centros_costos" />
                 </div>
             </div>
 
@@ -185,7 +185,6 @@
                 <div class="col">
                     <label><b>Periodo de Facturación</b></label>
                     <select class="form-select" name="perfac" [(ngModel)]="teso13.perfac" required>
-                        <!-- CORRECCIÓN: usar per en value y texto -->
                         <option *ngFor="let per of periodos" [value]="per">{{ per }}</option>
                     </select>
                     <small *ngIf="!registerForm.controls['perfac']?.valid && registerForm.controls['perfac']?.touched"
