@@ -143,6 +143,7 @@ export class Teso113Component implements OnInit {
                     this.impreseion.usucau = this.data.usucau;
                     this.impreseion.detalle = this.data.detalle;
                     this.impreseion.anexos_magneticos = this.data.anexos_magneticos;
+                    this.impreseion.centros_json = this.data.centros_json;
 
                     if (this.cdp_documento == '00') {
                         this.impreseion.cdp = '-'

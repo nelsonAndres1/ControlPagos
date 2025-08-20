@@ -32,7 +32,6 @@ export class Teso12UploadComponent {
   selectedFiles: { [key: string]: File } = {};
   uploading = false;
   errorMessage: string | null = null;
-
   permisos: ('S' | 'N')[] = [];
   itemDetail: any[] = [];
   status: any;
@@ -40,7 +39,6 @@ export class Teso12UploadComponent {
   contarPer: number = 0;
   datosArchivos: any[] = [];
   maxFileSize = 10_000_000; // 10MB
-
   uploadToken = '';
 
   constructor(
