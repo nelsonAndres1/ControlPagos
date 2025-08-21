@@ -17,13 +17,9 @@ export class PdfService {
     }
 
     generarPDF(data: any) {
-
-        let json = JSON.stringify(data);
-        let params = 'json=' + json;
-        console.log("ahaha");
-        console.log(params)
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    
-        return this.http.post(this.url + 'pdf/generarPDF', params, { headers: headers, responseType: 'blob' });
-      }
+        const json = encodeURIComponent(JSON.stringify(data)); // <- clave
+        const body = `json=${json}`;
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this.http.post(this.url + 'pdf/generarPDF', body, { headers, responseType: 'blob' });
+    }
 }
