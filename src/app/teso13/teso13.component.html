@@ -37,20 +37,21 @@
             </div>
         </div>
 
-        <!-- CDP -->
-        <div class="row">
-            <br>
+        <!-- SIN CDP -->
+        <div class="row mt-3">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" (change)="CDP()" id="chkSinCDP">
+                <input class="form-check-input" type="checkbox" (change)="onSinCDPChange($event)" id="chkSinCDP">
                 <label class="form-check-label" for="chkSinCDP">¿SIN CDP?</label>
             </div>
+        </div>
 
+        <!-- Bloque CDP (solo visible si NO está marcado SIN CDP) -->
+        <div class="row" *ngIf="!sinCDPChecked">
             <label id="cdp"><b>CDP</b></label>
 
             <div class="col">
                 <label><b>CDP_Marca</b></label>
-                <select class="form-select col" name="cdp_marca" #cdp_marca="ngModel" [(ngModel)]="teso13.cdp_marca"
-                    [disabled]="cdp_bandera">
+                <select class="form-select col" name="cdp_marca" #cdp_marca="ngModel" [(ngModel)]="teso13.cdp_marca">
                     <option *ngFor="let mc of marca">{{mc}}</option>
                 </select>
             </div>
@@ -58,13 +59,13 @@
             <div class="col">
                 <label><b>CDP_Documento</b></label>
                 <input class="form-control" type="text" name="cdp_documento" #cdp_documento="ngModel"
-                    [(ngModel)]="teso13.cdp_documento" maxlength="7" [disabled]="cdp_bandera">
+                    [(ngModel)]="teso13.cdp_documento" maxlength="7">
             </div>
 
             <div class="col">
                 <label><b>CDP_Año</b></label>
                 <input type="number" class="form-control" name="cdp_ano" #cdp_ano="ngModel" [(ngModel)]="teso13.cdp_ano"
-                    maxlength="4" [disabled]="cdp_bandera">
+                    maxlength="4">
             </div>
         </div>
 
@@ -100,15 +101,19 @@
 
                     <p>{{data_cant_pagos}}</p>
 
+                    <!-- Botón de búsqueda visible SOLO si NO está marcado SIN CDP -->
                     <button type="button"
                         (click)="buscarT17(teso13.cdp_marca, teso13.cdp_documento, teso13.cdp_ano, teso13.nit)"
-                        class="btn btn-primary">
+                        class="btn btn-primary" *ngIf="!sinCDPChecked">
                         <i class="fa fa-search" aria-hidden="true"></i>
                         <span class="nav-text"> Buscar Pagos asociados a NIT Y CDP </span>
                     </button>
                 </div>
             </div>
+        </div>
 
+        <!-- A PARTIR DE AQUÍ, TODO BLOQUEADO SI requiereBusqueda && !busquedaOk -->
+        <fieldset [disabled]="requiereBusqueda && !busquedaOk">
             <div class="row">
                 <div class="col">
                     <label><b>Numero de Pagos</b></label>
@@ -124,278 +129,270 @@
                     <label><b>Numero de pago actual:</b> {{cuota}}</label>
                 </div>
             </div>
-        </div>
 
-        <!-- SUBDIRECCIÓN (single) + DEPENDENCIA (single) -->
-        <div class="row">
-
-            <!-- Subdirección (usa teso13.codcen) -->
-            <div class="col">
-                <label><b>Subdirección</b></label>
+            <!-- SUBDIRECCIÓN (single) + DEPENDENCIA (single) -->
+            <div class="row">
+                <!-- Subdirección -->
                 <div class="col">
-                    <input type="text" class="form-control" name="subdir_name" placeholder="Buscar Subdirección"
-                        (input)="buscarSubdir($event)" [(ngModel)]="subdir_nombre" [disabled]="subdir_locked">
+                    <label><b>Subdirección</b></label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="subdir_name" placeholder="Buscar Subdirección"
+                            (input)="buscarSubdir($event)" [(ngModel)]="subdir_nombre" [disabled]="subdir_locked">
 
-                    <!-- resultados subdirección -->
-                    <div *ngFor="let r of dataSubdir" (click)="getDetailPage(r)">
-                        <div class="card card-body mb-1" (click)="touchSubdir(r)" style="cursor: pointer;"
-                            *ngIf="banderaSubdir">
-                            <h6>Detalle: {{r.detalle}}.</h6>
-                            <small class="text-primary">Código: {{r.codcen}}</small>
+                        <div *ngFor="let r of dataSubdir" (click)="getDetailPage(r)">
+                            <div class="card card-body mb-1" (click)="touchSubdir(r)" style="cursor: pointer;"
+                                *ngIf="banderaSubdir">
+                                <h6>Detalle: {{r.detalle}}.</h6>
+                                <small class="text-primary">Código: {{r.codcen}}</small>
+                            </div>
                         </div>
+                    </div>
+
+                    <div>
+                        <input class="form-control" type="text" name="codcen" placeholder="" #codcen="ngModel"
+                            [(ngModel)]="teso13.codcen" readonly maxlength="6" required>
+                        <small *ngIf="!codcen.valid && codcen.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
                     </div>
                 </div>
 
-                <div>
-                    <input class="form-control" type="text" name="codcen" placeholder="" #codcen="ngModel"
-                        [(ngModel)]="teso13.codcen" readonly maxlength="6" required>
-                    <small *ngIf="!codcen.valid && codcen.touched" class="invalid-feedback d-block">
+                <!-- Dependencia -->
+                <div class="col">
+                    <label><b>Dependencia</b></label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="dep_nombre" placeholder="Buscar Dependencia"
+                            (input)="buscarDep($event)" [(ngModel)]="dep_nombre" [disabled]="dep_locked">
+
+                        <div *ngFor="let r2 of datac28" (click)="getDetailPageC28(r2)">
+                            <div class="card card-body mb-1" (click)="touchDep(r2)" style="cursor: pointer;"
+                                *ngIf="bandera28">
+                                <h6>Detalle: {{r2.detalle}}.</h6>
+                                <small class="text-primary">Código: {{r2.coddep}}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <input class="form-control" type="text" name="coddep" placeholder="" #coddep="ngModel"
+                            [(ngModel)]="teso13.coddep" maxlength="6" readonly required>
+                        <small *ngIf="!coddep.valid && coddep.touched" class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTRO DE COSTO (VARIOS) -->
+            <div class="row mt-3">
+                <div class="col">
+                    <label><b>Centro de Costo (varios)</b></label>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" (change)="toggleCCVarios()" id="chkCCVarios">
+                        <label class="form-check-label" for="chkCCVarios">Habilitar múltiples Centros de Costo</label>
+                    </div>
+
+                    <div class="col">
+                        <input type="text" class="form-control" name="cc_name" placeholder="Buscar Centro de Costo"
+                            (input)="buscarCC($event)" [(ngModel)]="cc_nombre" [disabled]="!ccVarios">
+
+                        <div *ngFor="let rc of dataCC" (click)="getDetailPage(rc)">
+                            <div class="card card-body mb-1" (click)="touchCCVarios(rc)" style="cursor: pointer;"
+                                *ngIf="banderaCC">
+                                <h6>Detalle: {{rc.detalle}}.</h6>
+                                <small class="text-primary">Código: {{rc.codcen}}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-1">
+                        <input class="form-control" type="text" name="cc_cod_visual" placeholder="Código seleccionado"
+                            [(ngModel)]="cc_actual_cod" readonly maxlength="6">
+                    </div>
+
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="addCentro()"
+                            [disabled]="!ccVarios">
+                            + Agregar centro de costo
+                        </button>
+                    </div>
+
+                    <div class="mt-3" *ngIf="centros?.length > 0">
+                        <h6>Centros de Costo agregados ({{ centros.length }})</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 110px;">Cod. Centro</th>
+                                        <th>Detalle Centro</th>
+                                        <th style="width: 70px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let c of centros; let i = index">
+                                        <td>{{ c.codcen }}</td>
+                                        <td>{{ c.detalleCC }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                (click)="removeCentro(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <small class="text-muted">Estos centros son independientes de Subdirección/Dependencia.</small>
+                    </div>
+
+                    <input type="hidden" name="centros_json" [ngModel]="teso13.centros_json">
+                </div>
+            </div>
+
+            <!-- FACTURA, PERIODO, FOLIOS, ANEXOS -->
+            <div class="row mt-4">
+                <div class="col">
+                    <label><b>Numero de Factura</b></label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
+                            #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="50"
+                            (blur)="verificarNumero($event)" required>
+                    </div>
+                    <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
                         Este Campo es requerido
                     </small>
                 </div>
-            </div>
 
-            <!-- Dependencia (usa teso13.coddep) -->
-            <div class="col">
-                <label><b>Dependencia</b></label>
                 <div class="col">
-
-                    <input type="text" class="form-control" name="dep_nombre" placeholder="Buscar Dependencia"
-                        (input)="buscarDep($event)" [(ngModel)]="dep_nombre" [disabled]="dep_locked">
-
-                    <!-- resultados dependencia -->
-                    <div *ngFor="let r2 of datac28" (click)="getDetailPageC28(r2)">
-                        <div class="card card-body mb-1" (click)="touchDep(r2)" style="cursor: pointer;"
-                            *ngIf="bandera28">
-                            <h6>Detalle: {{r2.detalle}}.</h6>
-                            <small class="text-primary">Código: {{r2.coddep}}</small>
-                        </div>
+                    <label><b>Periodo de Facturación</b></label>
+                    <div class="col">
+                        <select class="form-select col" name="perfac" placeholder="Periodo Facturación"
+                            #perfac="ngModel" [(ngModel)]="teso13.perfac" required>
+                            <option *ngFor="let per of periodos">{{per}}</option>
+                        </select>
                     </div>
-                </div>
-
-                <div>
-                    <input class="form-control" type="text" name="coddep" placeholder="" #coddep="ngModel"
-                        [(ngModel)]="teso13.coddep" maxlength="6" readonly required>
-                    <small *ngIf="!coddep.valid && coddep.touched" class="invalid-feedback d-block">
+                    <small *ngIf="!perfac.valid && perfac.touched" class="invalid-feedback d-block">
                         Este Campo es requerido
                     </small>
                 </div>
-            </div>
-
-        </div>
-
-        <!-- CENTRO DE COSTO (VARIOS) independiente -->
-        <div class="row mt-3">
-            <div class="col">
-                <label><b>Centro de Costo (varios)</b></label>
-
-                <div class="form-check mb-2">
-                    <input class="form-check-input" type="checkbox" (change)="toggleCCVarios()" id="chkCCVarios">
-                    <label class="form-check-label" for="chkCCVarios">Habilitar múltiples Centros de Costo</label>
-                </div>
 
                 <div class="col">
-                    <input type="text" class="form-control" name="cc_name" placeholder="Buscar Centro de Costo"
-                        (input)="buscarCC($event)" [(ngModel)]="cc_nombre" [disabled]="!ccVarios">
+                    <label><b>Numero de Folios</b></label>
+                    <div class="col">
+                        <input type="number" class="form-control" name="numfol" placeholder="Numero de Folios"
+                            #numfol="ngModel" [(ngModel)]="teso13.numfol" maxlength="15" required>
+                    </div>
+                    <small *ngIf="!numfol.valid && numfol.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
 
-                    <!-- resultados CC -->
-                    <div *ngFor="let rc of dataCC" (click)="getDetailPage(rc)">
-                        <div class="card card-body mb-1" (click)="touchCCVarios(rc)" style="cursor: pointer;"
-                            *ngIf="banderaCC">
-                            <h6>Detalle: {{rc.detalle}}.</h6>
-                            <small class="text-primary">Código: {{rc.codcen}}</small>
+                <div class="row">
+                    <div class="col">
+                        <label><b>Numero de anexos magneticos</b></label>
+                        <div class="col">
+                            <input type="number" class="form-control" name="anexos_magneticos"
+                                placeholder="Numero de anexos magneticos" #anexos_magneticos="ngModel"
+                                [(ngModel)]="teso13.anexos_magneticos" maxlength="15" required>
                         </div>
+                        <small *ngIf="!anexos_magneticos.valid && anexos_magneticos.touched"
+                            class="invalid-feedback d-block">
+                            Este Campo es requerido
+                        </small>
                     </div>
                 </div>
-
-                <div class="mt-1">
-                    <input class="form-control" type="text" name="cc_cod_visual" placeholder="Código seleccionado"
-                        [(ngModel)]="cc_actual_cod" readonly maxlength="6">
-                </div>
-
-                <div class="mt-2">
-                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="addCentro()"
-                        [disabled]="!ccVarios">
-                        + Agregar centro de costo
-                    </button>
-                </div>
-
-                <!-- Tabla de centros agregados -->
-                <div class="mt-3" *ngIf="centros?.length > 0">
-                    <h6>Centros de Costo agregados ({{ centros.length }})</h6>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 110px;">Cod. Centro</th>
-                                    <th>Detalle Centro</th>
-                                    <th style="width: 70px;"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let c of centros; let i = index">
-                                    <td>{{ c.codcen }}</td>
-                                    <td>{{ c.detalleCC }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-danger" (click)="removeCentro(i)">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <small class="text-muted">Estos centros son independientes de Subdirección/Dependencia.</small>
-                </div>
-
-                <!-- Campo oculto con el JSON para backend -->
-                <input type="hidden" name="centros_json" [ngModel]="teso13.centros_json">
-            </div>
-        </div>
-
-        <!-- FACTURA, PERIODO, FOLIOS, ANEXOS -->
-        <div class="row mt-4">
-
-            <div class="col">
-                <label><b>Numero de Factura</b></label>
-                <div class="col">
-                    <input type="text" class="form-control" name="numfac" placeholder="Numero de Factura"
-                        #numfac="ngModel" [(ngModel)]="teso13.numfac" maxlength="50" (blur)="verificarNumero($event)"
-                        required>
-                </div>
-                <small *ngIf="!numfac.valid && numfac.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
             </div>
 
-            <div class="col">
-                <label><b>Periodo de Facturación</b></label>
-                <div class="col">
-                    <select class="form-select col" name="perfac" placeholder="Periodo Facturación" #perfac="ngModel"
-                        [(ngModel)]="teso13.perfac" required>
-                        <option *ngFor="let per of periodos">{{per}}</option>
-                    </select>
-                </div>
-                <small *ngIf="!perfac.valid && perfac.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
-            </div>
-
-            <div class="col">
-                <label><b>Numero de Folios</b></label>
-                <div class="col">
-                    <input type="number" class="form-control" name="numfol" placeholder="Numero de Folios"
-                        #numfol="ngModel" [(ngModel)]="teso13.numfol" maxlength="15" required>
-                </div>
-                <small *ngIf="!numfol.valid && numfol.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
-            </div>
-
+            <!-- FECHA, VALOR, CONTRATO -->
             <div class="row">
                 <div class="col">
-                    <label><b>Numero de anexos magneticos</b></label>
+                    <label><b>Fecha de Facturación</b></label>
                     <div class="col">
-                        <input type="number" class="form-control" name="anexos_magneticos"
-                            placeholder="Numero de anexos magneticos" #anexos_magneticos="ngModel"
-                            [(ngModel)]="teso13.anexos_magneticos" maxlength="15" required>
+                        <div class="col">
+                            <input type="date" class="form-control" name="fecfac" min="2018-01-01" max="2030-12-31"
+                                #fecfac="ngModel" [(ngModel)]="teso13.fecfac" required>
+                        </div>
                     </div>
-                    <small *ngIf="!anexos_magneticos.valid && anexos_magneticos.touched"
-                        class="invalid-feedback d-block">
+                    <small *ngIf="!fecfac.valid && fecfac.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+
+                <div class="col">
+                    <label><b>Valor</b></label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
+                            [(ngModel)]="teso13.valor" maxlength="20" required #valor="ngModel"
+                            (input)="onInputChange($event)">
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="col">
+                        <label><b>Numero de Contrato</b></label>
+                        <div class="col">
+                            <input type="text" class="form-control" name="numcon" placeholder="Numero de contrato"
+                                #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="19">
+                        </div>
+                    </div>
+                    <small *ngIf="!numcon.valid && numcon.touched" class="invalid-feedback d-block">
+                        Solo Numeros
+                    </small>
+                </div>
+            </div>
+
+            <!-- Personas -->
+            <div class="row">
+                <div class="col">
+                    <label><b>Persona quien revisa</b></label>
+                    <select class="form-select col" name="perrev" placeholder="perrev" #perrev="ngModel"
+                        [(ngModel)]="teso13.perrev">
+                        <option *ngFor="let pr of personas_revisa" [value]="pr.nombre + '-' + pr.docemp">
+                            {{pr.docemp}} - {{pr.nombre}}
+                        </option>
+                    </select>
+                    <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+
+                <div class="col">
+                    <label><b>Persona quien Autoriza</b></label>
+                    <select class="form-select col" name="peraut" placeholder="peraut" #peraut="ngModel"
+                        [(ngModel)]="teso13.peraut">
+                        <option *ngFor="let pa of personas_autoriza" [value]="pa.nombre + '-' + pa.docemp">
+                            {{pa.docemp}} - {{pa.nombre}}
+                        </option>
+                    </select>
+                    <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
                         Este Campo es requerido
                     </small>
                 </div>
             </div>
 
-        </div>
+            <br>
 
-        <!-- FECHA, VALOR, CONTRATO -->
-        <div class="row">
-
-            <div class="col">
-                <label><b>Fecha de Facturación</b></label>
-                <div class="col">
-                    <div class="col">
-                        <input type="date" class="form-control" name="fecfac" min="2018-01-01" max="2030-12-31"
-                            #fecfac="ngModel" [(ngModel)]="teso13.fecfac" required>
-                    </div>
+            <div class="row">
+                <div class="input-group">
+                    <span class="input-group-text"><b>Detalle</b></span>
+                    <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
+                        [(ngModel)]="teso13.detalle" maxlength="2000" required></textarea>
                 </div>
-                <small *ngIf="!fecfac.valid && fecfac.touched" class="invalid-feedback d-block">
+                <small *ngIf="!detalle.valid && detalle.touched" class="invalid-feedback d-block">
                     Este Campo es requerido
                 </small>
             </div>
-
-            <div class="col">
-                <label><b>Valor</b></label>
-                <div class="col">
-                    <input type="text" class="form-control" name="valor" placeholder="Valor del Pago"
-                        [(ngModel)]="teso13.valor" maxlength="20" required #valor="ngModel"
-                        (input)="onInputChange($event)">
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="col">
-                    <label><b>Numero de Contrato</b></label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="numcon" placeholder="Numero de contrato"
-                            #numcon="ngModel" [(ngModel)]="teso13.numcon" maxlength="19">
-                    </div>
-                </div>
-                <small *ngIf="!numcon.valid && numcon.touched" class="invalid-feedback d-block">
-                    Solo Numeros
-                </small>
-            </div>
-        </div>
-
-        <!-- Personas -->
-        <div class="row">
-            <div class="col">
-                <label><b>Persona quien revisa</b></label>
-                <select class="form-select col" name="perrev" placeholder="perrev" #perrev="ngModel"
-                    [(ngModel)]="teso13.perrev">
-                    <option *ngFor="let pr of personas_revisa" [value]="pr.nombre + '-' + pr.docemp">
-                        {{pr.docemp}} - {{pr.nombre}}
-                    </option>
-                </select>
-                <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
-            </div>
-
-            <div class="col">
-                <label><b>Persona quien Autoriza</b></label>
-                <select class="form-select col" name="peraut" placeholder="peraut" #peraut="ngModel"
-                    [(ngModel)]="teso13.peraut">
-                    <option *ngFor="let pa of personas_autoriza" [value]="pa.nombre + '-' + pa.docemp">
-                        {{pa.docemp}} - {{pa.nombre}}
-                    </option>
-                </select>
-                <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
-                    Este Campo es requerido
-                </small>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="row">
-            <div class="input-group">
-                <span class="input-group-text"><b>Detalle</b></span>
-                <textarea class="form-control" name="detalle" aria-label="With textarea" #detalle="ngModel"
-                    [(ngModel)]="teso13.detalle" maxlength="2000" required></textarea>
-            </div>
-            <small *ngIf="!detalle.valid && detalle.touched" class="invalid-feedback d-block">
-                Este Campo es requerido
-            </small>
-        </div>
+        </fieldset>
 
     </div>
 
     <div *ngIf="bd1" style="margin: 5%;">
         <button type="submit" class="btn btn-success"
-            [disabled]="registerForm.invalid || bandera_loading">Enviar</button>
+            [disabled]="registerForm.invalid || bandera_loading || (requiereBusqueda && !busquedaOk)">
+            Enviar
+        </button>
     </div>
 
     <br><br>

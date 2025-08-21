@@ -22,7 +22,7 @@ import { Numfac } from '../models/numfac';
 export class Teso13Component implements OnInit {
 
     bandera_loading = false;
-    // Usaremos "any" para no modificar el modelo Teso13 y poder setear centros_json dinámicamente
+    // Usamos any para setear campos dinámicos (centros_json, upload_token) sin tocar el modelo
     teso13: any;
     status: 'success' | 'error' | undefined;
     token: any;
@@ -57,8 +57,8 @@ export class Teso13Component implements OnInit {
     cdp_documento: any;
     cdp_ano: any;
     nit: any;
-    siCDPno = false;
-    cdp_bandera = false;
+    siCDPno = false;          // indica si hay relación CDP-NIT encontrada (nombre histórico)
+    cdp_bandera = false;      // no se usa para ocultar (ahora ocultamos con *ngIf), pero lo mantenemos por compatibilidad
 
     // Soportes / fecha
     datoSoportes: any;
@@ -69,7 +69,7 @@ export class Teso13Component implements OnInit {
     subdir_nombre = '';
     dataSubdir: any[] = [];
     banderaSubdir = false;
-    subdir_locked = false;  // si quieres bloquear tras elegir
+    subdir_locked = false;
 
     // ===== Dependencia (single) =====
     dep_nombre = '';
@@ -87,13 +87,18 @@ export class Teso13Component implements OnInit {
     centros: Array<{ codcen: string; detalleCC: string; }> = [];
 
     // Reuso
-    data: any; // no lo usamos ahora para subdir/cc (mantenido por compatibilidad)
+    data: any;
     data71: any;
     data_keyword: any = { data: '', codcen: '' };
     numfac: Numfac;
 
     nombre_usuario: string = '';
     nombre_pago: string = '';
+
+    // ===== NUEVO: control por “SIN CDP” / búsqueda obligatoria =====
+    sinCDPChecked = false;     // estado del checkbox ¿SIN CDP?
+    requiereBusqueda = true;   // si true, bloquea el resto del form hasta buscar
+    busquedaOk = false;        // se pone true cuando Buscar es exitoso
 
     constructor(
         private _teso13Service: Teso13Service,
@@ -106,19 +111,19 @@ export class Teso13Component implements OnInit {
     ) {
         this.numfac = new Numfac('');
         this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', '');
-        this.teso13.centros_json = ''; // campo dinámico (sin modificar el modelo)
+        this.teso13.centros_json = ''; // campo dinámico
 
         // Periodos del año actual
         const currentYear = new Date().getFullYear();
         this.periodosT(currentYear, currentYear);
 
-        // Identidad / usuario //
+        // Identidad / usuario
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
         this.usu = this.identity?.sub || this.identity?.usuario || this.identity?.username || '';
         this.teso13.usuela = this.usu;
 
-        // Tipo de pago / codclas //
+        // Tipo de pago / codclas
         try {
             const raw = localStorage.getItem('tpa');
             const tpa = raw ? JSON.parse(raw) : null;
@@ -153,9 +158,30 @@ export class Teso13Component implements OnInit {
     // ===== UI helpers =====
     CDP() { this.cdp_bandera = !this.cdp_bandera; }
 
+    // ===== NUEVO: manejo del check ¿SIN CDP? =====
+    onSinCDPChange(e: any) {
+        this.sinCDPChecked = !!e?.target?.checked;
+
+        if (this.sinCDPChecked) {
+            // SIN CDP: habilitar todo y no exigir búsqueda
+            this.requiereBusqueda = false;
+            this.busquedaOk = true;
+
+            // Opcional: limpiar y setear defaults en el modelo (para backend)
+            this.teso13.cdp_marca = 'OP';
+            this.teso13.cdp_documento = '00';
+            this.teso13.cdp_ano = '0';
+            this.siCDPno = false;   // no se valida CDP
+        } else {
+            // Con CDP: exigir búsqueda para continuar
+            this.requiereBusqueda = true;
+            this.busquedaOk = false;
+            // no tocar los valores, el usuario llena y busca
+        }
+    }
+
     toggleCCVarios() {
         this.ccVarios = !this.ccVarios;
-        // No borramos lo agregado; solo deshabilitamos agregar más si está apagado.
     }
 
     // ===== NIT =====
@@ -169,7 +195,6 @@ export class Teso13Component implements OnInit {
     }
 
     // ===== SUBDIRECCIÓN (single) =====
-
     buscarSubdir(e: any) {
         this.bandera_loading = true;
         const keyword = e.target.value;
@@ -177,15 +202,11 @@ export class Teso13Component implements OnInit {
         this._teso13Service.getConta06(keyword).then(
             (r: unknown) => {
                 this.bandera_loading = false;
-                // Si la API retorna un array directo
                 if (Array.isArray(r)) {
                     this.dataSubdir = r;
-                }
-                // Si la API retorna un objeto con la lista adentro (por ejemplo { data: [...] })
-                else if (r && typeof r === 'object' && Array.isArray((r as any).data)) {
+                } else if (r && typeof r === 'object' && Array.isArray((r as any).data)) {
                     this.dataSubdir = (r as any).data;
-                }
-                else {
+                } else {
                     this.dataSubdir = [];
                 }
                 this.banderaSubdir = true;
@@ -195,12 +216,11 @@ export class Teso13Component implements OnInit {
     }
 
     touchSubdir(r: any) {
-        // setea subdirección (usa teso13.codcen como antes)
         this.teso13.codcen = r.codcen;
         this.subdir_nombre = r.detalle;
         this.banderaSubdir = false;
 
-        // al elegir subdirección, limpia dependencia para forzar selección válida
+        // al elegir subdirección, limpia dependencia
         this.teso13.coddep = '';
         this.dep_nombre = '';
         this.dep_locked = false;
@@ -208,7 +228,7 @@ export class Teso13Component implements OnInit {
 
     // ===== DEPENDENCIA (single) =====
     buscarDep(e: any) {
-        this.data_keyword = { data: e.target.value, codcen: this.teso13.codcen }; // filtra por subdirección elegida
+        this.data_keyword = { data: e.target.value, codcen: this.teso13.codcen };
         this._teso13Service.getConta28(this.data_keyword).subscribe(
             r => { this.datac28 = r || []; this.bandera28 = true; }
         );
@@ -218,14 +238,9 @@ export class Teso13Component implements OnInit {
         this.teso13.coddep = r2.coddep;
         this.dep_nombre = r2.detalle;
         this.bandera28 = false;
-        // si quieres bloquear la edición tras elegir:
-        // this.dep_locked = true;
     }
 
     // ===== CENTRO DE COSTO (varios) =====
-    // En el componente
-
-
     buscarCC(e: any) {
         this.bandera_loading = true;
         const keyword = e.target.value;
@@ -233,13 +248,12 @@ export class Teso13Component implements OnInit {
         this._teso13Service.getConta06(keyword).then(
             (r: any[] | null) => {
                 this.bandera_loading = false;
-                this.dataCC = r ?? [];   // si viene null o undefined, queda []
+                this.dataCC = r ?? [];
                 this.banderaCC = true;
             },
             _ => this.bandera_loading = false
         );
     }
-
 
     touchCCVarios(rc: any) {
         this.cc_actual_cod = rc.codcen;
@@ -260,7 +274,7 @@ export class Teso13Component implements OnInit {
             return;
         }
         this.centros.push({ codcen: cod, detalleCC: this.cc_actual_detalle || '' });
-        // limpiar selección actual
+        // limpiar selección
         this.cc_actual_cod = '';
         this.cc_actual_detalle = '';
         this.cc_nombre = '';
@@ -311,6 +325,7 @@ export class Teso13Component implements OnInit {
         }
     }
 
+    // ======= BUSCAR T17 (actualizado para desbloquear cuando hay CDP) =======
     buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
         this._teso13Service.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
             if (response) {
@@ -325,11 +340,13 @@ export class Teso13Component implements OnInit {
                             this.datos_teso17.push(r.numcuo, r.cuota);
                             this.teso13.numcuo = r.numcuo; this.cuota = parseInt(r.cuota) + 1;
                         }
+                        this.busquedaOk = true; // habilita el resto
                     },
-                    _ => { this.bd1 = false; }
+                    _ => { this.bd1 = false; this.busquedaOk = false; }
                 );
             } else {
                 this.bd1 = false;
+                this.busquedaOk = false;
                 Swal.fire('¡Error!', 'No existen datos asociados a CDP Y NIT!', 'error');
             }
         });
@@ -355,6 +372,12 @@ export class Teso13Component implements OnInit {
     }
 
     onSubmit(form: any) {
+        // Guardia: si requiere búsqueda (NO SIN CDP) y aún no se hizo, impedir envío
+        if (this.requiereBusqueda && !this.busquedaOk) {
+            Swal.fire('Falta la búsqueda', 'Debes presionar "Buscar Pagos asociados a NIT Y CDP" antes de continuar.', 'warning');
+            return;
+        }
+
         Swal.fire({
             title: '¿Estas Seguro?',
             html: `
@@ -402,9 +425,9 @@ export class Teso13Component implements OnInit {
 
                 // Token de upload
                 const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
-                this.teso13.upload_token = uploadToken; // si tu modelo no lo tiene, es campo dinámico
+                this.teso13.upload_token = uploadToken; // campo dinámico
 
-                // Empaquetar CC varios en JSON (único sitio donde se usa para backend)
+                // Empaquetar CC varios en JSON (para backend)
                 this.teso13.centros_json = JSON.stringify(this.centros || []);
 
                 const navegar = () => {
@@ -413,9 +436,10 @@ export class Teso13Component implements OnInit {
                         this.nit_nombre,
                         this.subdir_nombre,  // solo informativo
                         this.dep_nombre,     // solo informativo
-                        this.siCDPno ? this.cdp_marca : 'OP',
-                        this.siCDPno ? this.cdp_documento : '00',
-                        this.siCDPno ? this.cdp_ano : '0',
+                        // Si se usó CDP real, usar sus valores; si se marcó SIN CDP, defaults 'OP','00','0'
+                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_marca : 'OP',
+                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_documento : '00',
+                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_ano : '0',
                         this.teso13.nit
                     ];
 
@@ -430,7 +454,9 @@ export class Teso13Component implements OnInit {
                     Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
                 };
 
-                if (this.siCDPno) {
+                // Flujo de envío según SIN CDP o CON CDP
+                if (!this.sinCDPChecked) {
+                    // CON CDP: validar contra valor del CDP
                     this.teso13.sCDPn = true;
                     this._teso13Service
                         .valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit))
@@ -440,6 +466,7 @@ export class Teso13Component implements OnInit {
                             else Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
                         });
                 } else {
+                    // SIN CDP: setear defaults y continuar
                     this.teso13.sCDPn = false;
                     this.teso13.cdp_ano = '0';
                     this.teso13.cdp_documento = '00';
