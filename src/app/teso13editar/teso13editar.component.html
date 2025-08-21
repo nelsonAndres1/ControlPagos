@@ -51,14 +51,6 @@
                     </div>
                 </div>
 
-                <!-- Pagos/cuotas -->
-                <div class="col">
-                    <label><b>Numero de Pagos</b></label>
-                    <input type="text" class="form-control" name="numcuo" [(ngModel)]="teso13.numcuo" maxlength="2"
-                        required />
-                    <small *ngIf="!registerForm.controls['numcuo']?.valid && registerForm.controls['numcuo']?.touched"
-                        class="invalid-feedback d-block">Este Campo es requerido</small>
-                </div>
             </div>
 
             <hr />

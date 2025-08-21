@@ -357,66 +357,96 @@ export class Teso13Component implements OnInit {
     onSubmit(form: any) {
         Swal.fire({
             title: '¿Estas Seguro?',
-            text: 'Iniciaras un nuevo Pago',
+            html: `
+            <strong class="font__weight">Importante antes de iniciar el pago!</strong>
+            <ul style="text-align: left;">
+            <li>ESTE FORMATO NO PODRÁ SER MODIFICADO, EN LO REFERENTE A REQUISITOS Y A SU FORMA SIN PREVIA
+                AUTORIZACIÓN DE LA COORDINACIÓN DE TESORERÍA Y LA LEGALIZACIÓN DEL CAMBIO ANTE LA COORDINACIÓN
+                DE DESARROLLO ORGANIZACIONAL
+            </li>
+            <li>Para el tramite de la cuenta debe obligatoriamente diligenciar este formato en su totalidad</li>
+            <li>Los requisitos se actualizarán de acuerdo con la normatividad vigente.</li>
+            <li>Cuando es un pago por primera vez se debe anexar el Formato de Información y Pagos Mediante el
+                Sistema de Traslado Electrónico.
+            </li>
+            <li>Certificación Bancaria, Pagos por primera vez o cuando modifique la cuenta bancaria.</li>
+            <li>Verificar que la resolución de la factura esté vigente (dos años).</li>
+            <li>Cuando se trate de cuentas con provisión del año inmediatamente anterior, se debe anexar soporte
+                de la misma emitido por la Coordinación de Contabilidad.
+            </li>
+            <li>Cuando se trate de legalización de cuentas de periodos anteriores no provisionadas o que requieran
+                pago después de las fechas de cierre, debe soportarse con oficio o acta del Comité de Conciliación
+                Contable, emitido por la oficina Jurídica.
+            </li>
+            <li>Cuando se trate de modificaciones al contrato inicial (monto, plazo o supervisión), debe adjuntarse
+                copia del Otro Sí en la cuenta siguiente a dicho cambio.
+            </li>
+            <li>Los documentos soportes para trámite de pago deben imprimirse a doble cara.</li>
+            <li>La firma y la fecha son los únicos campos que se pueden diligenciar a mano.</li>
+            <li>Los formatos para certificación de ejecución contractual, informe de supervisión/interventoría y
+                revisión de requisitos aplican únicamente para contratistas.</li>
+            </ul>
+        `,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#4BB543',
             cancelButtonColor: '#EA1737',
             confirmButtonText: 'Iniciar'
-        }).then(result => {
-            this.teso13.fecrad = this.fechaRdicado;
-            if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';
-            if (!result.value) { Swal.fire('Cancelado!', 'Pago No Enviado', 'error'); return; }
+        })
+            .then(result => {
+                this.teso13.fecrad = this.fechaRdicado;
+                if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';
+                if (!result.value) { Swal.fire('Cancelado!', 'Pago No Enviado', 'error'); return; }
 
-            const valorNum = this.normalizeCurrency(this.teso13.valor);
+                const valorNum = this.normalizeCurrency(this.teso13.valor);
 
-            // Token de upload
-            const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
-            this.teso13.upload_token = uploadToken; // si tu modelo no lo tiene, es campo dinámico
+                // Token de upload
+                const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
+                this.teso13.upload_token = uploadToken; // si tu modelo no lo tiene, es campo dinámico
 
-            // Empaquetar CC varios en JSON (único sitio donde se usa para backend)
-            this.teso13.centros_json = JSON.stringify(this.centros || []);
+                // Empaquetar CC varios en JSON (único sitio donde se usa para backend)
+                this.teso13.centros_json = JSON.stringify(this.centros || []);
 
-            const navegar = () => {
-                const arrayD = [
-                    this.tpago,
-                    this.nit_nombre,
-                    this.subdir_nombre,  // solo informativo
-                    this.dep_nombre,     // solo informativo
-                    this.siCDPno ? this.cdp_marca : 'OP',
-                    this.siCDPno ? this.cdp_documento : '00',
-                    this.siCDPno ? this.cdp_ano : '0',
-                    this.teso13.nit
-                ];
+                const navegar = () => {
+                    const arrayD = [
+                        this.tpago,
+                        this.nit_nombre,
+                        this.subdir_nombre,  // solo informativo
+                        this.dep_nombre,     // solo informativo
+                        this.siCDPno ? this.cdp_marca : 'OP',
+                        this.siCDPno ? this.cdp_documento : '00',
+                        this.siCDPno ? this.cdp_ano : '0',
+                        this.teso13.nit
+                    ];
 
-                const navigationExtras: NavigationExtras = {
-                    queryParams: {
-                        result: JSON.stringify([this.teso13, arrayD]),
-                        uploadToken
-                    }
+                    const navigationExtras: NavigationExtras = {
+                        queryParams: {
+                            result: JSON.stringify([this.teso13, arrayD]),
+                            uploadToken
+                        }
+                    };
+
+                    this._router.navigate(['teso12_upload'], navigationExtras);
+                    Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
                 };
 
-                this._router.navigate(['teso12_upload'], navigationExtras);
-                Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
-            };
-
-            if (this.siCDPno) {
-                this.teso13.sCDPn = true;
-                this._teso13Service
-                    .valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit))
-                    .subscribe(response => {
-                        const valorCDP = Number(response) || 0;
-                        if (valorCDP >= valorNum) navegar();
-                        else Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
-                    });
-            } else {
-                this.teso13.sCDPn = false;
-                this.teso13.cdp_ano = '0';
-                this.teso13.cdp_documento = '00';
-                this.teso13.cdp_marca = 'OP';
-                navegar();
-            }
-        });
+                if (this.siCDPno) {
+                    this.teso13.sCDPn = true;
+                    this._teso13Service
+                        .valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit))
+                        .subscribe(response => {
+                            const valorCDP = Number(response) || 0;
+                            if (valorCDP >= valorNum) navegar();
+                            else Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
+                        });
+                } else {
+                    this.teso13.sCDPn = false;
+                    this.teso13.cdp_ano = '0';
+                    this.teso13.cdp_documento = '00';
+                    this.teso13.cdp_marca = 'OP';
+                    navegar();
+                }
+            });
     }
 
     download() {

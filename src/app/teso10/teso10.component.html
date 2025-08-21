@@ -2,7 +2,6 @@
     <form [formGroup]="formGroup" class="row g-3">
         <div class="col-md-4">
             <h3>Seleccione la Clase de Pago</h3>
-            <!-- <label for="inputState"  class="form-label">Seleccione las Clases de Pago</label> -->
             <select [(ngModel)]="opcionSeleccionado" (change)="capturar($event)" id="inputState" formControlName="n1"
                 class="form-select">
                 <option selected>Seleccione</option>
@@ -36,7 +35,7 @@
                         DE DESARROLLO ORGANIZACIONAL
                     </li>
                     <li>
-                        Para el trámite de la cuenta debe obligatoriamente diligenciar este formato en su totalidad.
+                        Para el tramite de la cuenta debe obligatoriamente diligenciar este formato en su totalidad
                     </li>
                     <li>
                         Los requisitos se actualizarán de acuerdo con la normatividad vigente.
@@ -44,9 +43,6 @@
                     <li>
                         Cuando es, un pago por primera vez se debe anexar el Formato de Información y Pagos Mediante el
                         Sistema de Traslado Electrónico.
-                    </li>
-                    <li>
-                        Cuando es, un pago por primera vez se debe anexar el RUT actualizado
                     </li>
                     <li>
                         Certificación Bancaria, Pagos por primera vez o cuando modifique la cuenta bancaria.
@@ -60,19 +56,27 @@
                     </li>
                     <li>
                         Cuando se trate de legalización de cuentas de periodos anteriores que no se encuentren
-                        provisionadas o cuando requieran el pago de cuentas después de las fechas establecidas en el
-                        acta de fin de año de cierre de contable, deberá soportarse con oficio o acta del Comité
-                        Conciliación de Contable de la Caja de Compensación Familiar de Nariño, emitido a través de
-                        memorando de la oficina Jurídica.
+                        provisionadas o cuando requieran el pago de cuentas después de
+                        las fechas establecidas en el acta de fin de año de cierre de contable, deberá soportarse con
+                        oficio o acta del Comité Conciliación de Contable de la Caja
+                        de Compensación Familiar de Nariño, emitido a través de memorando de la oficina Jurídica.
                     </li>
                     <li>
                         Cuando se trate de modificaciones al contrato inicial, a través de otro Si, en la referente el
-                        monto, plazo o supervisión, debe presentarse una copia adjunta del Otro Si en la cuenta
-                        siguiente a dicho cambio.
+                        monto, plazo o supervisión, debe presentarse una copia adjunta del
+                        Otro Si en la cuenta siguiente a dicho cambio
                     </li>
                     <li>
                         Los documentos soportes generados para el trámite de pago de cuentas deberán imprimirse a doble
-                        cara.
+                        cara
+                    </li>
+                    <li>
+                        La firma y la fecha son los unicos campos que se pueden diligenciar a mano
+                    </li>
+                    <li>
+                        El Formato para certificacion de ejecucion contractual e informe de supervision y/o
+                        interventoria y el Formato para revision de requisito para cuentas de cobro
+                        aplica unicamente para contratistas.
                     </li>
                 </ul>
             </div>
