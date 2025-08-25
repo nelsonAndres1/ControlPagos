@@ -22,5 +22,4 @@ export class PdfService {
         const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this.http.post(this.url + 'pdf/generarPDF', body, { headers, responseType: 'blob' });
     }
-
 }
