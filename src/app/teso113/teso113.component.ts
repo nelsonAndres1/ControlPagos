@@ -11,9 +11,10 @@ import Swal from 'sweetalert2';
 import { PdfService } from '../services/pdf.service';
 import { Impresion } from '../models/impresion';
 import { firstValueFrom } from 'rxjs';
+import { Gener02Service } from '../services/gener02.service';
 
 
-@Component({ selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service, PdfService] })
+@Component({ selector: 'app-teso113', templateUrl: './teso113.component.html', styleUrls: ['./teso113.component.css'], providers: [Teso15Service, Teso13Service, PdfService, Gener02Service] })
 export class Teso113Component implements OnInit {
 
     @ViewChild('myData') myData: ElementRef;
@@ -41,39 +42,61 @@ export class Teso113Component implements OnInit {
     impreseion: Impresion;
     nombre_soportes_pago: any = '';
 
-    constructor(private route: ActivatedRoute, private _router: Router, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _PdfService: PdfService) {
-
-        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '','');
+    constructor(
+        private route: ActivatedRoute,
+        private _router: Router,
+        private _teso15Service: Teso15Service,
+        private _teso13Service: Teso13Service,
+        private _PdfService: PdfService,
+        private _gener02Service: Gener02Service
+    ) {
+        this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
         this.teso10 = new teso10('', '', '', '', '', '');
-        this.route.queryParams.subscribe(response => {
-            const paramsData = JSON.parse(response['result']);
+
+        this.route.queryParams.subscribe(q => {
+            const paramsData = q['result'] ? JSON.parse(q['result']) : [];
+            const numeroPago = q['numeroPago'];
             this.itemDetail = paramsData;
-            this.numero = this.itemDetail[0];
-            this.codclas = this.itemDetail[1];
-            this.nit = this.itemDetail[2];
-            this.cc = this.itemDetail[3];
-            this.depe = this.itemDetail[4];
-            this.cdp_marca = this.itemDetail[5];
-            this.cdp_documento = this.itemDetail[6];
-            this.cdp_ano = this.itemDetail[7];
+
+            this.numero = numeroPago;
+            sessionStorage.setItem('ultimo_numero_pago', this.numero);
+
+            this.codclas = this.itemDetail[0];
+            const nitNombre = this.itemDetail[1]; // por si lo necesitas en UI
+            this.cc = this.itemDetail[2];
+            this.depe = this.itemDetail[3];
+            this.cdp_marca = this.itemDetail[4];
+            this.cdp_documento = this.itemDetail[5];
+            this.cdp_ano = this.itemDetail[6];
+            this.nit = this.itemDetail[7]; // NIT numérico/real
+
+            console.log("detail!!!");
+            console.log(this.itemDetail);
+
+            // 3) Preparar servicios dependientes
             this.getTeso10(this.codclas);
             this.teso10.codclas = this.codclas;
             this.teso10.numero = this.numero;
 
             this.funcionPagos();
+            this.getConta04(this.nit);
         });
     }
 
 
+    getConta04(nit: any) {
+        this._gener02Service.getConta04({ 'nit': nit }).subscribe(
+            response => {
+                console.log("!!!!conta04    response");
+                console.log(response);
+                this.nit = response.conta04
+            })
+    }
 
     async funcionPagos() {
         var soportes_pago: any;
-
-
         this._teso13Service.getSoportesForPago(new Teso113(this.codclas, this.numero)).subscribe(
             response => {
-                console.log("Soportes for pago");
-                console.log(response);
                 soportes_pago = response;
                 for (let index = 0; index < soportes_pago.length; index++) {
                     if (this.nombre_soportes_pago !== '') {
@@ -81,17 +104,10 @@ export class Teso113Component implements OnInit {
                     }
                     this.nombre_soportes_pago += soportes_pago[index].detalle_codsop;
                 }
-                console.log("Soportes for pago");
-                console.log(this.nombre_soportes_pago);
             }
         )
 
-
         this._teso15Service.getAllTeso13(new Teso113(this.codclas, this.numero)).subscribe(response => {
-
-            console.log('responseTeso13');
-            console.log(response);
-
             if (response.status != 'error') {
                 this.data = response;
                 this.fecrad = this.data.fecrad;
@@ -127,6 +143,7 @@ export class Teso113Component implements OnInit {
                     this.impreseion.usucau = this.data.usucau;
                     this.impreseion.detalle = this.data.detalle;
                     this.impreseion.anexos_magneticos = this.data.anexos_magneticos;
+                    this.impreseion.centros_json = this.data.centros_json;
 
                     if (this.cdp_documento == '00') {
                         this.impreseion.cdp = '-'
@@ -191,11 +208,11 @@ export class Teso113Component implements OnInit {
         this._teso13Service.name_teso10(new teso10(n, '', '', '', '', '')).subscribe(
             response => {
                 this.detalle = response.detclas;
-                console.log(this.detalle);
+                console.log
             },
             error => {
                 this.detalle = 'error';
-                console.log(<any>error);
+
             });
     }
 
@@ -217,9 +234,9 @@ export class Teso113Component implements OnInit {
     ngOnInit(): void { }
 
     async descargarPDF() {
-        console.log("ayudaaaaaaaaa!!!!!!!!!!!!!!!!!!!!")
-        console.log(this.codclas);
-        console.log(this.numero);
+
+
+
 
         if (this.numero.toString().length < 7) {
             this.numero = this.numero.toString().padStart(7, '0');
@@ -235,8 +252,8 @@ export class Teso113Component implements OnInit {
                 this._teso13Service.getSoportesForPago(new Teso113(this.codclas, this.numero))
             );
 
-            console.log("Soportes for pago");
-            console.log(soportes_pago);
+
+
 
             for (let index = 0; index < soportes_pago.length; index++) {
                 if (this.nombre_soportes_pago !== '') {
