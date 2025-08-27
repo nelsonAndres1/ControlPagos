@@ -134,9 +134,9 @@
             <div class="row">
                 <!-- Subdirección -->
                 <div class="col">
-                    <label><b>Subdirección</b></label>
+                    <label><b>Area que tramita el pago</b></label>
                     <div class="col">
-                        <input type="text" class="form-control" name="subdir_name" placeholder="Buscar Subdirección"
+                        <input type="text" class="form-control" name="subdir_name" placeholder="Buscar"
                             (input)="buscarSubdir($event)" [(ngModel)]="subdir_nombre" [disabled]="subdir_locked">
 
                         <div *ngFor="let r of dataSubdir" (click)="getDetailPage(r)">
