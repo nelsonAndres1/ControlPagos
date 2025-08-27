@@ -21,6 +21,7 @@
           <th scope="col">Obligatorio?</th>
           <th scope="col">Orden</th>
           <th scope="col">Editar</th>
+          <th scope="col">Eliminar</th>
         </tr>
       </thead>
       <tbody>
@@ -34,6 +35,9 @@
           </td>
           <td><button type="button" class="btn btn-warning"
               (click)="editar(so.codclas, so.codsop, so.obliga, so.orden)">Editar</button></td>
+          <td><button type="button" class="btn btn-danger"
+              (click)="eliminar(so.codclas, so.codsop)">eliminar</button></td>
+
         </tr>
       </tbody>
     </table>

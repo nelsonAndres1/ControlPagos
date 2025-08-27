@@ -71,6 +71,8 @@ import { LoadingComponent } from './loading/loading.component'
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
+import { EstadoFiltroPipe } from './pipes/estado-filtro.pipe';
+
 
 @NgModule({
   declarations: [
@@ -119,7 +121,8 @@ import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.compo
     EditarSoportesComponent,
     LoadingComponent,
     NotificacionesComponent,
-    PasosGeneralesComponent
+    PasosGeneralesComponent, 
+    EstadoFiltroPipe
   ],
 
   imports: [

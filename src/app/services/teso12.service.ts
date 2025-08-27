@@ -102,11 +102,19 @@ export class Teso12Service {
 
     }
 
+    eliminarObligacionSoportes(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso12/eliminarObligacionSoportes', params, { headers: headers });
+
+    }
+
     downloadFile(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.get(this.url + 'teso12/downloadFile',{ headers, responseType: 'blob' as 'json'});
+        return this._http.get(this.url + 'teso12/downloadFile', { headers, responseType: 'blob' as 'json' });
 
     }
 
@@ -114,12 +122,12 @@ export class Teso12Service {
         let json = JSON.stringify(user);
         let params = 'json=' + json;
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-        return this._http.post(this.url + 'teso12/traerSoportesO', params,{ headers: headers });
+        return this._http.post(this.url + 'teso12/traerSoportesO', params, { headers: headers });
 
     }
-    
 
 
-    
+
+
 
 }

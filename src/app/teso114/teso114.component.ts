@@ -21,6 +21,7 @@ export class Teso114Component implements OnInit {
     public status: any;
     sw: any;
     sw1: any;
+    filtroEstado:any = 'ACTIVO';
     public teso112: teso112;
     constructor(private route: ActivatedRoute,
         private _teso14Service: Teso14Service,

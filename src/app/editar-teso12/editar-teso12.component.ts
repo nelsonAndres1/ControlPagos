@@ -151,6 +151,52 @@ export class EditarTeso12Component implements OnInit {
 
     })
   }
+  eliminar(codclas: any, codsop: any) {
+    Swal.fire({
+      title: 'Eliminar soporte',
+      text: "¿El soporte sera eliminado del pago?",
+      icon: 'question',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si!',
+      denyButtonText: 'No!',
+    }).then((result) => {
+
+      this.teso14.codclas = codclas;
+      this.teso14.codsop = codsop;
+
+      this._teso12Service.eliminarObligacionSoportes(this.teso14).subscribe(
+        response => {
+          if (response.status == 'success') {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: 'eliminado correctamente!',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            Swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: 'No eliminado!',
+              showConfirmButton: false,
+              timer: 1500
+            })
+            /* setTimeout(() => {
+              window.location.reload();
+            }, 1000); */
+          }
+        }
+      )
+
+    })
+  }
 
   traerTpago(detclas: any) {
     this._userService.traerCodClas({ detclas }).subscribe(

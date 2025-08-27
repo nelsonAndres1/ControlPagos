@@ -1,73 +1,167 @@
 <h2>Tipos de Soporte</h2>
 
 <div class="alert alert-success" *ngIf="status == 'success'">
-    ¡El registro del soporte se ha completado correctamente!<a [routerLink]="['/principal']"></a>
+    ¡El registro del soporte se ha completado correctamente!
+    <a [routerLink]="['/principal']"></a>
 </div>
 
 <div class="alert alert-danger" *ngIf="status == 'error'">
     ¡El registro del soporte no se ha completado!
 </div>
 
-
-
 <form class="col-md-5 ml-0 pl-0" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
     <div class="form-group col-md-12">
         <div class="row">
-            <label for="name">
+            <label for="detsop">
                 <h6> Tipo de Soporte</h6>
             </label>
 
-            <input type="text" placeholder="Buscar o Agregar Soporte" for="detsop" class="form-control"
+            <input type="text" placeholder="Buscar o Agregar Soporte" class="form-control"
                 (input)="getTSoportes($event)" #detsop="ngModel" [(ngModel)]="teso12.detsop" name="detsop" required
-                pattern="[a-zA-Z]+"><!-- numero -->
-            <div *ngFor="let result of data" (click)="getDetailPage(result)">
+                pattern="[a-zA-Z]+">
+
+            <!-- Resultados dinámicos -->
+            <div *ngFor="let result of data">
                 <div class="card card-body mb-1">
-                    <h6>Pago: {{result.detsop}}.</h6>
+                    <h6>Soporte: {{result.detsop}}</h6>
                     <div class="row">
-                        <button type="button" class="btn btn-warning btn-sm" (click)="update(result.codsop)"
-                            style="cursor: pointer;">Modificar</button>
+                        <button type="button" class="btn btn-warning btn-sm" (click)="update(result)"
+                            style="cursor: pointer;">
+                            Modificar
+                        </button>
                     </div>
                     <br>
                     <div class="row">
                         <button type="button" class="btn btn-danger btn-sm" (click)="delete(result.codsop)"
-                            style=" cursor: pointer;">Eliminar</button>
+                            style="cursor: pointer;">
+                            Eliminar
+                        </button>
                     </div>
                 </div>
             </div>
+
             <small *ngIf="!detsop.valid && detsop.touched" class="invalid-feedback d-block">
                 Este Campo es Requerido
             </small>
-            <label for="name">
+
+            <label for="decsop">
                 <h6> Detalle </h6>
             </label>
             <textarea maxlength="1000" class="form-control" aria-label="With textarea" #decsop="ngModel"
-                [(ngModel)]="teso12.decsop" name="decsop"></textarea>
-
+                [(ngModel)]="teso12.decsop" name="decsop">
+            </textarea>
         </div>
-
     </div>
 
-    <br>
-    <br>
+    <br><br>
     <div>
         <input type="submit" value="Agregar Tipo de Soporte" class="btn btn-success" />
-
     </div>
 </form>
+<!-- Barra de acciones masivas -->
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-3 p-2 bg-light rounded border"
+    *ngIf="dataSoportes?.length">
+    <!-- Selección -->
+    <div class="d-flex align-items-center gap-2">
+        <input type="checkbox" class="form-check-input" [checked]="allSelected" (change)="toggleAll($event)"
+            aria-label="Seleccionar todos" />
+        <span class="fw-semibold">{{ selectedCount }} seleccionados</span>
+    </div>
 
-<table class="table" id="tablaT10">
-    <thead>
-        <tr>
-            <th scope="col">Codsop</th>
-            <th scope="col">Detalle del Soporte</th>
-            <th scope="col">Descripción del Soporte</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let dt of dataSoportes">
-            <th scope="row">{{dt.codsop}}</th>
-            <td>{{dt.detsop}}</td>
-            <td>{{dt.decsop}}</td>
-        </tr>
-    </tbody>
-</table>
+    <!-- Botones -->
+    <div class="d-flex gap-2">
+
+        <button class="btn btn-outline-secondary btn-sm" (click)="clearSelection()" [disabled]="selectedCount === 0"
+            title="Limpiar selección">
+            Limpiar
+        </button>
+
+        <!-- Botón Inactivar -->
+        <button *ngIf="showInactivateButton" class="btn btn-danger btn-sm" (click)="inactivateSelected()"
+            title="Inactivar seleccionados">
+            Inactivar seleccionados
+        </button>
+
+        <!-- Botón Activar -->
+        <button *ngIf="showActivateButton" class="btn btn-success btn-sm" (click)="activateSelected()"
+            title="Activar seleccionados">
+            Activar seleccionados
+        </button>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="mb-3">
+    <div class="d-flex justify-content-start gap-2 flex-row" role="group" aria-label="Filtro de estado">
+        <button type="button" class="btn btn-outline-primary" [class.active]="filtroEstado === 'TODOS'"
+            (click)="setFiltro('TODOS')">
+            Todos
+        </button>
+        <button type="button" class="btn btn-outline-success" [class.active]="filtroEstado === 'ACTIVO'"
+            (click)="setFiltro('ACTIVO')" selected>
+            Activos
+        </button>
+        <button type="button" class="btn btn-outline-secondary" [class.active]="filtroEstado === 'INACTIVO'"
+            (click)="setFiltro('INACTIVO')">
+            Inactivos
+        </button>
+    </div>
+</div>
+
+
+
+
+
+<!-- Tabla de soportes registrados -->
+<div class="table-responsive">
+    <table class="table table-hover table-sm align-middle mb-0" id="tablaT10" *ngIf="dataSoportes?.length">
+        <thead class="table-light">
+            <tr>
+                <th style="width:40px">
+                    <input class="form-check-input" type="checkbox" [checked]="allSelected" (change)="toggleAll($event)"
+                        aria-label="Seleccionar todos" />
+                </th>
+                <th scope="col">Codsop</th>
+                <th scope="col">Detalle del Soporte</th>
+                <th scope="col">Descripción del Soporte</th>
+                <th scope="col">Estado</th>
+                <th scope="col" style="width:220px">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let dt of dataSoportes | estadoFiltro:filtroEstado">
+                <td>
+                    <input class="form-check-input" type="checkbox" [checked]="isSelected(dt.codsop)"
+                        (change)="toggleRow(dt.codsop, $event)" aria-label="Seleccionar soporte" />
+                </td>
+                <td class="text-muted">{{ dt.codsop }}</td>
+                <td class="fw-semibold">{{ dt.detsop }}</td>
+                <td class="text-truncate" style="max-width: 320px;">{{ dt.decsop }}</td>
+                <td>
+                    <span class="badge" [ngClass]="dt.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'">
+                        {{ dt.estado }}
+                    </span>
+                </td>
+                <td>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-warning btn-sm" (click)="update(dt)">Modificar</button>
+
+                        <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="dt.estado === 'ACTIVO'"
+                            (click)="inactivateOne(dt)">
+                            Inactivar
+                        </button>
+
+                        <button type="button" class="btn btn-outline-success btn-sm" *ngIf="dt.estado === 'INACTIVO'"
+                            (click)="activateOne(dt)">
+                            Activar
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="!dataSoportes?.length" class="p-4 text-center text-muted">
+        No hay soportes para mostrar.
+    </div>
+</div>
