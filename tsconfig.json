@@ -2,9 +2,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "forceConsistentCasingInFileNames": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

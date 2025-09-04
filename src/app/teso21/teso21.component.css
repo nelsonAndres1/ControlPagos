@@ -1,0 +1,91 @@
+/* ===== Canvas Cytoscape ===== */
+.cyto-container {
+    width: 100%;
+    height: 1000px;
+    /* ajusta según tu layout */
+    background:
+        linear-gradient(0deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+/* ===== Fondo NGX Graph ===== */
+:host ::ng-deep .chart-container {
+    background:
+        linear-gradient(0deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px;
+    background-color: #f8fafc;
+}
+
+/* ===== NGX Graph: nodos y aristas ===== */
+:host ::ng-deep .node rect {
+    stroke: rgba(0, 0, 0, .15);
+    stroke-width: 1;
+}
+
+:host ::ng-deep .edge .line,
+:host ::ng-deep .edge .line-casing,
+:host ::ng-deep .edge .hit-area {
+    vector-effect: non-scaling-stroke;
+    fill: none;
+}
+
+:host ::ng-deep .edge .line-casing {
+    stroke: #ffffff;
+    opacity: .95;
+    stroke-linecap: round;
+}
+
+:host ::ng-deep .edge .line {
+    opacity: .98;
+    stroke-linecap: round;
+    transition: opacity .15s ease, stroke-width .15s ease, filter .15s ease, stroke-dashoffset .3s linear;
+}
+
+:host ::ng-deep .edge .hit-area {
+    stroke: transparent;
+    stroke-width: 14;
+    pointer-events: stroke;
+}
+
+:host ::ng-deep .edge .edge-label .text-path,
+:host ::ng-deep .edge-label .text-path {
+    paint-order: stroke fill;
+    stroke: #ffffff;
+    stroke-width: 3px;
+}
+
+/* ===== Panel lateral opcional ===== */
+.card.card-outline-secondary {
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px rgba(2, 6, 23, 0.04);
+}
+
+.card.card-outline-secondary .card-header {
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card.card-outline-secondary .card-header h6 {
+    margin: 0;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.card.card-outline-secondary .card-body label {
+    font-size: 12px;
+    color: #334155;
+}
+
+/* Botón pequeño dentro de foreignObject */
+.btn.btn-primary.btn-sm {
+    background-color: #0f172a !important;
+    border-color: #0f172a !important;
+    padding: 2px 6px;
+    font-size: 12px;
+    line-height: 1;
+}

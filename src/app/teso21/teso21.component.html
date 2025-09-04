@@ -1,44 +1,106 @@
 <div class="row mt-12">
     <div class="col-sm-10 pb-3">
-        <ngx-graph class="chart-container" [view]="[1000, 1000]" [links]="links_" [nodes]="nodes_" [curve]="curve"
-            [layout]="layout" [nodeWidth]="250" [nodeHeight]="100" [layoutSettings]="layoutSettings" [enableZoom]="true"
-            [autoZoom]="true" [clusters]="clusters_fin" layout="dagreCluster">
+
+        <!-- Toggle de vista -->
+        <div class="d-flex align-items-center gap-2 mb-2">
+            <label class="me-2 mb-0">Vista:</label>
+            <button type="button" class="btn btn-sm" [class.btn-primary]="!useCytoscape"
+                [class.btn-outline-primary]="useCytoscape" (click)="switchView(false)">
+                NGX Graph
+            </button>
+            <button type="button" class="btn btn-sm" [class.btn-primary]="useCytoscape"
+                [class.btn-outline-primary]="!useCytoscape" (click)="switchView(true)">
+                Cytoscape
+            </button>
+        </div>
+
+        <!-- Contenedor Cytoscape -->
+        <div *ngIf="useCytoscape" #cyContainer class="cyto-container"></div>
+
+        <!-- Tu vista NGX Graph (se mantiene para compatibilidad) -->
+        <ngx-graph *ngIf="!useCytoscape" class="chart-container" [view]="[1000, 1000]" [links]="links_" [nodes]="nodes_"
+            [curve]="curve" [layout]="layout" [nodeWidth]="250" [nodeHeight]="100" [layoutSettings]="layoutSettings"
+            [enableZoom]="true" [autoZoom]="true" [clusters]="clusters_fin" layout="dagreCluster">
+
+            <!-- DEFS: glow, gradientes, flechas COMUNES y punto de origen -->
             <ng-template #defsTemplate>
-                <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
-                    orient="auto">
-                    <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-                </svg:marker>
+                <svg:defs>
+                    <svg:filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </svg:filter>
+
+                    <svg:marker id="dot-start" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"
+                        markerUnits="strokeWidth">
+                        <circle cx="4" cy="4" r="2.2" fill="context-stroke"></circle>
+                    </svg:marker>
+
+                    <svg:marker id="arrow-common" viewBox="0 -5 10 10" markerWidth="10" markerHeight="10" refX="8"
+                        refY="0" orient="auto" markerUnits="strokeWidth">
+                        <svg:path d="M0,-5L10,0L0,5" fill="context-stroke"></svg:path>
+                    </svg:marker>
+
+                    <ng-container *ngFor="let l of links_">
+                        <svg:linearGradient [attr.id]="'grad-'+l.id" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <svg:stop offset="0%" [attr.stop-color]="getNodeColor(l.source)" />
+                            <svg:stop offset="100%" [attr.stop-color]="getNodeColor(l.target)" />
+                        </svg:linearGradient>
+                    </ng-container>
+                </svg:defs>
             </ng-template>
+
+            <!-- Cluster -->
             <ng-template #clusterTemplate let-cluster>
                 <svg:g class="node cluster">
                     <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width"
-                        [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
+                        [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data?.color || '#e2e8f0'" />
                 </svg:g>
             </ng-template>
+
+            <!-- Node -->
             <ng-template #nodeTemplate let-node>
                 <svg:g class="node">
                     <svg:rect [attr.width]="node.dimension.width" [attr.height]="node.dimension.height"
-                        [attr.fill]="node.data.color" />
+                        [attr.fill]="node.data?.color || '#e2e8f0'" rx="10" ry="10" />
                     <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 5">
                         {{node.label}}
                     </svg:text>
+
                     <svg:foreignObject [attr.x]="node.dimension.width - 40" [attr.y]="node.dimension.height / 2"
                         [attr.width]="40" [attr.height]="20">
                         <xhtml:div xmlns="http://www.w3.org/1999/xhtml"
-                            style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                            <button
-                                style="font-size: 12px; padding: 2px 5px; border: 1px solid #000000; border-radius: 3px; background-color: #000000; cursor: pointer;"
-                                class="btn btn-primary" (click)="eliminar_nodo(node)">Eliminar</button>
+                            style="display:flex;justify-content:center;align-items:center;height:100%;">
+                            <button class="btn btn-primary btn-sm" (click)="eliminar_nodo(node)">Eliminar</button>
                         </xhtml:div>
                     </svg:foreignObject>
                 </svg:g>
             </ng-template>
+
+            <!-- Link con casing + gradiente + flecha común -->
             <ng-template #linkTemplate let-link>
                 <svg:g class="edge">
-                    <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" [attr.id]="'link-' + link.id">
+                    <!-- Casing blanco (sin markers) -->
+                    <svg:path class="line-casing" [attr.id]="'casing-' + link.id" stroke="#fff"
+                        [attr.stroke-width]="(link.archivo === 'SI') ? 7 : 5" stroke-linecap="round">
                     </svg:path>
+
+                    <!-- Línea principal -->
+                    <svg:path class="line" [attr.id]="link.id" [attr.stroke]="'url(#grad-'+link.id+')'"
+                        [attr.stroke-width]="(link.archivo === 'SI') ? 4 : 2.5" [attr.marker-end]="'url(#arrow-common)'"
+                        [attr.marker-start]="'url(#dot-start)'"
+                        [attr.stroke-dasharray]="(link.observacion === 'SI') ? '6,4' : null" stroke-linecap="round">
+                    </svg:path>
+
+                    <!-- Hit area para hover (si la quieres usar, puedes agregar listeners) -->
+                    <svg:path class="hit-area" [attr.id]="'hit-' + link.id" stroke="transparent" stroke-width="14">
+                    </svg:path>
+
+                    <!-- Etiqueta -->
                     <svg:text class="edge-label" text-anchor="middle">
-                        <textPath class="text-path" [attr.href]="'#link-' + link.id"
+                        <textPath class="text-path" [attr.href]="'#' + link.id"
                             [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
                             {{link.label}}
                         </textPath>
@@ -47,9 +109,33 @@
             </ng-template>
         </ngx-graph>
     </div>
+
+    <!-- Panel lateral (tu lógica intacta) -->
+
     <div class="col-sm-2 pb-3">
         <div class="col-md-10 offset-md-1">
             <span class="anchor" id="formComplex"></span>
+            <div class="card card-outline-secondary">
+                <div class="card-header">
+                    <h6 class="mb-0">Arboles existentes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-12">
+                        <form style="margin: 1%;">
+                            <div class="form-group">
+                                <label for="selArbol">Arboles</label>
+                                <select class="form-control" id="selArbol" (change)="select_iniciar_edicion($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option *ngFor="let dt of arboles_existentes" [value]="dt.proceso">{{dt.proceso}}
+                                    </option>
+                                </select>
+                            </div>
+                            <br>
+                            <button type="button" class="btn btn-primary" (click)="iniciar_edicion()">Editar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <div class="card card-outline-secondary">
                 <div class="card-header">
                     <h6 class="mb-0">Procesos</h6>
@@ -58,23 +144,22 @@
                     <div class="row mt-12">
                         <form style="margin: 1%;">
                             <div class="form-group">
-                                <label for="exampleFormControlSelect1">Proceso</label>
-                                <select class="form-control" id="exampleFormControlSelect1" (change)="ingrese($event)">
+                                <label for="selProceso">Proceso</label>
+                                <select class="form-control" id="selProceso" (change)="ingrese($event)">
                                     <option selected>Seleccione!</option>
                                     <option *ngFor="let dt of data_teso20" [value]="dt.id">{{dt.proceso}}</option>
                                 </select>
                             </div>
                             <br>
-                            <button type="submit" class="btn btn-primary" (click)="enviar()">Agregar</button>
+                            <button type="button" class="btn btn-primary" (click)="enviar()">Agregar</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-
         <div class="col-md-10 offset-md-1">
-            <span class="anchor" id="formComplex"></span>
+            <span class="anchor" id="formComplex2"></span>
             <div class="card card-outline-secondary">
                 <div class="card-header">
                     <h6 class="mb-0">Enlaces</h6>
@@ -83,59 +168,60 @@
                     <div class="row mt-12">
                         <form style="margin: 5%;">
                             <div class="form-group">
-                                <label for="exampleFormControlSelect1">Enlace 1</label>
-                                <select class="form-control" id="exampleFormControlSelect1" (change)="enlace1($event)">
+                                <label for="enlace1">Enlace 1</label>
+                                <select class="form-control" id="enlace1" (change)="enlace1($event)">
                                     <option selected>Seleccione!</option>
                                     <option *ngFor="let dt of nodes_" [value]="dt.id">{{dt.label}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="exampleFormControlSelect1">Enlace 2</label>
-                                <select class="form-control" id="exampleFormControlSelect1" (change)="enlace2($event)">
+                                <label for="enlace2">Enlace 2</label>
+                                <select class="form-control" id="enlace2" (change)="enlace2($event)">
                                     <option selected>Seleccione!</option>
                                     <option *ngFor="let dt of nodes_" [value]="dt.id">{{dt.label}}</option>
                                 </select>
-                                <label for="exampleFormControlSelect1">Observación</label>
-                                <input class="form-control" type="text" placeholder="Observación..."
+
+                                <label for="obs">Observación</label>
+                                <input id="obs" class="form-control" type="text" placeholder="Observación..."
                                     (input)="input_obs($event)">
                             </div>
                             <div class="form-group">
-                                <label for="exampleFormControlSelect1">¿Observación?</label>
-                                <select class="form-control" id="exampleFormControlSelect1"
-                                    (change)="observacion($event)">
+                                <label for="selObs">¿Observación?</label>
+                                <select class="form-control" id="selObs" (change)="observacion($event)">
                                     <option selected>Seleccione!</option>
                                     <option value="SI">SI</option>
                                     <option value="NO" selected>NO</option>
                                 </select>
-                                <label for="exampleFormControlSelect1">¿Archivo?</label>
-                                <select class="form-control" id="exampleFormControlSelect1" (change)="archivo($event)">
-                                    <option selected>Seleccione!</option>
-                                    <option value="SI">SI</option>
-                                    <option value="NO" selected>NO</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
 
+                                <label for="selArc">¿Archivo?</label>
+                                <select class="form-control" id="selArc" (change)="archivo($event)">
+                                    <option selected>Seleccione!</option>
+                                    <option value="SI">SI</option>
+                                    <option value="NO" selected>NO</option>
+                                </select>
                             </div>
                             <br>
-                            <button type="submit" class="btn btn-primary" (click)="enviar_enlaces()">Agregar</button>
+                            <button type="button" class="btn btn-primary" (click)="enviar_enlaces()">Agregar</button>
                         </form>
+                        <button type="button" class="btn btn-danger btn-sm mb-2" (click)="deleteSelected()">
+                            Eliminar selección
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-10 offset-md-1">
-            <span class="anchor" id="formComplex"></span>
+            <span class="anchor" id="formComplex3"></span>
             <div class="card card-outline-secondary">
                 <div class="card-header">
-
                     <h6 class="mb-0">Guardar</h6>
                 </div>
                 <div class="card-body">
                     <div class="row mt-12">
-                        <label for="exampleFormControlSelect1">Nombre Proceso</label>
-                        <input type="text" class="form-control" placeholder="Nombre Proceso"
-                            (input)="addProceso($event)">
+                        <label for="nombreProceso">Nombre Proceso</label>
+                        <input id="nombreProceso" type="text" class="form-control" placeholder="Nombre Proceso"
+                            [value]="nombre_proceso" (input)="addProceso($event)">
                         <br>
                         <button style="margin-top: 3%;" type="button" class="btn btn-warning"
                             (click)="guardar()">Guardar</button>
