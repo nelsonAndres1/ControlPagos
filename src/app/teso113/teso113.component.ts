@@ -182,9 +182,9 @@ export class Teso113Component implements OnInit {
     }
 
     extraerFecha(fecha: Date): { dia: number, mes: number, año: number } {
-        const dia = fecha.getDate() + 1;
-        const mes = fecha.getMonth() + 1;
-        const año = fecha.getFullYear();
+        const dia = fecha.getUTCDate();
+        const mes = fecha.getUTCMonth() + 1;
+        const año = fecha.getUTCFullYear();
 
         return { dia, mes, año };
     }
@@ -263,6 +263,8 @@ export class Teso113Component implements OnInit {
             }
 
             this.impreseion.documento_clase = this.nombre_soportes_pago;
+
+            console.log("Soportes de pago obtenidos!!!:", this.impreseion);
 
             const pdfBlob: any = await firstValueFrom(
                 this._PdfService.generarPDF(this.impreseion)
