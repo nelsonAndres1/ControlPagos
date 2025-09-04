@@ -34,6 +34,13 @@ export class Teso21Service {
     return this.http.post(this.url + 'teso20/update', params, { headers: headers });
   }
 
+  replace(user: any): Observable<any> {
+    const json = JSON.stringify(user);
+    const params = 'json=' + json;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso21/replace', params, { headers });
+  }
+
   getAll(user: any): Observable<any> {
     let json = JSON.stringify(user);
     let params = 'json=' + json;
@@ -41,7 +48,12 @@ export class Teso21Service {
     return this.http.post(this.url + 'teso20/getAll', params, { headers: headers });
   }
 
-
+  getFirstteso21(user: any): Observable<any> {
+    let json = JSON.stringify(user);
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'teso21/getFirstteso21', params, { headers: headers });
+  }
 }
 
 

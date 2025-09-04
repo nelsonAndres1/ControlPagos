@@ -78,7 +78,7 @@ export class Teso13Component implements OnInit {
     dep_locked = false;
 
     // ===== Centro de Costo (varios) =====
-    ccVarios = false;
+    ccVarios = true;
     cc_nombre = '';
     dataCC: any[] = [];
     banderaCC = false;
