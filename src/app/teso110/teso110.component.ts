@@ -19,7 +19,8 @@ export class Teso110Component implements OnInit {
     public teso10: teso10;
     public teso10_editar: teso10;
     public teso110: teso110;
-
+    pageSize = 5;
+    currentPage = 1;
     public status: any;
     public status2: any;
     data: any;
@@ -324,4 +325,55 @@ export class Teso110Component implements OnInit {
             }
         )
     }
+
+    get totalItems(): number {
+        return this.teso10_lista?.length ?? 0;
+    }
+
+    get totalPages(): number {
+        return Math.max(1, Math.ceil(this.totalItems / this.pageSize));
+    }
+
+    get startIndex(): number {
+        return (this.currentPage - 1) * this.pageSize;
+    }
+
+    get endIndex(): number {
+        const end = this.startIndex + this.pageSize;
+        return Math.min(end, this.totalItems);
+    }
+
+    get pagedData() {
+        // slice no rompe el two-way binding; sigues editando el mismo objeto
+        return (this.teso10_lista || []).slice(this.startIndex, this.endIndex);
+    }
+
+    goToPage(p: number) {
+        this.currentPage = Math.min(Math.max(1, p), this.totalPages);
+    }
+
+    next() { this.goToPage(this.currentPage + 1); }
+    prev() { this.goToPage(this.currentPage - 1); }
+
+    setPageSize(size: number) {
+        this.pageSize = Number(size) || 10;
+        this.currentPage = 1; // reinicia a la primera página
+    }
+
+    // (opcional) para performance
+    trackByCodclas = (_: number, item: any) => item?.codclas ?? _;
+
+    // páginas visibles (ventana de 5)
+    get pagesToShow(): number[] {
+        const window = 5;
+        const half = Math.floor(window / 2);
+        let start = Math.max(1, this.currentPage - half);
+        let end = Math.min(this.totalPages, start + window - 1);
+        start = Math.max(1, end - window + 1);
+
+        const pages: number[] = [];
+        for (let p = start; p <= end; p++) pages.push(p);
+        return pages;
+    }
+
 }

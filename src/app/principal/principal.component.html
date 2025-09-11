@@ -1,158 +1,280 @@
-<link
-    href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,500,500i,600,600i|Playfair+Display:300,400,400i,500,500i,600,600i|Lobster:400,400i,500,500i,600,600i|Montserrat:400,400i,500,500i,600,600i'
-    rel='stylesheet' type='text/css'>
-<div>
-    <div class="posts">
-        <h1>Pagos Pendientes - Prioridad Alta</h1>
-        <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-800 min-h-screen p-4">
-            <div class="h-full">
-                <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-                    <div class="p-3">
-                        <div class="overflow-x-auto">
-                            <cdk-virtual-scroll-viewport itemSize="5" class="container" style="height: 250px;">
-                                <table class="table-auto w-full">
-                                    <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                                        <tr>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Numero</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Tipo de Pago</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Estado</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Valor</div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-sm divide-y divide-gray-100">
-                                        <tr *ngFor="let dt of pagosA">
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.detcodclas}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
-                                            </td>
+<div class="pagos-wrapper">
 
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.valor}}</div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </cdk-virtual-scroll-viewport>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Título grande principal -->
+    <h1 class="main-title">Pagos Pendientes por Prioridad</h1>
+    <div *ngIf="cargando" class="loading">
+        <div class="spinner"></div>
+        Cargando pagos pendientes…
     </div>
 
-    <div class="posts">
-        <h1>Pagos Pendientes - Prioridad Media</h1>
-
-
-        <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
-            <div class="h-full">
-                <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-                    <div class="p-3">
-                        <div class="overflow-x-auto">
-                            <cdk-virtual-scroll-viewport itemSize="5" class="container" style="height: 250px;">
-                                <table class="table-auto w-full">
-                                    <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                                        <tr>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Numero</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Tipo de Pago</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Estado</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Valor</div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-sm divide-y divide-gray-100">
-                                        <tr *ngFor="let dt of pagosM">
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.detcodclas}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.valor}}</div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </cdk-virtual-scroll-viewport>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+    <div *ngIf="!cargando && errorMsg" class="alert alert-danger">
+        {{ errorMsg }}
     </div>
 
-    <div class="posts">
-        <h1>Pagos Pendientes - Prioridad Baja</h1>
-        <section class="flex flex-col justify-center antialiased bg-gray-100 text-gray-600 min-h-screen p-4">
-            <div class="h-full">
-                <div class="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-                    <div class="p-3">
-                        <div class="overflow-x-auto">
-                            <cdk-virtual-scroll-viewport itemSize="5" class="container" style="height: 250px;">
-                                <table class="table-auto w-full">
-                                    <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                                        <tr>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Numero</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Tipo de Pago</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Estado</div>
-                                            </th>
-                                            <th class="p-2 whitespace-nowrap">
-                                                <div class="font-semibold text-left">Valor</div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="text-sm divide-y divide-gray-100">
-                                        <tr *ngFor="let dt of pagosB">
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.codclas}} {{dt.numero}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.detcodclas}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{cambioEstadoNombre(dt.estado)}}</div>
-                                            </td>
-                                            <td class="p-2 whitespace-nowrap">
-                                                <div class="text-left">{{dt.valor}}</div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </cdk-virtual-scroll-viewport>
-                        </div>
+    <div *ngIf="!cargando && !errorMsg" class="stack gap-24 cards-center">
+
+        <!-- ====== CARD PRIORIDAD A ====== -->
+        <section class="card modern centered with-margin">
+            <header class="card-head">
+                <div class="card-title">
+                    <span class="dot dot-a"></span>
+                    <h2>Prioridad Alta</h2>
+                    <span class="badge count">{{ totalItems('A') }}</span>
+                </div>
+                <span class="badge tag" [ngClass]="priorityBadge('A')">A</span>
+            </header>
+
+            <div *ngIf="totalItems('A'); else noA" class="card-body">
+                <div class="table-wrap">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">Cod.</th>
+                                <th style="width: 140px;">Número</th>
+                                <th style="width: 100px;">Estado</th>
+                                <th>Nombre estado</th>
+                                <th>Clase</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of pagedData('A'); trackBy: trackByClave">
+                                <td><span class="mono">{{ p.codclas }}</span></td>
+                                <td><span class="mono strong">{{ p.numero }}</span></td>
+                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
+                                        }}</span>
+                                </td>
+                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
+                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación -->
+                <div class="pager">
+                    <div class="pager-info">
+                        <small>
+                            Mostrando {{ startIndex('A') + 1 }}–{{ endIndex('A') }} de {{ totalItems('A') }} registros
+                        </small>
+                    </div>
+
+                    <div class="pager-ctrls">
+                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
+                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.A.pageSize"
+                            (ngModelChange)="setPageSize('A', $event)">
+                            <option [ngValue]="5">5</option>
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="20">20</option>
+                            <option [ngValue]="50">50</option>
+                        </select>
+
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item" [class.disabled]="pag.A.currentPage === 1">
+                                    <button class="page-link" (click)="goToPage('A', 1)"
+                                        aria-label="Primera página">&laquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.A.currentPage === 1">
+                                    <button class="page-link" (click)="prev('A')"
+                                        aria-label="Anterior">&lsaquo;</button>
+                                </li>
+
+                                <li class="page-item" *ngFor="let p of pagesToShow('A')"
+                                    [class.active]="p === pag.A.currentPage">
+                                    <button class="page-link" (click)="goToPage('A', p)">{{ p }}</button>
+                                </li>
+
+                                <li class="page-item" [class.disabled]="pag.A.currentPage === totalPages('A')">
+                                    <button class="page-link" (click)="next('A')"
+                                        aria-label="Siguiente">&rsaquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.A.currentPage === totalPages('A')">
+                                    <button class="page-link" (click)="goToPage('A', totalPages('A'))"
+                                        aria-label="Última página">&raquo;</button>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
+
+            <ng-template #noA>
+                <div class="card-empty">No hay pagos con prioridad A.</div>
+            </ng-template>
         </section>
+
+        <!-- ====== CARD PRIORIDAD M ====== -->
+        <section class="card modern centered with-margin">
+            <header class="card-head">
+                <div class="card-title">
+                    <span class="dot dot-m"></span>
+                    <h2>Prioridad Media</h2>
+                    <span class="badge count">{{ totalItems('M') }}</span>
+                </div>
+                <span class="badge tag" [ngClass]="priorityBadge('M')">M</span>
+            </header>
+
+            <div *ngIf="totalItems('M'); else noM" class="card-body">
+                <div class="table-wrap">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">Cod.</th>
+                                <th style="width: 140px;">Número</th>
+                                <th style="width: 100px;">Estado</th>
+                                <th>Nombre estado</th>
+                                <th>Clase</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of pagedData('M'); trackBy: trackByClave">
+                                <td><span class="mono">{{ p.codclas }}</span></td>
+                                <td><span class="mono strong">{{ p.numero }}</span></td>
+                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
+                                        }}</span>
+                                </td>
+                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
+                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación M -->
+                <div class="pager">
+                    <div class="pager-info">
+                        <small>Mostrando {{ startIndex('M') + 1 }}–{{ endIndex('M') }} de {{ totalItems('M') }}
+                            registros</small>
+                    </div>
+                    <div class="pager-ctrls">
+                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
+                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.M.pageSize"
+                            (ngModelChange)="setPageSize('M', $event)">
+                            <option [ngValue]="5">5</option>
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="20">20</option>
+                            <option [ngValue]="50">50</option>
+                        </select>
+
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item" [class.disabled]="pag.M.currentPage === 1">
+                                    <button class="page-link" (click)="goToPage('M', 1)">&laquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.M.currentPage === 1">
+                                    <button class="page-link" (click)="prev('M')">&lsaquo;</button>
+                                </li>
+                                <li class="page-item" *ngFor="let p of pagesToShow('M')"
+                                    [class.active]="p === pag.M.currentPage">
+                                    <button class="page-link" (click)="goToPage('M', p)">{{ p }}</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.M.currentPage === totalPages('M')">
+                                    <button class="page-link" (click)="next('M')">&rsaquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.M.currentPage === totalPages('M')">
+                                    <button class="page-link" (click)="goToPage('M', totalPages('M'))">&raquo;</button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noM>
+                <div class="card-empty">No hay pagos con prioridad M.</div>
+            </ng-template>
+        </section>
+
+
+        <!-- ====== CARD PRIORIDAD B ====== -->
+        <section class="card modern centered with-margin">
+            <header class="card-head">
+                <div class="card-title">
+                    <span class="dot dot-b"></span>
+                    <h2>Prioridad Baja</h2>
+                    <span class="badge count">{{ totalItems('B') }}</span>
+                </div>
+                <span class="badge tag" [ngClass]="priorityBadge('B')">B</span>
+            </header>
+
+            <div *ngIf="totalItems('B'); else noB" class="card-body">
+                <div class="table-wrap">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 90px;">Cod.</th>
+                                <th style="width: 140px;">Número</th>
+                                <th style="width: 100px;">Estado</th>
+                                <th>Nombre estado</th>
+                                <th>Clase</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let p of pagedData('B'); trackBy: trackByClave">
+                                <td><span class="mono">{{ p.codclas }}</span></td>
+                                <td><span class="mono strong">{{ p.numero }}</span></td>
+                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
+                                        }}</span>
+                                </td>
+                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
+                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación B (mismo bloque que A) -->
+                <div class="pager">
+                    <div class="pager-info">
+                        <small>Mostrando {{ startIndex('B') + 1 }}–{{ endIndex('B') }} de {{ totalItems('B') }}
+                            registros</small>
+                    </div>
+                    <div class="pager-ctrls">
+                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
+                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.B.pageSize"
+                            (ngModelChange)="setPageSize('B', $event)">
+                            <option [ngValue]="5">5</option>
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="20">20</option>
+                            <option [ngValue]="50">50</option>
+                        </select>
+
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item" [class.disabled]="pag.B.currentPage === 1">
+                                    <button class="page-link" (click)="goToPage('B', 1)">&laquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.B.currentPage === 1">
+                                    <button class="page-link" (click)="prev('B')">&lsaquo;</button>
+                                </li>
+                                <li class="page-item" *ngFor="let p of pagesToShow('B')"
+                                    [class.active]="p === pag.B.currentPage">
+                                    <button class="page-link" (click)="goToPage('B', p)">{{ p }}</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.B.currentPage === totalPages('B')">
+                                    <button class="page-link" (click)="next('B')">&rsaquo;</button>
+                                </li>
+                                <li class="page-item" [class.disabled]="pag.B.currentPage === totalPages('B')">
+                                    <button class="page-link" (click)="goToPage('B', totalPages('B'))">&raquo;</button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noB>
+                <div class="card-empty">No hay pagos con prioridad B.</div>
+            </ng-template>
+        </section>
+
+
+
     </div>
 </div>
