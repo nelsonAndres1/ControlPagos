@@ -1,326 +1,173 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso13Service } from '../services/teso13.service';
+import { Teso22Service } from '../services/teso22.service';
+import { PagoPendiente } from '../models/pago-pendiente.model';
 import Swal from 'sweetalert2';
+
+type Pago = {
+    codclas: string;
+    numero: string;
+    estado_actual_txt: string;
+    nombre_estado_actual: string;
+    flujo: string;
+    prioridad: 'A' | 'B' | 'M' | string;
+    detclas: string;
+};
+
+type Prio = 'A' | 'B' | 'M';
+type PaginationState = { pageSize: number; currentPage: number; window: number };
 @Component({
     selector: 'app-principal',
     templateUrl: './principal.component.html',
     styleUrls: ['./principal.component.css'],
-    providers: [Gener02Service, Teso13Service]
+    providers: [Gener02Service, Teso13Service, Teso22Service]
 })
+
 export class PrincipalComponent implements OnInit {
-    public identity;
-    public token;
-    public pagos: any = [];
-    public pagosA: any = [];
-    public pagosM: any = [];
-    public pagosB: any = [];
+    pagosPendientes: PagoPendiente[] = [];
 
-    public pagosAA: any = [];
-    public pagosMM: any = [];
-    public pagosBB: any = [];
+    pagosA: PagoPendiente[] = [];
+    pagosB: PagoPendiente[] = [];
+    pagosM: PagoPendiente[] = [];
 
-    public permisos: any;
-    public arrayPermisos: any;
-    constructor(public _gener02Service: Gener02Service, public _teso13Service: Teso13Service) {
+
+    pag: Record<Prio, PaginationState> = {
+        A: { pageSize: 5, currentPage: 1, window: 5 },
+        B: { pageSize: 5, currentPage: 1, window: 5 },
+        M: { pageSize: 5, currentPage: 1, window: 5 }
+    };
+
+    cargando = false;
+    errorMsg = '';
+    identity: any;
+    token: any;
+    constructor(public _gener02Service: Gener02Service, public _teso13Service: Teso13Service, public _teso22Service: Teso22Service) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
-        this._teso13Service.getAllTeso13Pri(this.identity).subscribe(
-            response => {
-                this.pagos = response;
-                console.log("pruebaaa");
-                console.log(this.pagos);
-                for (let index = 0; index < this.pagos.length; index++) {
-                    this.estados(this.pagos[index].estado, this.pagos[index]);
-                }
-            }
-        )
+
+        this.getPagosPendientes();
     }
 
     ngOnInit(): void {
-
-    }
-    ngDoCheck(): void {
-        this.identity = this._gener02Service.getIdentity();
-        this.token = this._gener02Service.getToken();
-
+        this.getPagosPendientes();
     }
 
+    getPagosPendientes(): void {
+        this.cargando = true;
+        this._teso22Service.getPagosPendientes({}).subscribe({
+            next: (response: any) => {
+                // Tu backend a veces devuelve el array directo, otras {rows:[]}.
+                const data: PagoPendiente[] =
+                    Array.isArray(response) ? response :
+                        response?.rows ?? response?.data ?? [];
 
+                // Normalización visual mínima (opcional)
+                const clean = (s: any) => (typeof s === 'string' ? s.replace(/\u00A0/g, ' ').trim() : s);
 
-    estados(estado: any, pago:any) {
-        var bandera: any;
-        this.permisos = localStorage.getItem('permisos');
-        if (this.permisos != null) {
-            this.arrayPermisos = this.permisos.split(',');
-            if(this.arrayPermisos.length>0){
-            }else{
-                this.arrayPermisos = [this.permisos]
-            }
-            if (estado == 'RA' || estado == 'DR') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'RV' || this.arrayPermisos[index] == 'AD') {
-                        
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'RV') {
+                this.pagosPendientes = (data || []).map(p => ({
+                    ...p,
+                    numero: clean(p.numero),
+                    nombre_estado_actual: clean(p.nombre_estado_actual),
+                    detclas: clean(p.detclas),
+                    flujo: clean(p.flujo),
+                    estado_actual_txt: clean(p.estado_actual_txt),
+                    codclas: clean(p.codclas),
+                    prioridad: clean(p.prioridad)
+                }));
 
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'AU' || this.arrayPermisos[index] == 'AD') {
+                // Divide por prioridad
+                this.pagosA = this.pagosPendientes.filter(p => p.prioridad === 'A');
+                this.pagosB = this.pagosPendientes.filter(p => p.prioridad === 'B');
+                this.pagosM = this.pagosPendientes.filter(p => p.prioridad === 'M');
 
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'AU') {
+                // (Opcional) Ordenar por codclas ASC, numero DESC
+                const sortFn = (a: PagoPendiente, b: PagoPendiente) =>
+                    a.codclas.localeCompare(b.codclas) || b.numero.localeCompare(a.numero);
 
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'FI' || this.arrayPermisos[index] == 'AD') {
+                this.pagosA.sort(sortFn);
+                this.pagosB.sort(sortFn);
+                this.pagosM.sort(sortFn);
 
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
+                this.cargando = false;
+            },
+            error: (err) => {
+                this.errorMsg = 'Error cargando pagos pendientes';
+                console.error(err);
+                this.cargando = false;
             }
-            if (estado == 'FI') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'CT' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'CT' || estado == 'DC') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'PC' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'PC' || estado == 'CA') {
-
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'RT' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'RT') {
-
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'RP' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-            if (estado == 'RP') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'P' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-
-            if (estado == 'LC') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'LC' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-
-            if (estado == 'CF') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'CF' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-
-            if (estado == 'VF') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'VF' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-
-
-            if (estado == 'RT') {
-                for (let index = 0; index < this.arrayPermisos.length; index++) {
-                    if (this.arrayPermisos[index] == 'CA' || this.arrayPermisos[index] == 'AD') {
-                        if (pago.prioridad == 'ALTA') {
-                            this.pagosA.push(pago);
-                        }
-                        if (pago.prioridad == 'MEDIA') {
-                            this.pagosM.push(pago);
-                        }
-                        if (pago.prioridad == 'BAJA') {
-                            this.pagosB.push(pago);
-                        }
-                    }
-                }
-            }
-        }else{
-            console.log('no hay permiso');
+        });
+    }
+    // pagos-pendientes.component.ts (añade esto al componente)
+    priorityBadge(prio: string): string {
+        switch (prio) {
+            case 'A': return 'badge-prio-a';
+            case 'B': return 'badge-prio-b';
+            case 'M': return 'badge-prio-m';
+            default: return 'badge-prio-x';
         }
+    }
+
+    estadoChip(estadoTxt: string): string {
+        // Puedes personalizar chips por estado si quieres
+        // Ejemplos: 113=Radicado, 158=Causación, 163=Causación pago, 166=Rev Tesorería, 173=Aprobación, etc.
+        const e = (estadoTxt || '').trim();
+        if (e === '113') return 'chip chip-blue';
+        if (e === '120') return 'chip chip-teal';
+        if (e === '158') return 'chip chip-purple';
+        if (e === '163') return 'chip chip-green';
+        if (e === '166') return 'chip chip-amber';
+        if (e === '173') return 'chip chip-orange';
+        return 'chip chip-gray';
     }
 
 
 
-
-
-
-    cambioEstadoNombre(estado: any) {
-        var estadoEscr
-
-        if (estado == 'RV') {
-            estadoEscr = 'Revisión';
-        }
-        if (estado == 'RA') {
-            estadoEscr = 'Radicado';
-        }
-        if (estado == 'AN') {
-            estadoEscr = 'Anulado';
-        }
-        if (estado == 'AU') {
-            estadoEscr = 'Autorizado';
-        }
-        if (estado == 'FI') {
-            estadoEscr = 'Financiera';
-        }
-        if (estado == 'CT') {
-            estadoEscr = 'Causación de Cuenta';
-        }
-        if (estado == 'PC') {
-            estadoEscr = 'Causación Pago';
-        }
-        if (estado == 'DR') {
-            estadoEscr = 'Devuelto Radicado';
-        }
-        if (estado == 'RT') {
-            estadoEscr = 'Autorización Pago';
-        }
-        if (estado == 'DC') {
-            estadoEscr = 'Devuelto Causación';
-        }
-        if (estado == 'PB') {
-            estadoEscr = 'Pago Banco';
-        }
-        if (estado == 'PP') {
-            estadoEscr = 'Pago Portal';
-        }
-        if (estado == 'RP') {
-            estadoEscr = 'Preparación Transferencia';
-        }
-        if (estado == 'LC') {
-            estadoEscr = 'Legalización de Cheque';
-        }
-        if (estado == 'CF') {
-            estadoEscr = 'Cheque en Firmas';
-        }
-        if (estado == 'CE') {
-            estadoEscr = 'Cheque Entregado';
-        }
-        if (estado == 'VF') {
-            estadoEscr = 'Verificación Estado de Transferencia';
-        }
-        if (estado == 'PE') {
-            estadoEscr = 'Pago Exitoso';
-        }
-        if (estado == 'CA') {
-            estadoEscr = 'Causación de Pago';
-        }
-
-        return estadoEscr;
+    // -------- utilidades de paginación por prioridad --------
+    totalItems(prio: Prio): number {
+        const list = this.listFor(prio);
+        return list?.length ?? 0;
     }
+    totalPages(prio: Prio): number {
+        return Math.max(1, Math.ceil(this.totalItems(prio) / this.pag[prio].pageSize));
+    }
+    startIndex(prio: Prio): number {
+        return (this.pag[prio].currentPage - 1) * this.pag[prio].pageSize;
+    }
+    endIndex(prio: Prio): number {
+        const end = this.startIndex(prio) + this.pag[prio].pageSize;
+        return Math.min(end, this.totalItems(prio));
+    }
+    pagedData(prio: Prio): Pago[] {
+        const list = this.listFor(prio) || [];
+        return list.slice(this.startIndex(prio), this.endIndex(prio));
+    }
+    pagesToShow(prio: Prio): number[] {
+        const { window } = this.pag[prio];
+        const half = Math.floor(window / 2);
+        let start = Math.max(1, this.pag[prio].currentPage - half);
+        let end = Math.min(this.totalPages(prio), start + window - 1);
+        start = Math.max(1, end - window + 1);
+        const pages: number[] = [];
+        for (let p = start; p <= end; p++) pages.push(p);
+        return pages;
+    }
+    setPageSize(prio: Prio, size: number) {
+        this.pag[prio].pageSize = Number(size) || 10;
+        this.pag[prio].currentPage = 1;
+    }
+    goToPage(prio: Prio, p: number) {
+        this.pag[prio].currentPage = Math.min(Math.max(1, p), this.totalPages(prio));
+    }
+    next(prio: Prio) { this.goToPage(prio, this.pag[prio].currentPage + 1); }
+    prev(prio: Prio) { this.goToPage(prio, this.pag[prio].currentPage - 1); }
+
+    // helpers
+    private listFor(prio: Prio): Pago[] {
+        if (prio === 'A') return this.pagosA;
+        if (prio === 'B') return this.pagosB;
+        return this.pagosM;
+    }
+    trackByClave = (_: number, p: Pago) => `${p.codclas}-${p.numero}`;
 
 }

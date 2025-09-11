@@ -93,46 +93,99 @@
 <table class="table" id="tablaT10">
     <thead>
         <tr>
-            <th scope="col">Codclas</th>
-            <th scope="col">Detalle</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Prioridad</th>
-            <th scope="col">Numero de Pagos</th>
-            <th scope="col">Causador</th>
-            <th scope="col">Editar</th>
+            <th scope="col" style="width: 5%">Codclas</th>
+            <th scope="col" style="width: 35%">Detalle</th>
+            <th scope="col" style="width: 12%">Estado</th>
+            <th scope="col" style="width: 12%">Prioridad</th>
+            <th scope="col" style="width: 8%"># de Pagos</th>
+            <th scope="col" style="width: 12%">Causador</th>
+            <th scope="col" style="width: 16%">Editar</th>
         </tr>
     </thead>
+
     <tbody>
-        <tr *ngFor="let dt of teso10_lista">
-            <th scope="row">{{dt.codclas}}</th>
+        <!-- Paginado con slice -->
+        <tr *ngFor="let dt of pagedData; trackBy: trackByCodclas">
+            <th scope="row">{{ dt.codclas }}</th>
+
             <td>
                 <input type="text" placeholder="Tipo de Pago" class="form-control" [(ngModel)]="dt.detclas"
                     name="detclas">
             </td>
-            <td>
 
-                <select class="form-control" placeholder="Seleccione"  [(ngModel)]="dt.estado" name="estado">
+            <td>
+                <select class="form-control" [(ngModel)]="dt.estado" name="estado">
                     <option [value]="'A'" [selected]="dt.estado === 'A'">ACTIVO</option>
                     <option [value]="'I'" [selected]="dt.estado === 'I'">INACTIVO</option>
                 </select>
             </td>
+
             <td>
-                <select class="form-control" placeholder="Seleccione" [(ngModel)]="dt.prioridad" name="prioridad">
+                <select class="form-control" [(ngModel)]="dt.prioridad" name="prioridad">
                     <option [selected]="dt.prioridad === 'A'">ALTA</option>
                     <option [selected]="dt.prioridad === 'M'">MEDIA</option>
                     <option [selected]="dt.prioridad === 'B'">BAJA</option>
                 </select>
             </td>
-            <td>{{dt.numero}}</td>
+
+            <td>{{ dt.numero }}</td>
+
             <td>
-                <select class="form-control" placeholder="Seleccione" [(ngModel)]="dt.causador" name="causador">
+                <select class="form-control" [(ngModel)]="dt.causador" name="causador">
                     <option [value]="'SI'" [selected]="dt.causador === 'SI'">SI</option>
                     <option [value]="'NO'" [selected]="dt.causador === 'NO'">NO</option>
                 </select>
             </td>
+
             <td>
                 <button type="button" class="btn btn-warning" (click)="editar(dt)">Editar</button>
             </td>
         </tr>
     </tbody>
 </table>
+
+<!-- Controles de paginación -->
+<div class="d-flex flex-wrap gap-2 align-items-center justify-content-between">
+    <div>
+        <small>
+            Mostrando
+            {{ startIndex + 1 }}–{{ endIndex }}
+            de {{ totalItems }} registros
+        </small>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+        <label class="mb-0 me-1"><small>Filas por página:</small></label>
+        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pageSize"
+            (ngModelChange)="setPageSize($event)">
+            <option [ngValue]="5">5</option>
+            <option [ngValue]="10">10</option>
+            <option [ngValue]="20">20</option>
+            <option [ngValue]="50">50</option>
+        </select>
+
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <button class="page-link" (click)="goToPage(1)">&laquo;</button>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <button class="page-link" (click)="prev()">&lsaquo;</button>
+                </li>
+
+                <li class="page-item" *ngFor="let p of pagesToShow" [class.active]="p === currentPage">
+                    <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+                </li>
+
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <button class="page-link" (click)="next()">&rsaquo;</button>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <button class="page-link" (click)="goToPage(totalPages)">&raquo;</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <br><br>
+</div>
