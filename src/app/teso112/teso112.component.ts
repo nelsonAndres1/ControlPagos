@@ -21,7 +21,7 @@ export class Teso112Component implements OnInit {
     public status2: any;
     public teso11: Teso11;
     public dataSoportes: any;
-    filtroEstado: 'TODOS' | 'ACTIVO' | 'INACTIVO' = 'TODOS';
+    filtroEstado: 'TODOS' | 'ACTIVO' | 'INACTIVO' = 'ACTIVO';
 
     constructor(
         private _teso112Service: Teso112Service,
