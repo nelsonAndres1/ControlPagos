@@ -137,7 +137,7 @@ export class Teso12UploadComponent {
     // Validación mínima
     if (Object.keys(this.selectedFiles).length === 0) {
       Swal.fire('Info', 'No hay archivos seleccionados para subir.', 'info');
-      return;
+      //return;
     }
     if (!this.uploadToken) {
       Swal.fire('Error', 'Falta upload_token en la navegación (query param o itemDetail[0]).', 'error');
