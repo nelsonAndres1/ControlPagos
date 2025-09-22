@@ -22,6 +22,33 @@ export class ReporteService {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'reportes/Reportes', params, { headers: headers });
     }
+
+    ReportesAll(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/ReportesAll', params, { headers: headers });
+    }
+    getEstadosPago(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/getEstadosPago', params, { headers: headers });
+    }
+    getConta06(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/getConta06', params, { headers: headers });
+    }
+
+    getUsuarios(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/getUsuarios', params, { headers: headers });
+    }
+
     async dowloadExcel(dataExcel): Promise<void> {
         this._worbook = new Workbook();
         this._worbook.creator = 'Sistema de Ingreso - F5';
@@ -29,7 +56,7 @@ export class ReporteService {
 
         this._worbook.xlsx.writeBuffer().then((data) => {
             const blod = new Blob([data]);
-            fs.saveAs(blod, 'Prueba.xlsx');
+            fs.saveAs(blod, 'Reporte_Control_Pagos.xlsx');
         })
     }
 

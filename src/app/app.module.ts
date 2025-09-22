@@ -72,6 +72,7 @@ import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
 import { EstadoFiltroPipe } from './pipes/estado-filtro.pipe';
+import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
 
 
 @NgModule({
@@ -122,7 +123,7 @@ import { EstadoFiltroPipe } from './pipes/estado-filtro.pipe';
     LoadingComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
-    EstadoFiltroPipe
+    EstadoFiltroPipe, ReportesDinamicosComponent
   ],
 
   imports: [

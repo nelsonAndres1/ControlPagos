@@ -1,0 +1,90 @@
+
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="text-center mb-3">Reportes</h2>
+            <hr class="mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-10 offset-md-1">
+                    <span class="anchor" id="formComplex"></span>
+                    <div class="card card-outline-secondary">
+                        <form #registerForm="ngForm" (ngSubmit)="registerReportes(registerForm)">
+                            <div class="card-header">
+                                <h3 class="mb-0">Ingrese la información requerida</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row mt-4">
+                                    <div class="float-right">
+                                        <div class="row mt-12">
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Estados de Pago</b></label>
+                                                <select class="form-control" name="id" #id="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.id">
+                                                    <option value="" selected>SELECCIONE</option>
+                                                    <option *ngFor="let dt of estadosPago" value={{dt.id}}>
+                                                        {{dt.proceso}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Areas</b></label>
+                                                <select class="form-control" name="codcen" #codcen="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.codcen">
+                                                    <option value="" selected>SELECCIONE</option>
+                                                    <option *ngFor="let dt of conta06" value={{dt.codcen}}>
+                                                        {{dt.detalle}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Prioridades</b></label>
+                                                <select class="form-control" name="prioridad" #prioridad="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.prioridad">
+                                                    <option value="" selected>SELECCIONE</option>
+                                                    <option *ngFor="let dt of prioridades" value={{dt.id}}>
+                                                        {{dt.detalle}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Usuarios</b></label>
+                                                <select class="form-control" name="usuario" #usuario="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.usuario">
+                                                    <option value="" selected>SELECCIONE</option>
+                                                    <option *ngFor="let dt of usuarios" value={{dt.usuario}}>
+                                                        {{dt.nombre}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Fecha Inicial</b></label>
+                                                <input type="date" class="form-control" id="exampleAccount"
+                                                    placeholder="Fecha Inicial" name="fechaini" #fechaini="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.fechaini" id="fechaini">
+                                            </div>
+                                            <div class="col-sm-6 pb-3">
+                                                <label for="exampleAccount"><b>Fecha Final</b></label>
+                                                <input type="date" class="form-control" id="exampleAccount"
+                                                    placeholder="Fecha Final" name="fechafin" #fechafin="ngModel"
+                                                    [(ngModel)]="ReporteDinamico.fechafin" id="fechafin">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary" [disabled]="loading">
+  <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  {{ loading ? 'Espere...' : 'Generar Reporte' }}
+</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

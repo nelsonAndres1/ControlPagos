@@ -1,0 +1,15 @@
+.container h2 {
+    margin: 12px 0 16px;
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.btn {
+    padding: 6px 10px;
+}
+
+.table {
+    font-size: 0.9rem;
+}

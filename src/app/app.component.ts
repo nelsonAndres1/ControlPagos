@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck,HostListener } from '@angular/core';
+import { Component, OnInit, DoCheck, HostListener } from '@angular/core';
 import { teso10 } from './models/teso10';
 import { Gener02Service } from './services/gener02.service';
 import { Teso10Service } from './services/teso10.service';
@@ -19,7 +19,7 @@ import { AppVersionService } from './services/app-version.service';
 
 export class AppComponent implements OnInit, DoCheck {
     title = 'ControlPagos';
-    
+
     public identity: any;
     public token: any;
 
@@ -121,6 +121,7 @@ export class AppComponent implements OnInit, DoCheck {
 
     inp() { this.router.navigate(['teso10']); }
     reportes() { this.router.navigate(['reporte']); }
+    reportesDinamicos() { this.router.navigate(['reportes_dinamicos']); }
     causadores() { this.router.navigate(['causadores']); }
     revisa() { this.router.navigate(['revisa_autoriza']); }
     inp_editar() { this.router.navigate(['editar_teso13']); }
@@ -132,6 +133,7 @@ export class AppComponent implements OnInit, DoCheck {
     vincular() { this.router.navigate(['teso22']); }
     notificaciones() { this.router.navigate(['notificaciones']); }
     pasosgenerales() { this.router.navigate(['PasosGenerales']); }
+
 
     opciones() {
         const swalWithBootstrapButtons = Swal.mixin({

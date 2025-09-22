@@ -42,6 +42,7 @@ import { Teso15NitComponent } from './teso15-nit/teso15-nit.component';
 import { EditarSoportesComponent } from './editar-soportes/editar-soportes.component';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
+import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
 
 const routes: Routes = [
 
@@ -74,6 +75,7 @@ const routes: Routes = [
   { path: 'teso1118', component: Teso1118Component, canActivate: [IdentityGuard] },
   { path: 'teso118', component: Teso118Component, canActivate: [IdentityGuard] },
   { path: 'reporte', component: ReportesComponent, canActivate: [IdentityGuard] },
+  { path: 'reportes_dinamicos', component: ReportesDinamicosComponent, canActivate: [IdentityGuard] },
   { path: 'causadores', component: CausadoresComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_modal', component: Teso13modalComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_reimprimir', component: Teso13ReimprimirComponent, canActivate: [IdentityGuard] },
