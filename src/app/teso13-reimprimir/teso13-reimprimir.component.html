@@ -1,18 +1,27 @@
 <div style="margin: 50px;">
     <h2>Reimprimir Pago</h2>
-    <br>
+    <br />
 
-    <input class="form-control" id="exampleAccount" placeholder="Numero del Pago" name="vacio" [(ngModel)]="vacio"
-        type="text" (input)="getTeso13($event)" required>
-    <div class="col-sm-12">
-        <div class="card card-body mb-1" *ngFor="let result of data" (click)="getPago(result)" style="cursor: pointer;">
-            <h6> Detalle: {{result.detalle}} </h6>
+    <input class="form-control" id="exampleAccount" placeholder="Número del Pago" name="vacio" [(ngModel)]="vacio"
+        type="text" (input)="getTeso13($event)" required />
+
+    <div class="col-sm-12 mt-3">
+        <div class="card card-body mb-2" *ngFor="let result of data" (click)="getPago(result)" style="cursor: pointer;">
+            <h6>Detalle: {{ result.detalle }}</h6>
             <small class="text-primary">
-                <h6>Pago: {{result.codclas}}{{result.numero}}</h6>
+                <h6>Pago: {{ result.codclas }}{{ result.numero }}</h6>
             </small>
+
             <div class="col-sm-12">
-                <button type="button" class="btn btn-success">Reimprimir</button>
+                <button type="button" class="btn btn-success" (click)="$event.stopPropagation(); getPago(result)"
+                    [disabled]="cargando">
+                    {{ cargando ? 'Generando...' : 'Reimprimir' }}
+                </button>
             </div>
+        </div>
+
+        <div *ngIf="!data?.length" class="text-muted mt-3">
+            Sin resultados.
         </div>
     </div>
 </div>
