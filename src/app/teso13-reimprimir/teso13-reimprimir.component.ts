@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+
 import { Teso13Service } from '../services/teso13.service';
 import { Gener02Service } from '../services/gener02.service';
-import { Impresion } from '../models/impresion';
 import { Teso15Service } from '../services/teso15.service';
-import { Teso113 } from '../models/teso113';
-import { teso10 } from '../models/teso10';
 import { PdfService } from '../services/pdf.service';
 import { UtilidadesService } from '../services/utilidades.service';
+
+import { Impresion } from '../models/impresion';
+import { Teso113 } from '../models/teso113';
 
 @Component({
   selector: 'app-teso13-reimprimir',
@@ -17,152 +19,199 @@ import { UtilidadesService } from '../services/utilidades.service';
 export class Teso13ReimprimirComponent {
 
   identity: any;
-  data: any = [];
-  vacio: any = null;
+  data: any[] = [];
+  vacio: string | null = null;
+
   impreseion: Impresion;
-  fecrad: any;
-  identity1: any;
-  array_fecrad: any = [];
-  soportes: any;
-  longitud: any = '';
-  teso10: teso10
 
-  constructor(private _PdfService: PdfService, private _teso15Service: Teso15Service, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private _utilidadesService: UtilidadesService) {
-    this.identity = this._gener02Service.getIdentity();
-    this.impreseion = new Impresion('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
-  }
+  // helpers de UI
+  cargando: boolean = false;
 
-  getTeso13(event) {
+  constructor(
+    private _PdfService: PdfService,
+    private _teso15Service: Teso15Service,
+    private _teso13Service: Teso13Service,
+    private _gener02Service: Gener02Service,
+    private _utilidadesService: UtilidadesService
+  ) {
+    this.identity = this._gener02Service.getIdentity?.();
 
-    this.data = [];
-    const keyword: any = {};
-    keyword.keyword = event.target.value;
-    keyword.usuario = this.identity.sub;
-    const search = this._teso13Service.searchTeso13(keyword).subscribe(response => {
-      this.data = response;
-
-      console.log(this.data);
-
-    });
-  }
-
-
-  async getPago(dt) {
-
-    var soportes_pago: any;
-    var nombre_soportes_pago: any = '';
-
-    await this._teso13Service.getSoportesForPago(new Teso113(dt.codclas, dt.numero)).subscribe(
-      response => {
-        console.log("Soportes for pago");
-        console.log(response);
-        soportes_pago = response;
-        for (let index = 0; index < soportes_pago.length; index++) {
-          if (nombre_soportes_pago !== '') {
-            nombre_soportes_pago += ', ';
-          }
-          nombre_soportes_pago += soportes_pago[index].detalle_codsop;
-        }
-        console.log("Soportes for pago");
-        console.log(nombre_soportes_pago);
-      }
-    )
-    this._teso15Service.getAllTeso13(new Teso113(dt.codclas, dt.numero)).subscribe(
-      response => {
-        if (response.status != 'error') {
-          const { dia, mes, año } = this.extraerFecha(new Date(dt.fecrad));
-
-
-
-          this.impreseion.dia = dia + '';
-          this.impreseion.mes = mes + '';
-          this.impreseion.ano = año + '';
-
-          console.log("Impresion!!!");
-          console.log(this.impreseion);
-
-          this.impreseion.numero_factura = dt.numfac;
-          this.impreseion.nit_persona = dt.nit;
-          this.impreseion.nombre_persona = '';
-          this.impreseion.subdireccion = '';
-          this.impreseion.dependencia = dt.coddep;
-          this.impreseion.centro_costo = dt.codcen;
-          this.impreseion.clase_pago = dt.codclas;
-          this.impreseion.nombre_elaborado = dt.usuela;
-          this.impreseion.nombre_autoriza = dt.peraut;
-          this.impreseion.nombre_revisa = dt.perrev;
-          this.impreseion.codigo_barras = dt.codclas + dt.numero;
-          this.impreseion.coddep = dt.coddep;
-          this.impreseion.fecha = dt.fecrad;
-          this.impreseion.cdp = 'CDP: ' + dt.cdp_marca + dt.cdp_documento + dt.cdp_ano;
-          this.impreseion.valor = 'VALOR: ' + dt.valor;
-          this.impreseion.documento_clase = nombre_soportes_pago;
-          this.impreseion.numcon = dt.numcon;
-          this.impreseion.numfol = dt.numfol;
-          this.impreseion.detalle = response.detalle;
-          this.impreseion.anexos_magneticos = response.anexos_magneticos;
-          this.impreseion.centros_json = response.centros_json;
-
-          this._utilidadesService.getAllConta04(this.impreseion).subscribe(
-            response => {
-              this.impreseion.nombre_persona = response.detalle_razsoc;
-              this.impreseion.centro_costo = response.detalle_codcen;
-              this.impreseion.dependencia = dt.coddep + ' - ' + response.detalle_dependencia;
-              this.impreseion.clase_pago = response.detalle_pago;
-              this.impreseion.documento_clase = nombre_soportes_pago;
-              this.impreseion.nombre_elaborado = response.detalle_gener02;
-              this.impreseion.numcon = dt.numcon;
-              this._PdfService.generarPDF(this.impreseion).subscribe(
-                response => {
-                  const blob = new Blob([response], { type: 'application/pdf' });
-                  const url = window.URL.createObjectURL(blob);
-                  window.open(url);
-                }
-              )
-            }
-          )
-        }
-      }
+    // Asegúrate que en tu clase Impresion el tipo sea string, no "".
+    this.impreseion = new Impresion(
+      '', '', '', '', '', '', '', '', '', '', '',
+      '', // documento_clase
+      '', '', '',
+      '', // codigo_barras
+      '', // coddep
+      '', // fecha
+      '', // valor
+      '', // cdp
+      '', // numcon
+      '', // numfol
+      '', // usucau
+      '', // detalle
+      '', // anexos_magneticos
+      ''  // centros_json (opcional)
     );
   }
 
+  // ==============================
+  // Búsqueda incremental por número
+  // ==============================
+  async getTeso13(event: Event): Promise<void> {
+    try {
+      const input = event.target as HTMLInputElement;
+      const keyword = {
+        keyword: input.value,
+        usuario: this.identity?.sub ?? ''
+      };
+      const resp = await firstValueFrom(this._teso13Service.searchTeso13(keyword));
+      // asumo que el servicio retorna array directamente; si no, normalizamos:
+      this.data = Array.isArray(resp) ? resp : (resp?.data ?? []);
+    } catch (e) {
+      console.error('Error en getTeso13:', e);
+      this.data = [];
+    }
+  }
 
-  traerSoportes() {
-    this.longitud = '';
+  // ==============================
+  // Reimprimir un pago (click en card o botón)
+  // ==============================
+  async getPago(dt: any): Promise<void> {
+    try {
+      this.cargando = true;
 
-    this._teso13Service.getSoportes(this.teso10).subscribe(
-      response => {
-        console.log("Ahhh Soportes");
-        console.log(response);
-        this.impreseion.documento_clase = response;
-        this.soportes = response;
-        for (let index = 0; index < this.soportes.length; index++) {
-          this.longitud += this.soportes[index] + ',  ';
-        }
-        this.impreseion.documento_clase = this.longitud;
+      const codclas: string = String(dt.codclas ?? '');
+      const numero: string = this.padNumero(String(dt.numero ?? ''));
+
+      // 1) Soportes del pago
+      const soportesPagoResp = await firstValueFrom(this._teso13Service.getSoportesForPago(new Teso113(codclas, numero)));
+      const soportesPagoArr = this.extractArray(soportesPagoResp, ['data', 'items', 'results', 'soportes']);
+      const nombre_soportes_pago = soportesPagoArr
+        .map((s: any) => (typeof s === 'string' ? s : (s?.detalle_codsop ?? s?.detalle ?? '')))
+        .filter(Boolean)
+        .join(', ');
+
+      // 2) Datos completos del pago (detalle/anexos/centros_json, etc.)
+      const detallePagoResp = await firstValueFrom(this._teso15Service.getAllTeso13(new Teso113(codclas, numero)));
+      console.log('Detalle pago para reimpresión:', detallePagoResp);
+      if (detallePagoResp?.status === 'error') {
+        throw new Error('No se encontraron datos del pago para reimpresión.');
       }
-    )
+
+      // 3) Armar objeto Impresion con lo que ya tienes en dt y lo que devuelve el detalle
+      const { dia, mes, año } = this.extraerFecha(new Date(dt.fecrad));
+
+      this.impreseion.dia = String(dia);
+      this.impreseion.mes = String(mes);
+      this.impreseion.ano = String(año);
+
+      this.impreseion.numero_factura = String(dt.numfac ?? '');
+      this.impreseion.nit_persona = String(dt.nit ?? '');
+      this.impreseion.nombre_persona = ''; // se llenará con Conta04 más abajo
+      this.impreseion.subdireccion = '';
+
+      this.impreseion.dependencia = String(dt.coddep ?? '');
+      this.impreseion.centro_costo = String(dt.codcen ?? '');
+      this.impreseion.clase_pago = String(dt.codclas ?? '');
+
+      this.impreseion.nombre_elaborado = String(dt.usuela ?? '');
+      this.impreseion.nombre_autoriza = String(dt.peraut ?? '');
+      this.impreseion.nombre_revisa = String(dt.perrev ?? '');
+
+      this.impreseion.codigo_barras = `${dt.codclas ?? ''}${dt.numero ?? ''}`;
+      this.impreseion.coddep = String(dt.coddep ?? '');
+      this.impreseion.fecha = String(dt.fecrad ?? '');
+
+      // CDP / Valor en estilos más “limpios” (sin prefijos fijos “CDP:”/“VALOR:”)
+      const cdp_marca = String(dt.cdp_marca ?? '');
+      const cdp_documento = String(dt.cdp_documento ?? '');
+      const cdp_ano = String(dt.cdp_ano ?? '');
+      this.impreseion.cdp = (cdp_documento && cdp_documento !== '00') ? `${cdp_marca}${cdp_documento}${cdp_ano}` : '-';
+
+      this.impreseion.valor = String(dt.valor ?? '');
+
+      this.impreseion.documento_clase = nombre_soportes_pago;
+      this.impreseion.numcon = String(dt.numcon ?? '');
+      this.impreseion.numfol = String(dt.numfol ?? '');
+
+      // del detalle de pago (response del servicio)
+      this.impreseion.detalle = String(detallePagoResp?.detalle ?? '');
+      this.impreseion.anexos_magneticos = String(detallePagoResp?.anexos_magneticos ?? '');
+      this.impreseion.centros_json = String(detallePagoResp?.centros_json ?? '');
+
+      // 4) Enriquecer nombres (Conta04 / Gener02, etc.)
+      // getAllConta04 espera el objeto Impresion (según tu código)
+      const conta04 = await firstValueFrom(this._utilidadesService.getAllConta04(this.impreseion));
+      // Normaliza llaves esperadas
+      const detalle_razsoc = conta04?.detalle_razsoc ?? '';
+      const detalle_codcen = conta04?.detalle_codcen ?? '';
+      const detalle_dependencia = conta04?.detalle_dependencia ?? '';
+      const detalle_pago = conta04?.detalle_pago ?? '';
+      const detalle_gener02 = conta04?.detalle_gener02 ?? '';
+
+      this.impreseion.nombre_persona = detalle_razsoc || this.impreseion.nombre_persona;
+      this.impreseion.centro_costo = detalle_codcen || this.impreseion.centro_costo;
+      this.impreseion.dependencia = `${dt.coddep ?? ''}${detalle_dependencia ? ' - ' + detalle_dependencia : ''}`;
+      this.impreseion.clase_pago = detalle_pago || this.impreseion.clase_pago;
+      this.impreseion.nombre_elaborado = detalle_gener02 || this.impreseion.nombre_elaborado;
+
+      // 5) Generar y abrir PDF
+      await this.descargarPDF();
+
+    } catch (e: any) {
+      console.error('Error en reimpresión:', e?.message ?? e);
+    } finally {
+      this.cargando = false;
+    }
   }
 
-
-  extraerFecha(fecha: Date): { dia: number, mes: number, año: number } {
-    const dia = fecha.getUTCDate();
-    const mes = fecha.getUTCMonth() + 1;
-    const año = fecha.getUTCFullYear();
-
-    return { dia, mes, año };
+  // ==============================
+  // Descargar PDF
+  // ==============================
+  async descargarPDF(): Promise<void> {
+    try {
+      const pdfBlob: any = await firstValueFrom(this._PdfService.generarPDF(this.impreseion));
+      const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    } catch (e) {
+      console.error('Error al generar PDF:', e);
+    }
   }
 
-
-
-  descargarPDF() {
-    this._PdfService.generarPDF(this.impreseion).subscribe(
-      response => {
-        const blob = new Blob([response], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
-      }
-    )
+  // ==============================
+  // Helpers
+  // ==============================
+  private extraerFecha(fecha: Date): { dia: number, mes: number, año: number } {
+    return {
+      dia: fecha.getUTCDate(),
+      mes: fecha.getUTCMonth() + 1,
+      año: fecha.getUTCFullYear()
+    };
   }
 
+  private padNumero(n: string): string {
+    return n.length < 7 ? n.padStart(7, '0') : n;
+  }
+
+  /** Intenta extraer un arreglo desde distintas formas comunes de respuesta */
+  private extractArray(input: any, candidateKeys: string[] = []): any[] {
+    if (Array.isArray(input)) return input;
+
+    for (const k of candidateKeys) {
+      const v = input?.[k];
+      if (Array.isArray(v)) return v;
+      if (typeof v === 'string') return this.splitCsv(v);
+    }
+
+    if (typeof input === 'string') return this.splitCsv(input);
+
+    return [];
+  }
+
+  /** Convierte "a, b, c" en ['a','b','c'] */
+  private splitCsv(s: string): string[] {
+    return s.split(',').map(x => x.trim()).filter(Boolean);
+  }
 }
