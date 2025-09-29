@@ -95,7 +95,7 @@ export class Teso113Component implements OnInit {
         private gener02Srv: Gener02Service
     ) { 
 
-        this.descargarPDF();
+        
     }
 
 
@@ -225,6 +225,9 @@ export class Teso113Component implements OnInit {
             this.impreseion.anexos_magneticos = this.data.anexos_magneticos ?? '';
             this.impreseion.centros_json = this.data.centros_json ?? '';
 
+            console.log('Impresion objeto:', this.impreseion);
+
+            await this.descargarPDF();
         } catch (error: any) {
             console.error('Fallo en Teso113Component (init):', error);
             Swal.fire({
