@@ -16,15 +16,23 @@ export class Gener02Service {
         this.url = global.url;
     }
 
-    signup(user: any, gettoken = null): Observable<any> {
-        if (gettoken != null) {
-            user.gettoken = 'true';
-        }
-        let json = JSON.stringify(user);
-        let params = 'json=' + json;
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    signup(user: any, gettoken: boolean | null = null): Observable<any> {
+        const cleanUser = {
+            usuario: (user?.usuario ?? '').toString().trim(),
+            // elimina saltos de línea crudos (causaban json inválido en el servidor)
+            clave: (user?.clave ?? '').toString().replace(/\r?\n/g, '').trim(),
+        };
 
-        return this._http.post(this.url + 'login', params, { headers: headers });
+        if (gettoken != null) {
+            // tu backend espera "gettoken": "true" para devolver identidad/token alterno
+            (cleanUser as any).gettoken = 'true';
+        }
+
+        const json = JSON.stringify(cleanUser);
+        const params = 'json=' + encodeURIComponent(json); // más seguro
+        const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+
+        return this._http.post(this.url + 'login', params, { headers });
     }
 
     getUsuario(user: any): Observable<any> {
