@@ -151,7 +151,7 @@ export class Teso13editarComponent {
     this.teso13 = { ...dt }; // clonar
     this.vacio = trimAll(dt.codclas) + trimAll(dt.numero);
     this.bandera_formulario = true;
-
+    this.teso13.detalle = trimAll(dt.detalle);
     // Normaliza campos con espacios
     this.teso13.codcen = trimPad(dt.codcen);
     this.teso13.coddep = trimPad(dt.coddep);
