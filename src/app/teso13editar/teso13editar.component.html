@@ -224,6 +224,34 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col">
+                    <label><b>Persona quien revisa</b></label>
+                    <select class="form-select col" name="perrev" placeholder="perrev" #perrev="ngModel"
+                        [(ngModel)]="teso13.perrev">
+                        <option *ngFor="let pr of personas_revisa" [value]="pr.nombre + '-' + pr.docemp">
+                            {{pr.nombre}} - {{pr.docemp}}
+                        </option>
+                    </select>
+                    <small *ngIf="!perrev.valid && perrev.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+
+                <div class="col">
+                    <label><b>Persona quien Autoriza</b></label>
+                    <select class="form-select col" name="peraut" placeholder="peraut" #peraut="ngModel"
+                        [(ngModel)]="teso13.peraut">
+                        <option *ngFor="let pa of personas_autoriza" [value]="pa.nombre + '-' + pa.docemp">
+                            {{pa.nombre}} - {{pa.docemp}}
+                        </option>
+                    </select>
+                    <small *ngIf="!peraut.valid && peraut.touched" class="invalid-feedback d-block">
+                        Este Campo es requerido
+                    </small>
+                </div>
+            </div>
+
             <!-- Detalle -->
             <div class="row mt-3">
                 <div class="input-group">
