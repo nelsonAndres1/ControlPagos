@@ -73,6 +73,7 @@ import { NotificacionesComponent } from './notificaciones/notificaciones.compone
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
 import { EstadoFiltroPipe } from './pipes/estado-filtro.pipe';
 import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
+import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.component';
 
 
 @NgModule({
@@ -123,7 +124,7 @@ import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinami
     LoadingComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
-    EstadoFiltroPipe, ReportesDinamicosComponent
+    EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component
   ],
 
   imports: [

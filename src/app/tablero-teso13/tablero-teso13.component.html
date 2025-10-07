@@ -1,0 +1,144 @@
+<div class="container" style="padding:16px; display:grid; gap:12px;">
+    <h2 style="margin:0;">Tablero estadístico · TESO13</h2>
+
+    <!-- Filtros -->
+    <div style="display:grid; gap:8px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items:end;">
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Dimensión</span>
+            <select [(ngModel)]="dim">
+                <option value="nit">NIT</option>
+                <option value="coddep">CODDEP</option>
+                <option value="codcen">CODCEN</option>
+                <option value="perfac">PERFAC</option>
+            </select>
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Valor de la dimensión</span>
+            <input type="text" [(ngModel)]="valor" placeholder="Ej: 891280008 / 050306 / 0503 / 202508" />
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Estado(s) (CSV opcional)</span>
+            <input type="text" [(ngModel)]="estado" placeholder="Ej: RA,PE" />
+            <small>Si lo envías, NO se aplica la exclusión por defecto.</small>
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Filtro NIT (CSV opcional)</span>
+            <input type="text" [(ngModel)]="nit" placeholder="Ej: 891280008,1233193414" />
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Filtro CODDEP (CSV opcional)</span>
+            <input type="text" [(ngModel)]="coddep" placeholder="Ej: 050306,050307" />
+        </label>
+
+        <label style="display:flex; flex-direction:column; gap:4px;">
+            <span>Filtro CODCEN (CSV opcional)</span>
+            <input type="text" [(ngModel)]="codcen" placeholder="Ej: 0503,0504" />
+        </label>
+    </div>
+
+    <!-- Acciones -->
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button (click)="consultarTodo()">Consultar todo</button>
+        <button (click)="consultarTotal()">Solo total</button>
+        <button (click)="consultarEstados()">Solo estados</button>
+        <button (click)="consultarValores()">Solo valores</button>
+        <button (click)="limpiar()">Limpiar</button>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="loading" style="color:#555;">Cargando…</div>
+    <div *ngIf="!loading && errorMsg"
+        style="padding:8px; background:#ffe9e9; color:#8b1b1b; border:1px solid #f3bcbc; border-radius:8px;">
+        {{ errorMsg }}
+    </div>
+
+    <!-- Resultados -->
+    <div *ngIf="!loading && !errorMsg" style="display:grid; gap:12px;">
+
+        <!-- Totales -->
+        <div style="display:grid; gap:12px;">
+            <h3 style="margin:0;">Total de facturas</h3>
+
+            <!-- Caso A: enviaste "valor" => número -->
+            <div *ngIf="totalFacturas !== null" style="font-size:22px; font-weight:700;">
+                {{ totalFacturas | number:'1.0-0' }}
+            </div>
+
+            <!-- Caso B: NO enviaste "valor" => listado agrupado -->
+            <div *ngIf="totalListado?.length">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left; border-bottom:1px solid #eee;">{{ dim.toUpperCase() }}</th>
+                            <th style="text-align:right; border-bottom:1px solid #eee;">Total facturas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let r of totalListado">
+                            <td style="padding:6px 4px;">{{ r[dim] }}</td>
+                            <td style="padding:6px 4px; text-align:right;">{{ r.total_facturas | number:'1.0-0' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="!totalListado?.length && totalFacturas === null" style="color:#777;">Sin datos.</div>
+        </div>
+
+        <!-- Estados -->
+        <div>
+            <h3 style="margin:0 0 6px 0;">Estados</h3>
+            <table *ngIf="estadosRows?.length" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left; border-bottom:1px solid #eee;">Estado</th>
+                        <th style="text-align:right; border-bottom:1px solid #eee;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of estadosRows">
+                        <td style="padding:6px 4px;">
+                            <span
+                                style="background:#eef2ff; color:#3730a3; padding:2px 8px; border-radius:999px; font-size:12px;">
+                                {{ e.estado || '(NULL)' }}
+                            </span>
+                        </td>
+                        <td style="padding:6px 4px; text-align:right;">{{ e.total | number:'1.0-0' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="!estadosRows?.length" style="color:#777;">Sin datos.</div>
+        </div>
+
+        <!-- Valores -->
+        <div>
+            <h3 style="margin:0 0 6px 0;">Valores</h3>
+            <table *ngIf="valores" style="width:100%; border-collapse:collapse;">
+                <tbody>
+                    <tr>
+                        <td style="padding:6px 4px;">Suma</td>
+                        <td style="padding:6px 4px; text-align:right;">{{ valores?.suma_valores | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:6px 4px;">Promedio</td>
+                        <td style="padding:6px 4px; text-align:right;">{{ valores?.promedio_valores | number:'1.2-2' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:6px 4px;">Mínimo</td>
+                        <td style="padding:6px 4px; text-align:right;">{{ valores?.min_valor | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:6px 4px;">Máximo</td>
+                        <td style="padding:6px 4px; text-align:right;">{{ valores?.max_valor | number:'1.2-2' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="!valores" style="color:#777;">Sin datos.</div>
+        </div>
+
+    </div>
+</div>
