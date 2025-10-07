@@ -38,7 +38,8 @@ export class Teso12UploadComponent {
   banderaPermisos: boolean = true;
   contarPer: number = 0;
   datosArchivos: any[] = [];
-  maxFileSize = 10_000_000; // 10MB
+  //maxFileSize = 10_000_000; // 10MB
+  maxFileSize = 100_000_000; // 100 MB
   uploadToken = '';
 
   constructor(
