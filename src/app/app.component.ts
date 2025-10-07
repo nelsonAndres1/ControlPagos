@@ -133,6 +133,9 @@ export class AppComponent implements OnInit, DoCheck {
     vincular() { this.router.navigate(['teso22']); }
     notificaciones() { this.router.navigate(['notificaciones']); }
     pasosgenerales() { this.router.navigate(['PasosGenerales']); }
+    tablero(){
+        this.router.navigate(['tablero']);
+    }
 
 
     opciones() {

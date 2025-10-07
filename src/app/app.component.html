@@ -100,10 +100,13 @@
                         Reportes
                     </CDBSidebarMenuItem>
 
-                      <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-excel" (click)="reportesDinamicos()">
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-excel" (click)="reportesDinamicos()">
                         Reportes Dinamicos
                     </CDBSidebarMenuItem>
 
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-excel" (click)="tablero()">
+                        Tablero
+                    </CDBSidebarMenuItem>
 
                     <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="pasosgenerales()">
                         Pasos Generales

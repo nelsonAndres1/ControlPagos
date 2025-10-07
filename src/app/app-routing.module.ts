@@ -43,6 +43,7 @@ import { EditarSoportesComponent } from './editar-soportes/editar-soportes.compo
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
 import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
+import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.component';
 
 const routes: Routes = [
 
@@ -87,6 +88,7 @@ const routes: Routes = [
   { path: 'teso23', component: Teso23Component, canActivate: [IdentityGuard] },
   { path: 'teso15Nit', component: Teso15NitComponent, canActivate: [IdentityGuard] },
   { path: 'PasosGenerales', component: PasosGeneralesComponent, canActivate: [IdentityGuard] },
+  { path: 'tablero', component: TableroTeso13Component, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];
