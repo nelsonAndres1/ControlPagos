@@ -133,38 +133,16 @@ export class AppComponent implements OnInit, DoCheck {
     vincular() { this.router.navigate(['teso22']); }
     notificaciones() { this.router.navigate(['notificaciones']); }
     pasosgenerales() { this.router.navigate(['PasosGenerales']); }
-    tablero(){
+    tablero() {
         this.router.navigate(['tablero']);
     }
 
 
     opciones() {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-warning'
-            },
-            buttonsStyling: false
-        });
 
-        swalWithBootstrapButtons.fire({
-            title: 'Usted tiene permisos de Administrador',
-            text: '¿Qué opción desea elegir?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Agregar Permisos',
-            cancelButtonText: 'Eliminar Permisos',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.router.navigate(['teso116']);
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                this.router.navigate(['teso1117']);
-            }
-        });
+        this.router.navigate(['teso116']);
+
     }
-
-    /** Login / submit ###################### */
 
     onSubmit() {
         this._teso10Service.signup(this.teso10).subscribe(

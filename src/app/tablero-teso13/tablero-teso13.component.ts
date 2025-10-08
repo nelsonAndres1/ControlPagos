@@ -27,7 +27,7 @@ export class TableroTeso13Component {
   estadosRows: Array<{ estado: string | null; total: number }> = [];
   valores: TableroValores | null = null;
 
-  constructor(private tablero: TableroService) {}
+  constructor(private tablero: TableroService) { }
 
   // Construye el body para POST (el servicio ya normaliza CSV → array si hace falta)
   private buildBody() {
@@ -156,4 +156,16 @@ export class TableroTeso13Component {
     if (err?.error?.message) return err.error.message;
     return 'Error consultando el tablero.';
   }
+  // ... tu código actual arriba
+
+  get activeFilters(): string[] {
+    const chips: string[] = [];
+    if (this.valor) chips.push(`${this.dim.toUpperCase()}: ${this.valor}`);
+    if (this.estado) chips.push(`ESTADO: ${this.estado}`);
+    if (this.nit) chips.push(`NIT: ${this.nit}`);
+    if (this.coddep) chips.push(`CODDEP: ${this.coddep}`);
+    if (this.codcen) chips.push(`CODCEN: ${this.codcen}`);
+    return chips;
+  }
+
 }

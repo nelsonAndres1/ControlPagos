@@ -3,52 +3,71 @@
 
     <!-- Filtros -->
     <div style="display:grid; gap:8px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items:end;">
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Dimensión</span>
-            <select [(ngModel)]="dim">
-                <option value="nit">NIT</option>
-                <option value="coddep">CODDEP</option>
-                <option value="codcen">CODCEN</option>
-                <option value="perfac">PERFAC</option>
-            </select>
-        </label>
 
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Valor de la dimensión</span>
-            <input type="text" [(ngModel)]="valor" placeholder="Ej: 891280008 / 050306 / 0503 / 202508" />
-        </label>
+        <div class="form-group col-md-12">
+            <div class="row">
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Dimensión</span>
+                        <select [(ngModel)]="dim" class="form-control">
+                            <option value="nit">Nit</option>
+                            <option value="coddep">Codigo de Dependencia</option>
+                            <option value="codcen">Codigo de Area</option>
+                            <option value="perfac">Periodo de Facturación</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Valor de la dimensión</span>
+                        <input type="text" class="form-control" [(ngModel)]="valor"
+                            placeholder="Ej: 891280008 / 050306 / 0503 / 202508" />
+                    </label>
+                </div>
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Estado(s) (CSV opcional)</span>
+                        <input type="text" class="form-control" [(ngModel)]="estado" placeholder="Ej: RA,PE" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Filtro NIT (CSV opcional)</span>
+                        <input type="text" class="form-control" [(ngModel)]="nit"
+                            placeholder="Ej: 891280008,1233193414" />
+                    </label>
+                </div>
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Filtro CODDEP (CSV opcional)</span>
+                        <input type="text" class="form-control" [(ngModel)]="coddep" placeholder="Ej: 050306,050307" />
+                    </label>
+                </div>
+                <div class="col">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                        <span>Filtro CODCEN (CSV opcional)</span>
+                        <input type="text" class="form-control" [(ngModel)]="codcen" placeholder="Ej: 0503,0504" />
+                    </label>
+                </div>
+            </div>
 
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Estado(s) (CSV opcional)</span>
-            <input type="text" [(ngModel)]="estado" placeholder="Ej: RA,PE" />
-            <small>Si lo envías, NO se aplica la exclusión por defecto.</small>
-        </label>
+        </div>
 
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Filtro NIT (CSV opcional)</span>
-            <input type="text" [(ngModel)]="nit" placeholder="Ej: 891280008,1233193414" />
-        </label>
-
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Filtro CODDEP (CSV opcional)</span>
-            <input type="text" [(ngModel)]="coddep" placeholder="Ej: 050306,050307" />
-        </label>
-
-        <label style="display:flex; flex-direction:column; gap:4px;">
-            <span>Filtro CODCEN (CSV opcional)</span>
-            <input type="text" [(ngModel)]="codcen" placeholder="Ej: 0503,0504" />
-        </label>
     </div>
-
-    <!-- Acciones -->
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button (click)="consultarTodo()">Consultar todo</button>
-        <button (click)="consultarTotal()">Solo total</button>
-        <button (click)="consultarEstados()">Solo estados</button>
-        <button (click)="consultarValores()">Solo valores</button>
-        <button (click)="limpiar()">Limpiar</button>
+        <button type="button" class="btn btn-light" (click)="consultarTodo()">Consultar todo</button>
+        <button type="button" class="btn btn-light" (click)="consultarTotal()">Solo total</button>
+        <button type="button" class="btn btn-light" (click)="consultarEstados()">Solo estados</button>
+        <button type="button" class="btn btn-light" (click)="consultarValores()">Solo valores</button>
+        <button type="button" class="btn btn-light" (click)="limpiar()">Limpiar</button>
     </div>
+</div>
 
+<!-- Acciones -->
+
+<div class="container" style="padding:16px; display:grid; gap:12px;">
     <!-- Mensajes -->
     <div *ngIf="loading" style="color:#555;">Cargando…</div>
     <div *ngIf="!loading && errorMsg"
@@ -139,6 +158,7 @@
             </table>
             <div *ngIf="!valores" style="color:#777;">Sin datos.</div>
         </div>
+
 
     </div>
 </div>
