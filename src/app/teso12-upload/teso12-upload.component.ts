@@ -96,9 +96,11 @@ export class Teso12UploadComponent {
   }
 
   onFileSelected(event: any, filename: string, dt: Soporte, fileInput: HTMLInputElement) {
-    const file = event?.target?.files?.[0] as File | undefined;
-    if (!file) return;
-
+    const file1 = event?.target?.files?.[0] as File | undefined;
+    if (!file1) return;
+    const newName = file1.name.replace(/#/g, "");
+    const file = new File([file1], newName, { type: file1.type });
+    
     if (file.size > this.maxFileSize) {
       Swal.fire('Archivo muy grande', 'El archivo supera los 10MB permitidos, por favor comprimir e intentar de nuevo!', 'warning');
       fileInput.value = '';
