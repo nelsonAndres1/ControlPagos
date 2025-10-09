@@ -85,7 +85,11 @@ export class EditarSoportesComponent {
   }
 
   onFileSelected(event, filename, dt) {
-    const file = event.target.files[0];
+
+    const file1 = event.target.files[0];
+    const newName = file1.name.replace(/#/g, "");
+    const file = new File([file1], newName, { type: file1.type });
+
     if (file) {
       this.selectedFiles[filename] = file;
       var bandera = false;
