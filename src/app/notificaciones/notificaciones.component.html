@@ -1,17 +1,14 @@
-<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
+<div class="d-flex justify-content-center align-items-center flex-column">
     <div class="card p-4 shadow mb-4" style="width: 700px;">
-        <br>
         <h4 class="text-center mb-4">Parametrizar Notificaciones</h4>
-        <b>Importante: </b> Para la notificación se debe de utilizar un paso anterior al de interes.
-        <br>
-        <br>
-        <form #registerForm (ngSubmit)="onSubmit(registerForm)">
+
+        <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
             <!-- Campo Usuario -->
             <div class="mb-3">
                 <label for="usuario" class="form-label">Usuario</label>
                 <input type="text" id="nombre" class="form-control" (input)="input($event)"
                     placeholder="Buscar por documento..." name="nombre" #nombre="ngModel"
-                    [(ngModel)]="notificacion.nombre"  [disabled]=bandera_actualizar>
+                    [(ngModel)]="notificacion.nombre" [disabled]="bandera_actualizar">
                 <div *ngFor="let dt of usuarios">
                     <div class="card card-body mb-1">
                         <h6>Documento: {{dt.cedtra}}</h6>
@@ -23,29 +20,56 @@
                     </div>
                 </div>
             </div>
+
             <!-- Campo Correo -->
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo</label>
                 <input type="email" id="correo" class="form-control" placeholder="Ingrese su correo" name="correo"
-                    #correo="ngModel" [(ngModel)]="notificacion.correo">
+                    #correo="ngModel" [(ngModel)]="notificacion.correo" required email>
+                <div *ngIf="correo.invalid && (correo.dirty || correo.touched)" class="text-danger mt-1">
+                    <small *ngIf="correo.errors?.['required']">El correo es obligatorio.</small>
+                    <small *ngIf="correo.errors?.['email']">Ingrese un correo válido.</small>
+                </div>
             </div>
-            <!-- Campo Pago -->
+
+            <!-- Campo Pago (múltiple) -->
             <div class="mb-3">
                 <label for="pago" class="form-label">Pago</label>
-                <select class="form-select col" name="pago" [(ngModel)]="notificacion.pago" required>
-                    <option *ngFor="let td of pagos" [value]="td.codclas">{{td.detclas}}</option>
+                <select class="form-select col" name="pagosSel" [(ngModel)]="pagosSel" multiple required size="6">
+                    <option disabled>Selecciona uno o varios…</option>
+                    <option *ngFor="let td of pagos" [value]="td.codclas">{{ td.detclas }}</option>
                 </select>
+                <small class="text-muted d-block mt-1">
+                    Seleccionados: {{ pagosSel.length }} pago(s)
+                </small>
+                <div *ngIf="registerForm.submitted && pagosSel.length === 0" class="text-danger mt-1">
+                    <small>Debes seleccionar al menos un Pago.</small>
+                </div>
             </div>
+
+            <!-- Campo Paso (múltiple) -->
             <div class="mb-3">
                 <label for="paso" class="form-label">Paso</label>
-                <select class="form-control" name="paso" [(ngModel)]="notificacion.paso">
-                    <option *ngFor="let dt of data_teso20" [value]="dt.id">{{dt.proceso}}</option>
+                <select class="form-control" name="pasosSel" [(ngModel)]="pasosSel" multiple required size="6">
+                    <option disabled>Selecciona uno o varios…</option>
+                    <option *ngFor="let dt of data_teso20" [value]="dt.id">{{ dt.proceso }}</option>
                 </select>
+                <small class="text-muted d-block mt-1">
+                    Seleccionados: {{ pasosSel.length }} paso(s)
+                </small>
+                <div *ngIf="registerForm.submitted && pasosSel.length === 0" class="text-danger mt-1">
+                    <small>Debes seleccionar al menos un Paso.</small>
+                </div>
             </div>
-            <!-- Botón Guardar -->
-            <button *ngIf="!bandera_actualizar" type="submit" class="btn btn-primary w-100">Guardar</button>
 
+            <!-- Botón Guardar -->
+            <button *ngIf="!bandera_actualizar" type="submit" class="btn btn-primary w-100"
+                [disabled]="registerForm.invalid || pagosSel.length === 0 || pasosSel.length === 0">
+                Guardar
+            </button>
         </form>
+
+        <!-- Botón Editar -->
         <button *ngIf="bandera_actualizar" (click)="editar_data()" class="btn btn-warning w-100">Editar</button>
     </div>
 
