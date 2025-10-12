@@ -378,7 +378,7 @@ export class Teso13Component implements OnInit {
             return;
         }
 
-        if(this.centros.length === 0) {
+        if (this.centros.length === 0) {
             Swal.fire('Faltan datos', 'Agrega al menos un Centro de Costo.', 'warning');
             return;
         }

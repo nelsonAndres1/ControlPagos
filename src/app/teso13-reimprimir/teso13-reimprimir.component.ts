@@ -127,8 +127,12 @@ export class Teso13ReimprimirComponent {
       const cdp_marca = String(dt.cdp_marca ?? '');
       const cdp_documento = String(dt.cdp_documento ?? '');
       const cdp_ano = String(dt.cdp_ano ?? '');
-      this.impreseion.cdp = (cdp_documento && cdp_documento !== '00') ? `${cdp_marca}${cdp_documento}${cdp_ano}` : '-';
-
+      
+      if (cdp_documento.trim() == '00') {
+        this.impreseion.cdp = ' ';
+      } else {
+        this.impreseion.cdp = (cdp_documento && cdp_documento !== '00') ? `${cdp_marca}${cdp_documento}${cdp_ano}` : '-';
+      }
       this.impreseion.valor = String(dt.valor ?? '');
 
       this.impreseion.documento_clase = nombre_soportes_pago;
