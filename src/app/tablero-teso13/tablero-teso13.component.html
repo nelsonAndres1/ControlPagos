@@ -1,164 +1,328 @@
-<div class="container" style="padding:16px; display:grid; gap:12px;">
-    <h2 style="margin:0;">Tablero estadístico · TESO13</h2>
+<div class="container-fluid my-3">
 
-    <!-- Filtros -->
-    <div style="display:grid; gap:8px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items:end;">
+    <!-- ===== Filtros ===== -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+            <div>
+                <strong>Filtros</strong>
+                <small class="text-muted ms-2">Configura la dimensión y los criterios</small>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-outline-secondary btn-sm" (click)="limpiar()"
+                    [disabled]="loading">Limpiar</button>
+                <button class="btn btn-primary btn-sm" (click)="consultarTodo()" [disabled]="loading"
+                    [attr.aria-busy]="loading ? 'true' : null">
+                    {{ loading ? 'Consultando…' : 'Actualizar' }}
+                </button>
+            </div>
+        </div>
 
-        <div class="form-group col-md-12">
-            <div class="row">
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Dimensión</span>
-                        <select [(ngModel)]="dim" class="form-control">
-                            <option value="nit">Nit</option>
-                            <option value="coddep">Codigo de Dependencia</option>
-                            <option value="codcen">Codigo de Area</option>
-                            <option value="perfac">Periodo de Facturación</option>
+        <div class="card-body">
+            <div class="row g-3">
+
+                <!-- Dimensión -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label class="form-label">Dimensión</label>
+                    <select class="form-select" [(ngModel)]="dim" (ngModelChange)="onDimChange($event)">
+                        <option value="nit">Nit</option>
+                        <option value="coddep">Código de Dependencia</option>
+                        <option value="codcen">Código de Área</option>
+                        <option value="perfac">Periodo de Facturación</option>
+                    </select>
+                </div>
+
+                <!-- Valor de la dimensión (dinámico) -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label class="form-label">Valor de la dimensión</label>
+                    <ng-container [ngSwitch]="dim">
+                        <!-- NIT -->
+                        <input *ngSwitchCase="'nit'" type="text" class="form-control" [(ngModel)]="valor"
+                            placeholder="Ej: 891280008" (blur)="onNitBlur()" />
+                        <!-- CODDEP -->
+                        <select *ngSwitchCase="'coddep'" class="form-select" [(ngModel)]="valor"
+                            (ngModelChange)="onSelectCoddep($event)">
+                            <option [ngValue]="''" disabled>Seleccione dependencia…</option>
+                            <option *ngFor="let est of dataConta28; trackBy: trackByCoddep" [value]="est.coddep">
+                                {{est.coddep}} - {{est.detalle}}
+                            </option>
                         </select>
-                    </label>
+                        <!-- CODCEN -->
+                        <select *ngSwitchCase="'codcen'" class="form-select" [(ngModel)]="valor"
+                            (ngModelChange)="onSelectCodcen($event)">
+                            <option [ngValue]="''" disabled>Seleccione área…</option>
+                            <option *ngFor="let est of dataConta06; trackBy: trackByCodcen" [value]="est.codcen">
+                                {{est.codcen}} - {{est.detalle}}
+                            </option>
+                        </select>
+                        <!-- PERFAC -->
+                        <input *ngSwitchCase="'perfac'" type="text" class="form-control" [ngModel]="valor"
+                            (ngModelChange)="onPerfacChange($event)" placeholder="AAAAmm (Ej: 202508)" maxlength="6"
+                            inputmode="numeric" />
+                        <!-- Default -->
+                        <input *ngSwitchDefault type="text" class="form-control" [(ngModel)]="valor" />
+                    </ng-container>
                 </div>
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Valor de la dimensión</span>
-                        <input type="text" class="form-control" [(ngModel)]="valor"
-                            placeholder="Ej: 891280008 / 050306 / 0503 / 202508" />
-                    </label>
+
+                <!-- Estado(s) multiselect -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label class="form-label">Estado(s) (múltiple o vacío)</label>
+                    <select class="form-select" name="estado" [multiple]="true" [size]="estadosSize"
+                        [(ngModel)]="estadosSeleccionados" (ngModelChange)="syncEstadosCsv()"
+                        aria-label="Seleccionar estados">
+                        <option value="RA">RADICADO</option>
+                        <option *ngFor="let est of estadosTeso20; trackBy: trackByEstado" [value]="est.id">
+                            {{ est.proceso }}
+                        </option>
+                    </select>
+                    <div class="form-text">Se enviará como CSV (p. ej. RA,PE,AP).</div>
                 </div>
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Estado(s) (CSV opcional)</span>
-                        <input type="text" class="form-control" [(ngModel)]="estado" placeholder="Ej: RA,PE" />
-                    </label>
+
+                <!-- NIT CSV -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Filtro NIT (CSV opcional)</label>
+                    <input type="text" class="form-control" [(ngModel)]="nit" placeholder="Ej: 891280008,1233193414" />
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Filtro NIT (CSV opcional)</span>
-                        <input type="text" class="form-control" [(ngModel)]="nit"
-                            placeholder="Ej: 891280008,1233193414" />
-                    </label>
+
+                <!-- Dependencias (auxiliar) -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Dependencias</label>
+                    <select class="form-select" name="coddep" [(ngModel)]="coddep">
+                        <option *ngFor="let est of dataConta28; trackBy: trackByCoddep" [value]="est.coddep">
+                            {{est.coddep}} - {{ est.detalle }}
+                        </option>
+                    </select>
                 </div>
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Filtro CODDEP (CSV opcional)</span>
-                        <input type="text" class="form-control" [(ngModel)]="coddep" placeholder="Ej: 050306,050307" />
-                    </label>
+
+                <!-- Áreas (auxiliar) -->
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label">Áreas</label>
+                    <select class="form-select" name="codcen" [(ngModel)]="codcen">
+                        <option *ngFor="let est of dataConta06; trackBy: trackByCodcen" [value]="est.codcen">
+                            {{est.codcen}} - {{ est.detalle }}
+                        </option>
+                    </select>
                 </div>
-                <div class="col">
-                    <label style="display:flex; flex-direction:column; gap:4px;">
-                        <span>Filtro CODCEN (CSV opcional)</span>
-                        <input type="text" class="form-control" [(ngModel)]="codcen" placeholder="Ej: 0503,0504" />
-                    </label>
+
+                <!-- Acciones secundarias -->
+                <div class="col-12 col-md-6 col-lg-3 d-flex align-items-end">
+                    <div class="btn-group w-100">
+                        <button class="btn btn-outline-primary btn-sm" (click)="consultarTotal()"
+                            [disabled]="loading">Solo total</button>
+                        <button class="btn btn-outline-primary btn-sm" (click)="consultarEstados()"
+                            [disabled]="loading || !valor">Solo estados</button>
+                        <button class="btn btn-outline-primary btn-sm" (click)="consultarValores()"
+                            [disabled]="loading || !valor">Solo valores</button>
+                    </div>
                 </div>
+
             </div>
 
+            <!-- Chips de filtros activos -->
+            <div class="mt-3" *ngIf="activeFilters.length">
+                <span *ngFor="let f of activeFilters; trackBy: trackByIndex"
+                    class="badge rounded-pill bg-light text-dark border me-1 mb-1">{{ f }}</span>
+            </div>
         </div>
-
     </div>
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-light" (click)="consultarTodo()">Consultar todo</button>
-        <button type="button" class="btn btn-light" (click)="consultarTotal()">Solo total</button>
-        <button type="button" class="btn btn-light" (click)="consultarEstados()">Solo estados</button>
-        <button type="button" class="btn btn-light" (click)="consultarValores()">Solo valores</button>
-        <button type="button" class="btn btn-light" (click)="limpiar()">Limpiar</button>
-    </div>
-</div>
 
-<!-- Acciones -->
-
-<div class="container" style="padding:16px; display:grid; gap:12px;">
     <!-- Mensajes -->
-    <div *ngIf="loading" style="color:#555;">Cargando…</div>
-    <div *ngIf="!loading && errorMsg"
-        style="padding:8px; background:#ffe9e9; color:#8b1b1b; border:1px solid #f3bcbc; border-radius:8px;">
-        {{ errorMsg }}
-    </div>
+    <div *ngIf="loading" class="alert alert-info py-2">Cargando…</div>
+    <div *ngIf="!loading && errorMsg" class="alert alert-danger py-2">{{ errorMsg }}</div>
 
-    <!-- Resultados -->
-    <div *ngIf="!loading && !errorMsg" style="display:grid; gap:12px;">
+    <!-- ===== Dashboard ===== -->
+    <div *ngIf="!loading && !errorMsg" class="row g-3">
 
-        <!-- Totales -->
-        <div style="display:grid; gap:12px;">
-            <h3 style="margin:0;">Total de facturas</h3>
-
-            <!-- Caso A: enviaste "valor" => número -->
-            <div *ngIf="totalFacturas !== null" style="font-size:22px; font-weight:700;">
-                {{ totalFacturas | number:'1.0-0' }}
+        <!-- KPIs -->
+        <div class="col-12 col-lg-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="text-muted small">Total de facturas</div>
+                    <div class="display-6 fw-bold">{{ kpiTotalFacturas | number:'1.0-0' }}</div>
+                    <div class="text-muted small">Dimensión: <span class="badge bg-light text-dark">{{ dim.toUpperCase()
+                            }}</span></div>
+                </div>
             </div>
 
-            <!-- Caso B: NO enviaste "valor" => listado agrupado -->
-            <div *ngIf="totalListado?.length">
-                <table style="width:100%; border-collapse:collapse;">
-                    <thead>
-                        <tr>
-                            <th style="text-align:left; border-bottom:1px solid #eee;">{{ dim.toUpperCase() }}</th>
-                            <th style="text-align:right; border-bottom:1px solid #eee;">Total facturas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let r of totalListado">
-                            <td style="padding:6px 4px;">{{ r[dim] }}</td>
-                            <td style="padding:6px 4px; text-align:right;">{{ r.total_facturas | number:'1.0-0' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="text-muted small">Suma de valores</div>
+                    <div class="h4 fw-bold mb-2">{{ kpiSuma | number:'1.2-2' }}</div>
+                    <div class="progress" style="height:6px;">
+                        <div class="progress-bar" [style.width.%]="kpiMax ? (kpiSuma / kpiMax) * 100 : 0"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <small class="text-muted">Min {{ kpiMin | number:'1.0-0' }}</small>
+                        <small class="text-muted">Max {{ kpiMax | number:'1.0-0' }}</small>
+                    </div>
+                </div>
             </div>
-            <div *ngIf="!totalListado?.length && totalFacturas === null" style="color:#777;">Sin datos.</div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="text-muted small">Promedio</div>
+                    <div class="h4 fw-bold mb-0">{{ kpiPromedio | number:'1.2-2' }}</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Estados -->
-        <div>
-            <h3 style="margin:0 0 6px 0;">Estados</h3>
-            <table *ngIf="estadosRows?.length" style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr>
-                        <th style="text-align:left; border-bottom:1px solid #eee;">Estado</th>
-                        <th style="text-align:right; border-bottom:1px solid #eee;">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let e of estadosRows">
-                        <td style="padding:6px 4px;">
-                            <span
-                                style="background:#eef2ff; color:#3730a3; padding:2px 8px; border-radius:999px; font-size:12px;">
-                                {{ e.estado || '(NULL)' }}
-                            </span>
-                        </td>
-                        <td style="padding:6px 4px; text-align:right;">{{ e.total | number:'1.0-0' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div *ngIf="!estadosRows?.length" style="color:#777;">Sin datos.</div>
+        <!-- Paneles de barras -->
+        <div class="col-12 col-lg-9">
+            <div class="row g-3">
+
+                <!-- Distribución por estado -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-white d-flex justify-content-between">
+                            <strong>Distribución por estado</strong>
+                            <span class="badge bg-light text-dark">{{ estadosTotal | number:'1.0-0' }} filas</span>
+                        </div>
+                        <div class="card-body">
+                            <ng-container *ngIf="estadosDistrib?.length; else noEstados">
+                                <div *ngFor="let e of estadosDistrib; index as i" class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="text-truncate">{{ e.estado }}</span>
+                                        <small class="text-muted">{{ e.total | number:'1.0-0' }} ({{ e.pct |
+                                            number:'1.0-2' }}%)</small>
+                                    </div>
+                                    <div class="progress" style="height:8px;">
+                                        <div class="progress-bar"
+                                            [ngClass]="{'bg-success': i===0, 'bg-info': i===1, 'bg-primary': i===2, 'bg-secondary': i>2}"
+                                            [style.width.%]="e.pct"></div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noEstados>
+                                <div class="text-muted small">Sin datos de estados.</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top 3 por dimensión -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-white d-flex justify-content-between">
+                            <strong>Top 3 {{ dim.toUpperCase() }} por facturas</strong>
+                            <span class="badge bg-light text-dark">{{ kpiTotalFacturas | number:'1.0-0' }} total</span>
+                        </div>
+                        <div class="card-body">
+                            <ng-container *ngIf="top3Grupos?.length; else noTop">
+                                <div *ngFor="let g of top3Grupos; index as i" class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="text-truncate">{{ g.key || '(vacío)' }}</span>
+                                        <small class="text-muted">{{ g.total | number:'1.0-0' }} ({{ g.pct |
+                                            number:'1.0-2' }}%)</small>
+                                    </div>
+                                    <div class="progress" style="height:8px;">
+                                        <div class="progress-bar"
+                                            [ngClass]="{'bg-primary': i===0, 'bg-info': i===1, 'bg-secondary': i===2}"
+                                            [style.width.%]="g.pct"></div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #noTop>
+                                <div class="text-muted small">Sin datos agrupados por {{ dim }}.</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- Valores -->
-        <div>
-            <h3 style="margin:0 0 6px 0;">Valores</h3>
-            <table *ngIf="valores" style="width:100%; border-collapse:collapse;">
-                <tbody>
-                    <tr>
-                        <td style="padding:6px 4px;">Suma</td>
-                        <td style="padding:6px 4px; text-align:right;">{{ valores?.suma_valores | number:'1.2-2' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:6px 4px;">Promedio</td>
-                        <td style="padding:6px 4px; text-align:right;">{{ valores?.promedio_valores | number:'1.2-2' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding:6px 4px;">Mínimo</td>
-                        <td style="padding:6px 4px; text-align:right;">{{ valores?.min_valor | number:'1.2-2' }}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:6px 4px;">Máximo</td>
-                        <td style="padding:6px 4px; text-align:right;">{{ valores?.max_valor | number:'1.2-2' }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div *ngIf="!valores" style="color:#777;">Sin datos.</div>
+        <!-- ===== Sección original: Totales / Estados / Valores ===== -->
+        <div class="col-12">
+            <div class="row g-3">
+
+                <!-- Totales -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-white"><strong>Total de facturas</strong></div>
+                        <div class="card-body">
+                            <div *ngIf="totalFacturas !== null" class="display-6 fw-bold">
+                                {{ totalFacturas | number:'1.0-0' }}
+                            </div>
+                            <div *ngIf="totalListado?.length" class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>{{ dim.toUpperCase() }}</th>
+                                            <th class="text-end">Total facturas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let r of totalListado; trackBy: trackByRow">
+                                            <td class="text-truncate">{{ r[dim] }}</td>
+                                            <td class="text-end">{{ r.total_facturas | number:'1.0-0' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="!totalListado?.length && totalFacturas === null" class="text-muted small">Sin
+                                datos.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estados -->
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-white"><strong>Estados</strong></div>
+                        <div class="card-body">
+                            <div *ngIf="estadosRows?.length" class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Estado</th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let e of estadosRows; trackBy: trackByEstadoRow">
+                                            <td><span class="badge bg-light text-dark border">{{ e.estado || '(NULL)'
+                                                    }}</span></td>
+                                            <td class="text-end">{{ e.total | number:'1.0-0' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="!estadosRows?.length" class="text-muted small">Sin datos.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valores -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-white"><strong>Valores</strong></div>
+                        <div class="card-body">
+                            <div *ngIf="valores; else noValores" class="row g-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="text-muted small">Suma</div>
+                                    <div class="h4 fw-bold">{{ valores?.suma_valores | number:'1.2-2' }}</div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="text-muted small">Promedio</div>
+                                    <div class="h4 fw-bold">{{ valores?.promedio_valores | number:'1.2-2' }}</div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="text-muted small">Mínimo</div>
+                                    <div class="h4 fw-bold">{{ valores?.min_valor | number:'1.2-2' }}</div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="text-muted small">Máximo</div>
+                                    <div class="h4 fw-bold">{{ valores?.max_valor | number:'1.2-2' }}</div>
+                                </div>
+                            </div>
+                            <ng-template #noValores>
+                                <div class="text-muted small">Sin datos.</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-
-    </div>
+    </div> <!-- /row -->
 </div>

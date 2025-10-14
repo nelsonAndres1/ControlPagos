@@ -41,7 +41,12 @@ export class ReporteService {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'reportes/getConta06', params, { headers: headers });
     }
-
+    getConta28(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/getConta28', params, { headers: headers });
+    }
     getUsuarios(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = 'json=' + json;
