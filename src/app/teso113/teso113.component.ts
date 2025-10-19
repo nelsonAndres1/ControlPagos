@@ -267,7 +267,7 @@ export class Teso113Component implements OnInit {
             window.open(url);
 
             // Navegar (opcional)
-            this.router.navigate(['/principal']);
+            //this.router.navigate(['/principal']);
         } catch (error: any) {
             console.error('Error al generar PDF:', error);
             Swal.fire({

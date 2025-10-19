@@ -108,7 +108,7 @@ export class Teso117SuperComponent {
   src: string = 'assets/pspdfkit-web-demo.pdf';
   errorMessage: string | null = null;
   uploading: boolean = false; // Bandera para indicar si se está subiendo archivos
-
+  loading: boolean = false; // Bandera para indicar si se está cargando la vista
   page: number = 1;
   totalPages: number = 0;
   isLoaded: boolean = false;
@@ -206,8 +206,11 @@ export class Teso117SuperComponent {
 
   uploadFiles() {
 
+    this.loading = true;
+
     this._teso23Service.getPermisoForUsuario(this.teso15).subscribe(
       response => {
+        this.loading = false;
         if (response.estado == true) {
           Swal.fire({
             title: "¿Estas Seguro?",
@@ -219,8 +222,6 @@ export class Teso117SuperComponent {
             confirmButtonText: 'Iniciar'
           }).then(result => {
             if (result.value) {
-
-
               if (this.bandera_archivo) {
                 let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
                 this.data.codtipag = '180';
@@ -266,6 +267,8 @@ export class Teso117SuperComponent {
             window.location.reload();
           });
         }
+      }, error => {
+        this.loading = false;
       }
     )
   }
@@ -592,8 +595,10 @@ export class Teso117SuperComponent {
       if (result.isConfirmed) {
         this.teso15.usuario = this.identity_real.sub;
         this.teso15.relacion = '0';
+        this.loading = true;
         this._teso15Service.save(this.teso15).subscribe(
           response => {
+            this.loading = false;
             if (response.status == 'success') {
               Swal.fire('Información', 'Cambios guardados!', 'success').then(() => {
                 window.location.reload();
@@ -601,6 +606,8 @@ export class Teso117SuperComponent {
             } else {
               Swal.fire('Información', 'Cambios NO guardados!', 'error');
             }
+          }, error => {
+            this.loading = false;
           }
         )
       } else if (result.isDenied) {

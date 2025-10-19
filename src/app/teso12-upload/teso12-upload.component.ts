@@ -100,7 +100,7 @@ export class Teso12UploadComponent {
     if (!file1) return;
     const newName = file1.name.replace(/#/g, "");
     const file = new File([file1], newName, { type: file1.type });
-    
+
     if (file.size > this.maxFileSize) {
       Swal.fire('Archivo muy grande', 'El archivo supera los 10MB permitidos, por favor comprimir e intentar de nuevo!', 'warning');
       fileInput.value = '';
@@ -137,7 +137,6 @@ export class Teso12UploadComponent {
   }
 
   uploadFiles() {
-    // Validación mínima
     if (Object.keys(this.selectedFiles).length === 0) {
       Swal.fire('Info', 'No hay archivos seleccionados para subir.', 'info');
       //return;
@@ -148,35 +147,38 @@ export class Teso12UploadComponent {
     }
 
     const formData = new FormData();
-
-    // 1) Adjuntar archivos
     for (const file of Object.values(this.selectedFiles)) {
       formData.append('files[]', file);
     }
-
-    // 2) Adjuntar metadatos (uno por archivo)
     this.datosArchivos.forEach(d => {
       formData.append('data[]', JSON.stringify(d));
     });
 
-    this.uploading = true;
+    // 🔸 Mostrar mensaje de espera
+    Swal.fire({
+      title: 'Subiendo archivos y guardando pago...',
+      text: 'Por favor espera un momento.',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    this.uploading = true; // 
 
     this.uploadService.upload(formData).subscribe(
       (response: any) => {
-        this.uploading = false;
+        this.uploading = false; // 
+        Swal.close();
 
         if (response?.success) {
           Swal.fire('Info', 'Archivos subidos exitosamente: ' + (response.files ?? ''), 'info').then(() => {
-            // Limpiar selección
             this.selectedFiles = {};
-
-            // Preparar registro (sin campo numero)
             const detail0: ItemDetail0 = { ...(this.itemDetail?.[0] ?? {}) };
             detail0.upload_token = this.uploadToken;
             if ('numero' in detail0) delete (detail0 as any).numero;
 
             this._userService.register(detail0).subscribe(
               (r: any) => {
+                this.uploading = false; // 🔓 seguridad extra por si acaso
                 if (r?.status === 'success') {
                   this.status = r.status;
                   const arrayD = this.itemDetail?.[1] ?? {};
@@ -189,7 +191,6 @@ export class Teso12UploadComponent {
                     }
                   };
 
-                  // Navega a la siguiente pantalla
                   this._router.navigate(['teso113'], navigationExtras);
                   Swal.fire('Correcto!', 'Pago Enviado Exitosamente!', 'success');
                 } else {
@@ -198,6 +199,7 @@ export class Teso12UploadComponent {
                 }
               },
               (err: any) => {
+                this.uploading = false; // 🔓 también aquí
                 Swal.fire('Error!', err?.error?.message || 'Error al registrar', 'info').then(() => {
                   this._router.navigate(['teso10']);
                 });
@@ -210,11 +212,14 @@ export class Teso12UploadComponent {
         }
       },
       (error: any) => {
-        this.uploading = false;
+        this.uploading = false; // 🔓 también en error
+        Swal.close();
         const msg = error?.error?.message || 'Error al subir archivos. Por favor, inténtalo de nuevo.';
         this.errorMessage = msg;
         Swal.fire('Error!', msg, 'error');
       }
     );
   }
+
+
 }
