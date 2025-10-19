@@ -14,7 +14,8 @@
         <th scope="row">{{dt.codsop}}</th>
         <td>{{dt.detsop}}</td>
         <td>
-          <input #fileInput class="form-control" type="file" [id]="'formFile_' + dt.codsop" (change)="onFileSelected($event, dt.detsop, dt, fileInput)">
+          <input #fileInput class="form-control" type="file" [id]="'formFile_' + dt.codsop"
+            (change)="onFileSelected($event, dt.detsop, dt, fileInput)">
         </td>
         <td>
           {{obligatorio(dt.per)}}
@@ -23,8 +24,14 @@
     </tbody>
   </table>
   <div style="align-items: center; margin-inline-start: 50%;">
-    <button *ngIf="hasSelectedFiles()" (click)="uploadFiles()" type="submit" class="btn btn-success">Subir Documentos y
-      Enviar Pago</button>
+    <button *ngIf="hasSelectedFiles()" (click)="uploadFiles()" type="submit" class="btn btn-success"
+      [disabled]="uploading">
+      <span *ngIf="!uploading">Subir Documentos y Enviar Pago</span>
+      <span *ngIf="uploading">
+        <i class="fa fa-spinner fa-spin"></i> Subiendo, por favor espera...
+      </span>
+    </button>
+
   </div>
   <div *ngIf="uploading">Subiendo archivos...</div>
   <div *ngIf="errorMessage">{{ errorMessage }}</div>
