@@ -64,7 +64,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Ingrese Observación</span>
                         </div>
-                        <textarea class="form-control" aria-label="With textarea" (input)="ingrese_observacion($event)"></textarea>
+                        <textarea class="form-control" aria-label="With textarea" (input)="ingrese_observacion($event)"   maxlength="299" ></textarea>
                     </div>
                     <div class="input-group col-sm-6 pb-3" *ngIf="opcion_seleccionada.archivo == 'SI'">
                         <div class="input-group-prepend">

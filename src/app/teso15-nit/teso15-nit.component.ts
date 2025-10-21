@@ -14,7 +14,7 @@ export class Teso15NitComponent {
   teso15: Teso15Nit;
   teso15All = [];
   selectedRow: number | null = null;
-  datos_:any;
+  datos_: any;
 
   constructor(private _teso15Service: Teso15Service) {
     this.teso15 = new Teso15Nit('', '', '');
@@ -26,6 +26,8 @@ export class Teso15NitComponent {
 
   consultar(index: number, dt) {
     console.log(dt)
+
+    this.datos_ = [];
 
     if (this.selectedRow === index) {
       this.selectedRow = null; // Deselecciona la fila si se hace clic nuevamente
@@ -70,7 +72,7 @@ export class Teso15NitComponent {
     this.teso15.numero = dt.numero;
 
     this._teso15Service.getAllEstadosPagos(this.teso15).subscribe(
-      response =>{
+      response => {
         console.log(response)
         this.datos_ = response;
       }
