@@ -6,7 +6,7 @@ import { Gener02Service } from '../services/gener02.service';
 import { Teso15Service } from '../services/teso15.service';
 import { PdfService } from '../services/pdf.service';
 import { UtilidadesService } from '../services/utilidades.service';
-
+import { Gener02 } from '../models/gener02';
 import { Impresion } from '../models/impresion';
 import { Teso113 } from '../models/teso113';
 
@@ -32,7 +32,9 @@ export class Teso13ReimprimirComponent {
     private _teso15Service: Teso15Service,
     private _teso13Service: Teso13Service,
     private _gener02Service: Gener02Service,
-    private _utilidadesService: UtilidadesService
+    private _utilidadesService: UtilidadesService,
+    private teso15Srv: Teso15Service,
+
   ) {
     this.identity = this._gener02Service.getIdentity?.();
 
@@ -102,6 +104,10 @@ export class Teso13ReimprimirComponent {
       // 3) Armar objeto Impresion con lo que ya tienes en dt y lo que devuelve el detalle
       const { dia, mes, año } = this.extraerFecha(new Date(dt.fecrad));
 
+
+
+
+
       this.impreseion.dia = String(dia);
       this.impreseion.mes = String(mes);
       this.impreseion.ano = String(año);
@@ -116,6 +122,14 @@ export class Teso13ReimprimirComponent {
       this.impreseion.clase_pago = String(dt.codclas ?? '');
 
       this.impreseion.nombre_elaborado = String(dt.usuela ?? '');
+
+      const [
+        usuarioResp,
+      ] = await Promise.all([
+        firstValueFrom(this.teso15Srv.getUsuario(new Gener02(dt.usuela, ''))),
+      ]);
+
+      this.impreseion.documento_elaborado = (usuarioResp?.[0]?.cedtra) ?? '';
       this.impreseion.nombre_autoriza = String(dt.peraut ?? '');
       this.impreseion.nombre_revisa = String(dt.perrev ?? '');
 
@@ -127,7 +141,7 @@ export class Teso13ReimprimirComponent {
       const cdp_marca = String(dt.cdp_marca ?? '');
       const cdp_documento = String(dt.cdp_documento ?? '');
       const cdp_ano = String(dt.cdp_ano ?? '');
-      
+
       if (cdp_documento.trim() == '00') {
         this.impreseion.cdp = ' ';
       } else {
