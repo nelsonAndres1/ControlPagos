@@ -26,7 +26,8 @@ export class Impresion {
         public usucau: string,
         public detalle: string,
         public anexos_magneticos: string,
-        public centros_json?: string
+        public centros_json?: string,
+        public documento_elaborado?: string
     ) {
 
 

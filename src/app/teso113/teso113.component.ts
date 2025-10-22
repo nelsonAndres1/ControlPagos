@@ -59,6 +59,7 @@ export class Teso113Component implements OnInit {
     data!: Teso13Data;
     detalleTeso10: string = '';
     usuarioNombre: string = '';
+    usuarioDocemp: string = '';
     conta04Nombre?: string;
 
     // Soportes
@@ -176,6 +177,7 @@ export class Teso113Component implements OnInit {
 
             this.detalleTeso10 = detclasResp?.detclas ?? '';
             this.usuarioNombre = (usuarioResp?.[0]?.nombre) ?? '';
+            this.usuarioDocemp = (usuarioResp?.[0]?.cedtra) ?? '';
             this.conta04Nombre = conta04Resp?.conta04 ?? undefined;
 
             const soportesPagoArr = this.extractArray(soportesPagoResp, ['data', 'items', 'results', 'soportes']);
@@ -207,6 +209,7 @@ export class Teso113Component implements OnInit {
             this.impreseion.documento_clase = this.nombre_soportes_pago;
 
             this.impreseion.nombre_elaborado = this.usuarioNombre ?? '';
+            this.impreseion.documento_elaborado = this.usuarioDocemp ?? '';
             this.impreseion.nombre_autoriza = this.data.peraut ?? '';
             this.impreseion.nombre_revisa = this.data.perrev ?? '';
 
