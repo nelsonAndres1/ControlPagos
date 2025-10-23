@@ -23,6 +23,13 @@ export class ReporteService {
         return this._http.post(this.url + 'reportes/Reportes', params, { headers: headers });
     }
 
+    getUsucau(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = 'json=' + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'reportes/getUsucau', params, { headers: headers });
+    }
+
     ReportesAll(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = 'json=' + json;

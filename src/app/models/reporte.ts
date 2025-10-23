@@ -4,5 +4,6 @@ export class Reporte{
         public fechafin: string,
         public codclas: string,
         public numero: string,
+        public usucau?: string
     ){}
 }
