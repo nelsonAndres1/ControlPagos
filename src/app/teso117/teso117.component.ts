@@ -692,7 +692,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
 
     submit() {
-        var datoU = JSON.parse(localStorage.getItem('identity'));
+        var datoU = JSON.parse(localStorage.getItem('identityControlPagos'));
 
         datoU['sub'];
 
