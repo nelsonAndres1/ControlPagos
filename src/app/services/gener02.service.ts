@@ -51,7 +51,7 @@ export class Gener02Service {
 
     getIdentity() {
 
-        let identity = JSON.parse(localStorage.getItem('identity') + '');
+        let identity = JSON.parse(localStorage.getItem('identityControlPagos') + '');
 
         if (identity && identity != 'undefined') {
             this.identity = identity;
@@ -85,7 +85,7 @@ export class Gener02Service {
         return this.token;
     }
     eliminar() {
-        localStorage.removeItem('identity');
+        localStorage.removeItem('identityControlPagos');
         localStorage.removeItem('token');
         localStorage.removeItem('tpago');
         localStorage.removeItem('token1');

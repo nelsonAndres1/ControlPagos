@@ -60,7 +60,7 @@ export class Teso10Service {
     }
 
     getIdentity() {
-        let identity = JSON.parse(localStorage.getItem('identity') + '');
+        let identity = JSON.parse(localStorage.getItem('identityControlPagos') + '');
 
         if (identity && identity != 'undefined') {
             this.identity = identity;

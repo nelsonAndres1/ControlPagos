@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit(form: any) {
+    localStorage.clear();
     var permisos;
     this._gener02Service.signup(this.gener02).subscribe(
       response => {
@@ -106,7 +107,7 @@ export class LoginComponent implements OnInit {
                   //persistir los datos del usuario
                   localStorage.setItem('token', this.token);
                   console.log(this.token + 'asdigaidsguyasidu');
-                  localStorage.setItem('identity', JSON.stringify(this.identity));
+                  localStorage.setItem('identityControlPagos', JSON.stringify(this.identity));
                   //this.permisos();
                   permisos = this.permisos();
 
@@ -147,7 +148,7 @@ export class LoginComponent implements OnInit {
         let logout = +params['sure'];
 
         if (logout == 1) {
-          localStorage.removeItem('identity');
+          localStorage.removeItem('identityControlPagos');
           localStorage.removeItem('token');
           localStorage.removeItem('tpago');
           localStorage.removeItem('token1');
