@@ -94,7 +94,6 @@ export class Teso117SuperComponent {
   public teso13teso15: any;
   public permisos: any;
   public arrayPermisos: any;
-
   pdfSource = '0090000053136comprobante_de_pago.pdf';
   documento: Documento;
   soportes: any;
@@ -103,7 +102,6 @@ export class Teso117SuperComponent {
   estadoEscrito: any = '';
   conta04: Conta04;
   observacion: string = '';
-
   title: string = 'ng2-pdf-viewer';
   src: string = 'assets/pspdfkit-web-demo.pdf';
   errorMessage: string | null = null;
@@ -117,6 +115,7 @@ export class Teso117SuperComponent {
   lista_historia_pago: any = [];
   seleccion_selected: any = '';
   estado_actual_actual: any = '';
+  texto_observacion: string = '';
 
   constructor(private uploadService: UploadService,
     private route: ActivatedRoute,
@@ -154,7 +153,11 @@ export class Teso117SuperComponent {
   }
 
 
-
+  actualizarContadorTexto() {
+    if (this.texto_observacion.length > 800) {
+      this.texto_observacion = this.texto_observacion.substring(0, 800);
+    }
+  }
   downloadPDF(so: any) {
     const url = this.global_url + 'teso12/getDocumento/' + so.archivo;
     fetch(url)

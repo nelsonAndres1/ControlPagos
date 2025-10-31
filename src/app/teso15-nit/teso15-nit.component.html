@@ -19,6 +19,7 @@
                 <th scope="col">Nit</th>
                 <th scope="col">Razon Social</th>
                 <th scope="col">Tipo de Pago</th>
+                <th scope="col"># de Factura</th>
                 <th scope="col">Valor</th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
                     <td>{{dt.nit}}</td>
                     <td>{{dt.razon_social}}</td>
                     <td>{{dt.codclas_detalle}}</td>
+                    <td>{{dt.numero_factura}}</td>
                     <td>{{dt.valor}}</td>
                 </tr>
                 <tr *ngIf="selectedRow === i">

@@ -63,16 +63,9 @@ export class EditarSoportesComponent {
     const keyword: any = {};
     keyword.keyword = event.target.value;
     keyword.usuario = this.identity.sub;
-    const search = this._teso13Service.searchTeso13(keyword).subscribe(response => {
+    const search = this._teso13Service.searchTeso13soportes(keyword).subscribe(response => {
       this.data = response;
-
-      console.log(this.data);
-
     });
-  }
-
-  getPago(res: any) {
-
   }
 
   ver(dt) {
