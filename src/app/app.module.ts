@@ -74,6 +74,7 @@ import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.compo
 import { EstadoFiltroPipe } from './pipes/estado-filtro.pipe';
 import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
 import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.component';
+import { MsoportesComponent } from './msoportes/msoportes.component';
 
 
 @NgModule({
@@ -124,7 +125,7 @@ import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.componen
     LoadingComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
-    EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component
+    EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component, MsoportesComponent
   ],
 
   imports: [

@@ -139,9 +139,11 @@ export class AppComponent implements OnInit, DoCheck {
 
 
     opciones() {
-
         this.router.navigate(['teso116']);
+    }
 
+    asopotes() {
+        this.router.navigate(['soportes_administrador']);
     }
 
     onSubmit() {

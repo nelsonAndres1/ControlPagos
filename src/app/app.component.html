@@ -112,6 +112,10 @@
                         Pasos Generales
                     </CDBSidebarMenuItem>
 
+                    <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="asopotes()">
+                        Administrador Soportes
+                    </CDBSidebarMenuItem>
+
                     <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]">
                         Salir
                     </CDBSidebarMenuItem>
