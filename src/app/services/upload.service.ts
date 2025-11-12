@@ -33,4 +33,11 @@ export class UploadService {
             map(response => response)
         );
     }
+
+    uploadUpdateadmin(formData: FormData): Observable<any> {
+        return this.http.post<any>(this.url + 'uploadUpdateadmin', formData).pipe(
+            map(response => response)
+        );
+    }
+    
 }

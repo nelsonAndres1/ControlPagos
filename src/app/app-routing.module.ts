@@ -44,6 +44,7 @@ import { NotificacionesComponent } from './notificaciones/notificaciones.compone
 import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.component';
 import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
 import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.component';
+import { MsoportesComponent } from './msoportes/msoportes.component';
 
 const routes: Routes = [
 
@@ -89,6 +90,7 @@ const routes: Routes = [
   { path: 'teso15Nit', component: Teso15NitComponent, canActivate: [IdentityGuard] },
   { path: 'PasosGenerales', component: PasosGeneralesComponent, canActivate: [IdentityGuard] },
   { path: 'tablero', component: TableroTeso13Component, canActivate: [IdentityGuard] },
+  { path: 'soportes_administrador', component: MsoportesComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];
