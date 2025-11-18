@@ -220,6 +220,8 @@ export class MsoportesComponent {
     }).then(r => {
       if (r.isConfirmed && r.value) {
         this.observacionEliminar = r.value; // Guarda en variable global
+        /* console.log('Observación para eliminar:', dt); */
+        
         this.eliminarSoporte(dt);
       }
     });
