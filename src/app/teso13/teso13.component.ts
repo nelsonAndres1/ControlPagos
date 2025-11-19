@@ -503,12 +503,19 @@ export class Teso13Component implements OnInit {
 
     verificarNumero(event: any) {
         this.bandera_loading = true;
-        this.numfac = new Numfac(event.target.value);
+
+        if (this.teso13.nit == '') {
+            Swal.fire('Información', 'Primero debe de diligenciar el nit!').then(() => {
+                window.location.reload();
+            });
+        }
+
+        this.numfac = new Numfac(event.target.value, this.teso13.nit);
         this._teso13Service.verificarNumero(this.numfac).subscribe(
             response => {
                 this.bandera_loading = false;
                 if (response.status === 'success' && response.bandera === '1') {
-                    Swal.fire('Información', 'Este numero de factura ya existe en un pago!');
+                    Swal.fire('Información', 'Este numero de factura: '+event.target.value+' con este nit: '+this.teso13.nit+ ' ya existe en un pago!');
                 }
             },
             _ => { this.bandera_loading = false; }

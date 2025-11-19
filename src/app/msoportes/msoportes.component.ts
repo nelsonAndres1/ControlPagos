@@ -127,6 +127,7 @@ export class MsoportesComponent {
     // Si ya hay registro para ese codsop, lo reemplazamos
     const idx = this.datosArchivos.findIndex(x => x.codsop == dt.codsop);
     const payload = {
+      id: dt.id,
       codclas: this.codclas,
       numero: this.numero,
       codsop: dt.codsop,
