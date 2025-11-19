@@ -547,7 +547,9 @@ export class Teso117SuperComponent {
   }
 
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+
+  }
   getConta04(nit) {
     this.conta04.nit = nit;
     this._teso117Service.getConta04(this.conta04).subscribe(
@@ -604,7 +606,7 @@ export class Teso117SuperComponent {
             this.loading = false;
             if (response.status == 'success') {
               Swal.fire('Información', 'Cambios guardados!', 'success').then(() => {
-                window.location.reload();
+                this._router.navigate(['teso17']);
               });
             } else {
               Swal.fire('Información', 'Cambios NO guardados!', 'error');
