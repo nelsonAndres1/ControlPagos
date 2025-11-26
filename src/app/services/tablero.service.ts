@@ -26,6 +26,7 @@ export class TableroService {
     /**
      * Normaliza filtros: acepta string CSV, string simple o array (estado, nit, coddep, codcen).
      * El backend acepta cualquiera de estos formatos.
+     * Ahora también acepta fecrad_ini y fecrad_fin como fechas (YYYY-MM-DD).
      */
     private buildPayload(body: {
         valor?: string;
@@ -33,46 +34,108 @@ export class TableroService {
         nit?: string | string[];
         coddep?: string | string[];
         codcen?: string | string[];
+        fecrad_ini?: string; // nuevo
+        fecrad_fin?: string; // nuevo
     }) {
         const normalize = (v: any) =>
-            Array.isArray(v) ? v : (typeof v === 'string' && v.includes(',')) ? v.split(',').map(s => s.trim()) : v;
+            Array.isArray(v)
+                ? v
+                : (typeof v === 'string' && v.includes(','))
+                    ? v.split(',').map(s => s.trim())
+                    : v;
 
         const payload: any = {};
-        if (body.valor != null && body.valor !== '') payload.valor = String(body.valor);
-        if (body.estado != null) payload.estado = normalize(body.estado);
-        if (body.nit != null) payload.nit = normalize(body.nit);
-        if (body.coddep != null) payload.coddep = normalize(body.coddep);
-        if (body.codcen != null) payload.codcen = normalize(body.codcen);
+
+        if (body.valor != null && body.valor !== '') {
+            payload.valor = String(body.valor);
+        }
+        if (body.estado != null) {
+            payload.estado = normalize(body.estado);
+        }
+        if (body.nit != null) {
+            payload.nit = normalize(body.nit);
+        }
+        if (body.coddep != null) {
+            payload.coddep = normalize(body.coddep);
+        }
+        if (body.codcen != null) {
+            payload.codcen = normalize(body.codcen);
+        }
+
+        // 🔹 nuevas fechas de radicación
+        if (body.fecrad_ini != null && body.fecrad_ini !== '') {
+            payload.fecrad_ini = String(body.fecrad_ini);
+        }
+        if (body.fecrad_fin != null && body.fecrad_fin !== '') {
+            payload.fecrad_fin = String(body.fecrad_fin);
+        }
+
         return payload;
     }
 
     /** POST /teso13/{dim}/total  (dim = nit | coddep | codcen | perfac) */
     postTotal(
         dim: 'nit' | 'coddep' | 'codcen' | 'perfac',
-        body: { valor?: string; estado?: string | string[]; nit?: string | string[]; coddep?: string | string[]; codcen?: string | string[] },
+        body: {
+            valor?: string;
+            estado?: string | string[];
+            nit?: string | string[];
+            coddep?: string | string[];
+            codcen?: string | string[];
+            fecrad_ini?: string;
+            fecrad_fin?: string;
+        },
         token?: string
     ): Observable<{ total_facturas: number } | Array<{ [k: string]: any, total_facturas: number }>> {
         const url = `${this.base}teso13/${dim}/total`;
-        return this.http.post(url, this.buildPayload(body), { headers: this.headers(token) }) as any;
+        return this.http.post(
+            url,
+            this.buildPayload(body),
+            { headers: this.headers(token) }
+        ) as any;
     }
 
     /** POST /teso13/{dim}/estados  (requiere body.valor) */
     postEstados(
         dim: 'nit' | 'coddep' | 'codcen' | 'perfac',
-        body: { valor: string; estado?: string | string[]; nit?: string | string[]; coddep?: string | string[]; codcen?: string | string[] },
+        body: {
+            valor: string;
+            estado?: string | string[];
+            nit?: string | string[];
+            coddep?: string | string[];
+            codcen?: string | string[];
+            fecrad_ini?: string;
+            fecrad_fin?: string;
+        },
         token?: string
     ): Observable<Array<{ estado: string | null, total: number }>> {
         const url = `${this.base}teso13/${dim}/estados`;
-        return this.http.post<Array<{ estado: string | null, total: number }>>(url, this.buildPayload(body), { headers: this.headers(token) });
+        return this.http.post<Array<{ estado: string | null, total: number }>>(
+            url,
+            this.buildPayload(body),
+            { headers: this.headers(token) }
+        );
     }
 
     /** POST /teso13/{dim}/valores  (requiere body.valor) */
     postValores(
         dim: 'nit' | 'coddep' | 'codcen' | 'perfac',
-        body: { valor: string; estado?: string | string[]; nit?: string | string[]; coddep?: string | string[]; codcen?: string | string[] },
+        body: {
+            valor: string;
+            estado?: string | string[];
+            nit?: string | string[];
+            coddep?: string | string[];
+            codcen?: string | string[];
+            fecrad_ini?: string;
+            fecrad_fin?: string;
+        },
         token?: string
     ): Observable<TableroValores> {
         const url = `${this.base}teso13/${dim}/valores`;
-        return this.http.post<TableroValores>(url, this.buildPayload(body), { headers: this.headers(token) });
+        return this.http.post<TableroValores>(
+            url,
+            this.buildPayload(body),
+            { headers: this.headers(token) }
+        );
     }
 }
