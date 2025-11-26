@@ -43,7 +43,7 @@
                             (ngModelChange)="onSelectCoddep($event)">
                             <option [ngValue]="''" disabled>Seleccione dependencia…</option>
                             <option *ngFor="let est of dataConta28; trackBy: trackByCoddep" [value]="est.coddep">
-                                {{est.coddep}} - {{est.detalle}}
+                                {{ est.coddep }} - {{ est.detalle }}
                             </option>
                         </select>
                         <!-- CODCEN -->
@@ -51,7 +51,7 @@
                             (ngModelChange)="onSelectCodcen($event)">
                             <option [ngValue]="''" disabled>Seleccione área…</option>
                             <option *ngFor="let est of dataConta06; trackBy: trackByCodcen" [value]="est.codcen">
-                                {{est.codcen}} - {{est.detalle}}
+                                {{ est.codcen }} - {{ est.detalle }}
                             </option>
                         </select>
                         <!-- PERFAC -->
@@ -61,6 +61,18 @@
                         <!-- Default -->
                         <input *ngSwitchDefault type="text" class="form-control" [(ngModel)]="valor" />
                     </ng-container>
+                </div>
+
+                <!-- Fecha radicación inicial  -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label class="form-label">Fecha radicación inicial </label>
+                    <input type="date" class="form-control" [(ngModel)]="fecradIni" />
+                </div>
+
+                <!-- Fecha radicación final  -->
+                <div class="col-12 col-md-4 col-lg-3">
+                    <label class="form-label">Fecha radicación final </label>
+                    <input type="date" class="form-control" [(ngModel)]="fecradFin" />
                 </div>
 
                 <!-- Estado(s) multiselect -->
@@ -88,7 +100,7 @@
                     <label class="form-label">Dependencias</label>
                     <select class="form-select" name="coddep" [(ngModel)]="coddep">
                         <option *ngFor="let est of dataConta28; trackBy: trackByCoddep" [value]="est.coddep">
-                            {{est.coddep}} - {{ est.detalle }}
+                            {{ est.coddep }} - {{ est.detalle }}
                         </option>
                     </select>
                 </div>
@@ -98,12 +110,10 @@
                     <label class="form-label">Áreas</label>
                     <select class="form-select" name="codcen" [(ngModel)]="codcen">
                         <option *ngFor="let est of dataConta06; trackBy: trackByCodcen" [value]="est.codcen">
-                            {{est.codcen}} - {{ est.detalle }}
+                            {{ est.codcen }} - {{ est.detalle }}
                         </option>
                     </select>
                 </div>
-
-                <!-- Acciones secundarias -->
                 <div class="col-12 col-md-6 col-lg-3 d-flex align-items-end">
                     <div class="btn-group w-100">
                         <button class="btn btn-outline-primary btn-sm" (click)="consultarTotal()"
@@ -114,8 +124,10 @@
                             [disabled]="loading || !valor">Solo valores</button>
                     </div>
                 </div>
+                <!-- (tu bloque de “Acciones secundarias” lo dejas igual debajo de esto) -->
 
             </div>
+
 
             <!-- Chips de filtros activos -->
             <div class="mt-3" *ngIf="activeFilters.length">

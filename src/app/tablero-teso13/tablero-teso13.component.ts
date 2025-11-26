@@ -14,6 +14,7 @@ type Dim = 'nit' | 'coddep' | 'codcen' | 'perfac';
 })
 export class TableroTeso13Component {
   // ===== Filtros =====
+  // ===== Filtros =====
   dim: Dim = 'nit';
   valor = '';
 
@@ -23,6 +24,11 @@ export class TableroTeso13Component {
   nit = '';
   coddep = '';
   codcen = '';
+
+  // rango de fechas por teso13.fecrad
+  fecradIni = ''; // YYYY-MM-DD
+  fecradFin = ''; // YYYY-MM-DD
+
 
   // ===== Catálogos =====
   estadosTeso20: any[] = [];
@@ -124,17 +130,24 @@ export class TableroTeso13Component {
     this.syncEstadosCsv();
   }
 
-  /** Construye body para POST (omite vacíos) */
   private buildBody() {
     this.sanitize();
-    return {
+    const body: any = {
       valor: this.valor || undefined,
       estado: this.estadoCsv || undefined, // CSV: "RA,PE,AP"
       nit: this.nit || undefined,
       coddep: this.coddep || undefined,
       codcen: this.codcen || undefined
     };
+    if (this.fecradIni) {
+      body.fecrad_ini = this.fecradIni;
+    }
+    if (this.fecradFin) {
+      body.fecrad_fin = this.fecradFin;
+    }
+    return body;
   }
+
 
   limpiar() {
     this.errorMsg = '';
@@ -142,7 +155,17 @@ export class TableroTeso13Component {
     this.totalListado = [];
     this.estadosRows = [];
     this.valores = null;
+
+    this.valor = '';
+    this.estadosSeleccionados = [];
+    this.estadoCsv = '';
+    this.nit = '';
+    this.coddep = '';
+    this.codcen = '';
+    this.fecradIni = '';
+    this.fecradFin = '';
   }
+
 
   private humanizeError(err: any): string {
     if (typeof err === 'string') return err;
@@ -152,7 +175,10 @@ export class TableroTeso13Component {
 
   // ---------- CONSULTAS ----------
   consultarTotal() {
-    this.limpiar();
+    /* this.limpiar(); */
+
+    console.log('consultarTotal', this.dim);
+
     this.loading = true;
     const body = this.buildBody();
 
@@ -277,8 +303,16 @@ export class TableroTeso13Component {
     if (this.nit) chips.push(`NIT: ${this.nit}`);
     if (this.coddep) chips.push(`CODDEP: ${this.coddep}`);
     if (this.codcen) chips.push(`CODCEN: ${this.codcen}`);
+
+    if (this.fecradIni || this.fecradFin) {
+      const ini = this.fecradIni || '...';
+      const fin = this.fecradFin || '...';
+      chips.push(`FECRAD: ${ini} a ${fin}`);
+    }
+
     return chips;
   }
+
 
   // ---------- Getters para el dashboard ----------
   get kpiTotalFacturas(): number {
