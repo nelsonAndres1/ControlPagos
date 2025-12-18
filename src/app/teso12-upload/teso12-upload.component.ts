@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 
 import { UploadService } from '../services/upload.service';
 import { Teso13Service } from '../services/teso13.service';
+import { Console } from 'console';
 
 interface Soporte {
   codsop: string;
@@ -136,90 +137,95 @@ export class Teso12UploadComponent {
     this.contarPer = this.permisos.filter(p => p === 'S').length;
   }
 
-  uploadFiles() {
-    if (Object.keys(this.selectedFiles).length === 0) {
-      Swal.fire('Info', 'No hay archivos seleccionados para subir.', 'info');
-      //return;
-    }
-    if (!this.uploadToken) {
-      Swal.fire('Error', 'Falta upload_token en la navegación (query param o itemDetail[0]).', 'error');
-      return;
-    }
+/*   uploadFiles() {
+    const detail0: ItemDetail0 = { ...(this.itemDetail?.[0] ?? {}) };
+    console.log('Detalle 0 antes de uploadFiles:', detail0);
+  } */
 
-    const formData = new FormData();
-    for (const file of Object.values(this.selectedFiles)) {
-      formData.append('files[]', file);
-    }
-    this.datosArchivos.forEach(d => {
-      formData.append('data[]', JSON.stringify(d));
-    });
-
-    // 🔸 Mostrar mensaje de espera
-    Swal.fire({
-      title: 'Subiendo archivos y guardando pago...',
-      text: 'Por favor espera un momento.',
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading()
-    });
-
-    this.uploading = true; // 
-
-    this.uploadService.upload(formData).subscribe(
-      (response: any) => {
-        this.uploading = false; // 
-        Swal.close();
-
-        if (response?.success) {
-          Swal.fire('Info', 'Archivos subidos exitosamente: ' + (response.files ?? ''), 'info').then(() => {
-            this.selectedFiles = {};
-            const detail0: ItemDetail0 = { ...(this.itemDetail?.[0] ?? {}) };
-            detail0.upload_token = this.uploadToken;
-            if ('numero' in detail0) delete (detail0 as any).numero;
-
-            this._userService.register(detail0).subscribe(
-              (r: any) => {
-                this.uploading = false; // 🔓 seguridad extra por si acaso
-                if (r?.status === 'success') {
-                  this.status = r.status;
-                  const arrayD = this.itemDetail?.[1] ?? {};
-
-                  const navigationExtras: NavigationExtras = {
-                    queryParams: {
-                      result: JSON.stringify(arrayD),
-                      numeroPago: r.numero ?? '',
-                      uploadToken: this.uploadToken
-                    }
-                  };
-
-                  this._router.navigate(['teso113'], navigationExtras);
-                  Swal.fire('Correcto!', 'Pago Enviado Exitosamente!', 'success');
-                } else {
-                  Swal.fire('Error!', r?.error?.message || 'Error al registrar', 'error');
-                  this.status = 'error';
-                }
-              },
-              (err: any) => {
-                this.uploading = false; // 🔓 también aquí
-                Swal.fire('Error!', err?.error?.message || 'Error al registrar', 'info').then(() => {
-                  this._router.navigate(['teso10']);
-                });
-              }
-            );
-          });
-        } else {
-          this.errorMessage = response?.message || 'Respuesta inválida del servicio de carga.';
-          Swal.fire('Error!', 'Error al subir archivos: ' + this.errorMessage, 'error');
-        }
-      },
-      (error: any) => {
-        this.uploading = false; // 🔓 también en error
-        Swal.close();
-        const msg = error?.error?.message || 'Error al subir archivos. Por favor, inténtalo de nuevo.';
-        this.errorMessage = msg;
-        Swal.fire('Error!', msg, 'error');
+    uploadFiles() {
+      if (Object.keys(this.selectedFiles).length === 0) {
+        Swal.fire('Info', 'No hay archivos seleccionados para subir.', 'info');
+        //return;
       }
-    );
-  }
+      if (!this.uploadToken) {
+        Swal.fire('Error', 'Falta upload_token en la navegación (query param o itemDetail[0]).', 'error');
+        return;
+      }
+  
+      const formData = new FormData();
+      for (const file of Object.values(this.selectedFiles)) {
+        formData.append('files[]', file);
+      }
+      this.datosArchivos.forEach(d => {
+        formData.append('data[]', JSON.stringify(d));
+      });
+  
+      // 🔸 Mostrar mensaje de espera
+      Swal.fire({
+        title: 'Subiendo archivos y guardando pago...',
+        text: 'Por favor espera un momento.',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+  
+      this.uploading = true; // 
+  
+      this.uploadService.upload(formData).subscribe(
+        (response: any) => {
+          this.uploading = false; // 
+          Swal.close();
+  
+          if (response?.success) {
+            Swal.fire('Info', 'Archivos subidos exitosamente: ' + (response.files ?? ''), 'info').then(() => {
+              this.selectedFiles = {};
+              const detail0: ItemDetail0 = { ...(this.itemDetail?.[0] ?? {}) };
+              detail0.upload_token = this.uploadToken;
+              if ('numero' in detail0) delete (detail0 as any).numero;
+  
+              this._userService.register(detail0).subscribe(
+                (r: any) => {
+                  this.uploading = false; // 🔓 seguridad extra por si acaso
+                  if (r?.status === 'success') {
+                    this.status = r.status;
+                    const arrayD = this.itemDetail?.[1] ?? {};
+  
+                    const navigationExtras: NavigationExtras = {
+                      queryParams: {
+                        result: JSON.stringify(arrayD),
+                        numeroPago: r.numero ?? '',
+                        uploadToken: this.uploadToken
+                      }
+                    };
+  
+                    this._router.navigate(['teso113'], navigationExtras);
+                    Swal.fire('Correcto!', 'Pago Enviado Exitosamente!', 'success');
+                  } else {
+                    Swal.fire('Error!', r?.error?.message || 'Error al registrar', 'error');
+                    this.status = 'error';
+                  }
+                },
+                (err: any) => {
+                  this.uploading = false; // 🔓 también aquí
+                  Swal.fire('Error!', err?.error?.message || 'Error al registrar', 'info').then(() => {
+                    this._router.navigate(['teso10']);
+                  });
+                }
+              );
+            });
+          } else {
+            this.errorMessage = response?.message || 'Respuesta inválida del servicio de carga.';
+            Swal.fire('Error!', 'Error al subir archivos: ' + this.errorMessage, 'error');
+          }
+        },
+        (error: any) => {
+          this.uploading = false; // 🔓 también en error
+          Swal.close();
+          const msg = error?.error?.message || 'Error al subir archivos. Por favor, inténtalo de nuevo.';
+          this.errorMessage = msg;
+          Swal.fire('Error!', msg, 'error');
+        }
+      );
+    }
 
 
 }

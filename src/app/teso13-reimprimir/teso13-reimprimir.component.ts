@@ -157,6 +157,7 @@ export class Teso13ReimprimirComponent {
       this.impreseion.detalle = String(detallePagoResp?.detalle ?? '');
       this.impreseion.anexos_magneticos = String(detallePagoResp?.anexos_magneticos ?? '');
       this.impreseion.centros_json = String(detallePagoResp?.centros_json ?? '');
+      this.impreseion.cdps_json = String(detallePagoResp?.cdps_json ?? '');
 
       // 4) Enriquecer nombres (Conta04 / Gener02, etc.)
       // getAllConta04 espera el objeto Impresion (según tu código)

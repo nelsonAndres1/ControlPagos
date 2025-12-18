@@ -1,3 +1,5 @@
+// teso13.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router, NavigationExtras } from '@angular/router';
@@ -22,18 +24,25 @@ import { Numfac } from '../models/numfac';
 export class Teso13Component implements OnInit {
 
     bandera_loading = false;
-    // Usamos any para setear campos dinámicos (centros_json, upload_token) sin tocar el modelo
+
+    // Usamos any para setear campos dinámicos (centros_json, cdps_json, upload_token) sin tocar el modelo
     teso13: any;
+
     status: 'success' | 'error' | undefined;
+
     token: any;
     identity: any;
+
     consecutivo = '';
     nconsecutivo = 0;
+
     usu = '';
     tpago: any;
+
     num: any;
     usuela: any;
     codclas: any;
+
     periodos: string[] = [];
     valor: any;
 
@@ -53,12 +62,21 @@ export class Teso13Component implements OnInit {
 
     // CDP
     marca: string[] = ['AC', 'OP', 'SU'];
+
+    // Compat (campos simples históricos)
     cdp_marca: any;
     cdp_documento: any;
     cdp_ano: any;
     nit: any;
-    siCDPno = false;          // indica si hay relación CDP-NIT encontrada (nombre histórico)
-    cdp_bandera = false;      // no se usa para ocultar (ahora ocultamos con *ngIf), pero lo mantenemos por compatibilidad
+
+    siCDPno = false;
+    cdp_bandera = false;
+
+    // ===== CDP (VARIOS) =====
+    cdp_actual_marca: string = 'AC';
+    cdp_actual_documento: string = '';
+    cdp_actual_ano: any = ''; // input number puede ser number o string
+    cdps: Array<{ marca: string; documento: string; ano: number }> = [];
 
     // Soportes / fecha
     datoSoportes: any;
@@ -95,10 +113,10 @@ export class Teso13Component implements OnInit {
     nombre_usuario: string = '';
     nombre_pago: string = '';
 
-    // ===== NUEVO: control por “SIN CDP” / búsqueda obligatoria =====
-    sinCDPChecked = false;     // estado del checkbox ¿SIN CDP?
-    requiereBusqueda = true;   // si true, bloquea el resto del form hasta buscar
-    busquedaOk = false;        // se pone true cuando Buscar es exitoso
+    // ===== Control por “SIN CDP” / búsqueda obligatoria =====
+    sinCDPChecked = false;
+    requiereBusqueda = true;
+    busquedaOk = false;
 
     constructor(
         private _teso13Service: Teso13Service,
@@ -110,8 +128,16 @@ export class Teso13Component implements OnInit {
         private _teso19Service: Teso19Service
     ) {
         this.numfac = new Numfac('');
-        this.teso13 = new Teso13('', '', '', '', '', '', '', '', '', 1, '', '', '', '', '', '', '', '', '', '', '', 0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', '');
-        this.teso13.centros_json = ''; // campo dinámico
+
+        this.teso13 = new Teso13(
+            '', '', '', '', '', '', '', '', '',
+            1, '', '', '', '', '', '', '', '', '', '', '',
+            0, 0, 0, '', '', '', '', null, '', '', '0', '', '', '', ''
+        );
+
+        // Campos dinámicos
+        this.teso13.centros_json = '';
+        this.teso13.cdps_json = '';
 
         // Periodos del año actual
         const currentYear = new Date().getFullYear();
@@ -129,6 +155,7 @@ export class Teso13Component implements OnInit {
             const tpa = raw ? JSON.parse(raw) : null;
             this.tpago = Array.isArray(tpa) ? tpa[0]?.codclas : (tpa?.codclas ?? tpa ?? '');
         } catch { this.tpago = ''; }
+
         this.codclas = this.tpago;
         this.teso13.codclas = this.codclas;
 
@@ -149,6 +176,7 @@ export class Teso13Component implements OnInit {
         // Listas de personas
         this._utilidadesService.getAutorizaRevisa({ 'opcion': 'REVISA' }).subscribe(r => this.personas_revisa = r || []);
         this._utilidadesService.getAutorizaRevisa({ 'opcion': 'AUTORIZA' }).subscribe(r => this.personas_autoriza = r || []);
+
         this.getUsuario();
         this.getFirstPago();
     }
@@ -158,7 +186,39 @@ export class Teso13Component implements OnInit {
     // ===== UI helpers =====
     CDP() { this.cdp_bandera = !this.cdp_bandera; }
 
-    // ===== NUEVO: manejo del check ¿SIN CDP? =====
+    // ===== UX NO TRAUMÁTICA: Enter agrega CDP =====
+    onEnterAddCDP(ev: any) {
+        if (ev?.preventDefault) ev.preventDefault();
+        this.addCDP();
+    }
+
+
+    // ===== Sync CDPs a JSON para backend =====
+    private syncCdpsJson() {
+        // Si SIN CDP, vacío
+        if (this.sinCDPChecked) {
+            this.teso13.cdps_json = '';
+            return;
+        }
+        this.teso13.cdps_json = JSON.stringify(this.cdps || []);
+    }
+
+    // ===== Auto-agregar si el CDP está completo (para evitar “trauma”) =====
+    autoAddCDPIfComplete() {
+        if (this.sinCDPChecked) return;
+
+        const marca = String(this.cdp_actual_marca ?? '').trim();
+        const documento = String(this.cdp_actual_documento ?? '').trim();
+        const anoStr = String(this.cdp_actual_ano ?? '').trim();
+
+        // Si no está completo, no hacemos nada
+        if (!marca || !documento || !anoStr) return;
+
+        // Si está completo, lo intentamos agregar (respeta duplicados y validaciones)
+        this.addCDP(false); // false = no mostrar alertas por faltantes (ya está completo)
+    }
+
+    // ===== Manejo del check ¿SIN CDP? =====
     onSinCDPChange(e: any) {
         this.sinCDPChecked = !!e?.target?.checked;
 
@@ -167,16 +227,26 @@ export class Teso13Component implements OnInit {
             this.requiereBusqueda = false;
             this.busquedaOk = true;
 
-            // Opcional: limpiar y setear defaults en el modelo (para backend)
+            // Limpia CDPs agregados
+            this.cdps = [];
+            this.syncCdpsJson();
+
+            // Defaults (para backend / compatibilidad)
             this.teso13.cdp_marca = 'OP';
             this.teso13.cdp_documento = '00';
-            this.teso13.cdp_ano = '0';
-            this.siCDPno = false;   // no se valida CDP
+            this.teso13.cdp_ano = 0; // si backend espera integer, mejor number aquí
+
+            this.siCDPno = false;
+
+            // limpiar inputs CDP actual
+            this.cdp_actual_marca = 'AC';
+            this.cdp_actual_documento = '';
+            this.cdp_actual_ano = '';
         } else {
             // Con CDP: exigir búsqueda para continuar
             this.requiereBusqueda = true;
             this.busquedaOk = false;
-            // no tocar los valores, el usuario llena y busca
+            this.siCDPno = false;
         }
     }
 
@@ -184,11 +254,63 @@ export class Teso13Component implements OnInit {
         this.ccVarios = !this.ccVarios;
     }
 
+    // ===== CDP (varios) =====
+    addCDP(mostrarAlertasPorFaltantes: boolean = true) {
+        if (this.sinCDPChecked) return;
+
+        const marca = String(this.cdp_actual_marca ?? '').trim();
+        const documento = String(this.cdp_actual_documento ?? '').trim();
+        const anoStr = String(this.cdp_actual_ano ?? '').trim();
+        const anoNum = Number(anoStr);
+
+        if (!marca || !documento || !anoStr) {
+            if (mostrarAlertasPorFaltantes) {
+                Swal.fire('Faltan datos', 'Diligencia Marca, Documento y Año del CDP.', 'warning');
+            }
+            return;
+        }
+
+        if (!Number.isFinite(anoNum) || anoNum <= 0) {
+            Swal.fire('Año inválido', 'El año del CDP debe ser numérico.', 'warning');
+            return;
+        }
+
+        const dup = this.cdps.some(x =>
+            x.marca === marca &&
+            x.documento === documento &&
+            x.ano === anoNum
+        );
+
+        if (dup) {
+            Swal.fire('Duplicado', 'Ese CDP ya fue agregado.', 'info');
+            return;
+        }
+
+        this.cdps.push({ marca, documento, ano: anoNum });
+        this.syncCdpsJson();
+
+        // limpiar inputs
+        this.cdp_actual_documento = '';
+        this.cdp_actual_ano = '';
+    }
+
+    removeCDP(i: number) {
+        this.cdps.splice(i, 1);
+        this.syncCdpsJson();
+    }
+
+    private nitParam(nit: any): any {
+        const s = String(nit ?? '').trim();
+        const n = Number(s);
+        return (s !== '' && Number.isFinite(n)) ? n : s;
+    }
+
     // ===== NIT =====
     touch(resultC: any) {
         this._teso19Service.getAllPagos(resultC).subscribe(response => {
             this.data_cant_pagos = 'Este Nit tiene esta cantidad de pagos: ' + (response?.total_pagos ?? 0);
         });
+
         this.teso13.nit = resultC.nit;
         this.nit_nombre = resultC.razsoc;
         this.bandera2 = false;
@@ -263,17 +385,21 @@ export class Teso13Component implements OnInit {
 
     addCentro() {
         if (!this.ccVarios) return;
+
         const cod = (this.cc_actual_cod || '').trim();
         if (!cod) {
             Swal.fire('Faltan datos', 'Selecciona un Centro de Costo de la lista.', 'warning');
             return;
         }
+
         const dup = this.centros.some(c => c.codcen === cod);
         if (dup) {
             Swal.fire('Duplicado', 'Ese Centro de Costo ya fue agregado.', 'info');
             return;
         }
+
         this.centros.push({ codcen: cod, detalleCC: this.cc_actual_detalle || '' });
+
         // limpiar selección
         this.cc_actual_cod = '';
         this.cc_actual_detalle = '';
@@ -325,31 +451,101 @@ export class Teso13Component implements OnInit {
         }
     }
 
-    // ======= BUSCAR T17 (actualizado para desbloquear cuando hay CDP) =======
-    buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
-        this._teso13Service.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
-            if (response) {
-                this.cdp_marca = cdp_marca; this.cdp_documento = cdp_documento; this.cdp_ano = cdp_ano; this.nit = nit;
-                this._teso13Service.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(
-                    r => {
-                        this.siCDPno = true; this.bd1 = true;
-                        if (r.numcuo == r.cuota) {
-                            if (r.numcuo == undefined) { this.teso13.numcuo = 1; this.cuota = 1; }
-                            else { Swal.fire('Información', 'Ya se han realizado la totalidad de los pagos', 'info'); this.teso13.numcuo = 1; this.cuota = 1; }
-                        } else {
-                            this.datos_teso17.push(r.numcuo, r.cuota);
-                            this.teso13.numcuo = r.numcuo; this.cuota = parseInt(r.cuota) + 1;
-                        }
-                        this.busquedaOk = true; // habilita el resto
-                    },
-                    _ => { this.bd1 = false; this.busquedaOk = false; }
-                );
-            } else {
-                this.bd1 = false;
-                this.busquedaOk = false;
-                Swal.fire('¡Error!', 'No existen datos asociados a CDP Y NIT!', 'error');
+    // ===== BÚSQUEDA MULTI-CDP (valida mismo NIT) =====
+    buscarT17Multiple(nit: any) {
+        if (this.sinCDPChecked) return;
+
+        // UX: si el usuario digitó el CDP pero no presionó agregar, lo auto-agregamos
+        this.autoAddCDPIfComplete();
+
+        const nitVal = String(nit ?? '').trim();
+        if (!nitVal) {
+            Swal.fire('Faltan datos', 'Selecciona primero un NIT.', 'warning');
+            return;
+        }
+
+        if (!this.cdps || this.cdps.length === 0) {
+            Swal.fire('Faltan CDP', 'Agrega al menos un CDP antes de buscar.', 'warning');
+            return;
+        }
+
+        this.bandera_loading = true;
+        this.busquedaOk = false;
+        this.bd1 = true;
+
+        const run = (idx: number, maxCuota: number, maxNumcuo: number, algunoDisponible: boolean) => {
+            if (idx >= this.cdps.length) {
+                this.bandera_loading = false;
+
+                this.busquedaOk = true;
+                this.siCDPno = true;
+
+                if (!algunoDisponible) {
+                    Swal.fire('Información', 'Todos los CDP agregados ya tienen la totalidad de pagos realizados.', 'info');
+                    this.teso13.numcuo = 1;
+                    this.cuota = 1;
+                    return;
+                }
+
+                if (!maxNumcuo && !maxCuota) {
+                    this.teso13.numcuo = 1;
+                    this.cuota = 1;
+                } else {
+                    this.teso13.numcuo = maxNumcuo;
+                    this.cuota = maxCuota + 1;
+                }
+
+                return;
             }
-        });
+
+            const c = this.cdps[idx];
+
+            // 1) validar relación CDP-NIT
+            this._teso13Service
+                .getbusqueda71(new Conta71(c.marca, c.documento, c.ano, this.nitParam(nitVal)))
+                .subscribe(respRelacion => {
+
+                    if (!respRelacion) {
+                        this.bandera_loading = false;
+                        this.bd1 = false;
+                        this.busquedaOk = false;
+                        Swal.fire('¡Error!', `No existen datos asociados a CDP y NIT para: ${c.marca}-${c.documento}-${c.ano}`, 'error');
+                        return;
+                    }
+
+                    // 2) obtener info de pagos (teso17)
+                    this._teso13Service
+                        .getTeso17(new Teso17(nitVal, c.marca, c.documento, String(c.ano), '', '', 0, 0, ''))
+                        .subscribe(
+                            r => {
+                                const numcuoR = Number(r?.numcuo) || 0;
+                                const cuotaR = Number(r?.cuota) || 0;
+
+                                if (!numcuoR && !cuotaR) {
+                                    algunoDisponible = true;
+                                    maxNumcuo = Math.max(maxNumcuo, 1);
+                                    maxCuota = Math.max(maxCuota, 0);
+                                } else if (numcuoR === cuotaR) {
+                                    // completo
+                                } else {
+                                    algunoDisponible = true;
+                                    maxNumcuo = Math.max(maxNumcuo, numcuoR);
+                                    maxCuota = Math.max(maxCuota, cuotaR);
+                                }
+
+                                run(idx + 1, maxCuota, maxNumcuo, algunoDisponible);
+                            },
+                            _ => {
+                                this.bandera_loading = false;
+                                this.bd1 = false;
+                                this.busquedaOk = false;
+                                Swal.fire('Error', `No fue posible consultar pagos para: ${c.marca}-${c.documento}-${c.ano}`, 'error');
+                            }
+                        );
+                });
+        };
+
+        run(0, 0, 0, false);
     }
 
     private normalizeCurrency(value: string): number {
@@ -365,16 +561,21 @@ export class Teso13Component implements OnInit {
         let value = input.value || '';
         value = value.replace(/\./g, '');
         value = value.replace(/[^0-9,]/g, '');
+
         const [integerPart, decimalPart] = value.split(',');
         const formattedIntegerPart = (integerPart || '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
         input.value = decimalPart !== undefined ? `${formattedIntegerPart},${decimalPart}` : formattedIntegerPart;
         this.teso13.valor = input.value;
     }
 
     onSubmit(form: any) {
+        // UX: si el usuario digitó el CDP pero no presionó agregar, lo auto-agregamos
+        this.autoAddCDPIfComplete();
+
         // Guardia: si requiere búsqueda (NO SIN CDP) y aún no se hizo, impedir envío
         if (this.requiereBusqueda && !this.busquedaOk) {
-            Swal.fire('Falta la búsqueda', 'Debes presionar "Buscar Pagos asociados a NIT Y CDP" antes de continuar.', 'warning');
+            Swal.fire('Falta la búsqueda', 'Debes presionar "Buscar Pagos asociados a NIT y CDP(s)" antes de continuar.', 'warning');
             return;
         }
 
@@ -383,102 +584,132 @@ export class Teso13Component implements OnInit {
             return;
         }
 
+        if (!this.sinCDPChecked && (!this.cdps || this.cdps.length === 0)) {
+            Swal.fire('Faltan CDP', 'Agrega al menos un CDP.', 'warning');
+            return;
+        }
+
         Swal.fire({
             title: '¿Estas Seguro?',
             html: `
-            <strong class="font__weight">Importante antes de iniciar el pago!</strong>
-            <ul style="text-align: left;">
-            <li>ESTE FORMATO NO PODRÁ SER MODIFICADO, EN LO REFERENTE A REQUISITOS Y A SU FORMA SIN PREVIA
-                AUTORIZACIÓN DE LA COORDINACIÓN DE TESORERÍA Y LA LEGALIZACIÓN DEL CAMBIO ANTE LA COORDINACIÓN
-                DE DESARROLLO ORGANIZACIONAL
-            </li>
-            <li>Para el tramite de la cuenta debe obligatoriamente diligenciar este formato en su totalidad</li>
-            <li>Los requisitos se actualizarán de acuerdo con la normatividad vigente.</li>
-            <li>Cuando es un pago por primera vez se debe anexar el Formato de Información y Pagos Mediante el
-                Sistema de Traslado Electrónico.
-            </li>
-            <li>Certificación Bancaria, Pagos por primera vez o cuando modifique la cuenta bancaria.</li>
-            <li>Verificar que la resolución de la factura esté vigente (dos años).</li>
-            <li>Cuando se trate de cuentas con provisión del año inmediatamente anterior, se debe anexar soporte
-                de la misma emitido por la Coordinación de Contabilidad.
-            </li>
-            <li>Cuando se trate de legalización de cuentas de periodos anteriores no provisionadas o que requieran
-                pago después de las fechas de cierre, debe soportarse con oficio o acta del Comité de Conciliación
-                Contable, emitido por la oficina Jurídica.
-            </li>
-            <li>Cuando se trate de modificaciones al contrato inicial (monto, plazo o supervisión), debe adjuntarse
-                copia del Otro Sí en la cuenta siguiente a dicho cambio.
-            </li>
-            <li>Los documentos soportes para trámite de pago deben imprimirse a doble cara.</li>
-            <li>La firma y la fecha son los únicos campos que se pueden diligenciar a mano.</li>
-            <li>Los formatos para certificación de ejecución contractual, informe de supervisión/interventoría y
-                revisión de requisitos aplican únicamente para contratistas.</li>
-            </ul>
-        `,
+        <strong class="font__weight">Importante antes de iniciar el pago!</strong>
+        <ul style="text-align: left;">
+          <li>ESTE FORMATO NO PODRÁ SER MODIFICADO, EN LO REFERENTE A REQUISITOS Y A SU FORMA SIN PREVIA
+            AUTORIZACIÓN DE LA COORDINACIÓN DE TESORERÍA Y LA LEGALIZACIÓN DEL CAMBIO ANTE LA COORDINACIÓN
+            DE DESARROLLO ORGANIZACIONAL</li>
+          <li>Para el tramite de la cuenta debe obligatoriamente diligenciar este formato en su totalidad</li>
+          <li>Los requisitos se actualizarán de acuerdo con la normatividad vigente.</li>
+          <li>Cuando es un pago por primera vez se debe anexar el Formato de Información y Pagos Mediante el
+            Sistema de Traslado Electrónico.</li>
+          <li>Certificación Bancaria, Pagos por primera vez o cuando modifique la cuenta bancaria.</li>
+          <li>Verificar que la resolución de la factura esté vigente (dos años).</li>
+          <li>Cuando se trate de cuentas con provisión del año inmediatamente anterior, se debe anexar soporte
+            de la misma emitido por la Coordinación de Contabilidad.</li>
+          <li>Cuando se trate de legalización de cuentas de periodos anteriores no provisionadas o que requieran
+            pago después de las fechas de cierre, debe soportarse con oficio o acta del Comité de Conciliación
+            Contable, emitido por la oficina Jurídica.</li>
+          <li>Cuando se trate de modificaciones al contrato inicial (monto, plazo o supervisión), debe adjuntarse
+            copia del Otro Sí en la cuenta siguiente a dicho cambio.</li>
+          <li>Los documentos soportes para trámite de pago deben imprimirse a doble cara.</li>
+          <li>La firma y la fecha son los únicos campos que se pueden diligenciar a mano.</li>
+          <li>Los formatos para certificación de ejecución contractual, informe de supervisión/interventoría y
+            revisión de requisitos aplican únicamente para contratistas.</li>
+        </ul>
+      `,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#4BB543',
             cancelButtonColor: '#EA1737',
             confirmButtonText: 'Iniciar'
-        })
-            .then(result => {
-                this.teso13.fecrad = this.fechaRdicado;
-                if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';
-                if (!result.value) { Swal.fire('Cancelado!', 'Pago No Enviado', 'error'); return; }
+        }).then(result => {
+            this.teso13.fecrad = this.fechaRdicado;
 
-                const valorNum = this.normalizeCurrency(this.teso13.valor);
+            if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';
+            if (!result.value) { Swal.fire('Cancelado!', 'Pago No Enviado', 'error'); return; }
 
-                // Token de upload
-                const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
-                this.teso13.upload_token = uploadToken; // campo dinámico
+            const valorNum = this.normalizeCurrency(this.teso13.valor);
 
-                // Empaquetar CC varios en JSON (para backend)
-                this.teso13.centros_json = JSON.stringify(this.centros || []);
+            // Token de upload
+            const uploadToken = (window as any).crypto?.randomUUID?.() || String(Date.now());
+            this.teso13.upload_token = uploadToken;
 
-                const navegar = () => {
-                    const arrayD = [
-                        this.tpago,
-                        this.nit_nombre,
-                        this.subdir_nombre,  // solo informativo
-                        this.dep_nombre,     // solo informativo
-                        // Si se usó CDP real, usar sus valores; si se marcó SIN CDP, defaults 'OP','00','0'
-                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_marca : 'OP',
-                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_documento : '00',
-                        (!this.sinCDPChecked && this.siCDPno) ? this.cdp_ano : '0',
-                        this.teso13.nit
-                    ];
+            // Empaquetar CC varios en JSON (para backend)
+            this.teso13.centros_json = JSON.stringify(this.centros || []);
 
-                    const navigationExtras: NavigationExtras = {
-                        queryParams: {
-                            result: JSON.stringify([this.teso13, arrayD]),
-                            uploadToken
-                        }
-                    };
+            const navegar = () => {
+                // CDP principal: el primero de la lista (compatibilidad)
+                const cdpPrincipal = (!this.sinCDPChecked && this.cdps.length > 0)
+                    ? this.cdps[0]
+                    : { marca: 'OP', documento: '00', ano: 0 };
 
-                    this._router.navigate(['teso12_upload'], navigationExtras);
-                    Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
+                const arrayD = [
+                    this.tpago,
+                    this.nit_nombre,
+                    this.subdir_nombre,
+                    this.dep_nombre,
+                    cdpPrincipal.marca,
+                    cdpPrincipal.documento,
+                    cdpPrincipal.ano,
+                    this.teso13.nit
+                ];
+
+                const navigationExtras: NavigationExtras = {
+                    queryParams: {
+                        result: JSON.stringify([this.teso13, arrayD]),
+                        uploadToken
+                    }
                 };
 
-                // Flujo de envío según SIN CDP o CON CDP
-                if (!this.sinCDPChecked) {
-                    // CON CDP: validar contra valor del CDP
-                    this.teso13.sCDPn = true;
-                    this._teso13Service
-                        .valorCDP(new Conta71(this.cdp_marca, this.cdp_documento, this.cdp_ano, this.nit))
-                        .subscribe(response => {
-                            const valorCDP = Number(response) || 0;
-                            if (valorCDP >= valorNum) navegar();
-                            else Swal.fire('Error!', 'Pago No Enviado, valor de CDP insuficiente', 'error');
+                this._router.navigate(['teso12_upload'], navigationExtras);
+                Swal.fire('Formulario diligenciado!', 'Pendiente envio!', 'success');
+            };
+
+            // Flujo de envío según SIN CDP o CON CDP(s)
+            if (!this.sinCDPChecked) {
+                // CON CDP(s): valida sumatoria del valor disponible
+                this.teso13.sCDPn = true;
+
+                // setear primer CDP en campos clásicos (compatibilidad)
+                this.teso13.cdp_marca = this.cdps[0].marca;
+                this.teso13.cdp_documento = this.cdps[0].documento;
+                this.teso13.cdp_ano = this.cdps[0].ano; // integer
+
+                // enviar todos
+                this.syncCdpsJson();
+
+                let total = 0;
+
+                const sumar = (i: number) => {
+                    if (i >= this.cdps.length) {
+                        if (total >= valorNum) navegar();
+                        else Swal.fire('Error!', 'Pago No Enviado, valor total de CDP(s) insuficiente', 'error');
+                        return;
+                    }
+
+                    const c = this.cdps[i];
+                    const anoNum = Number(c.ano);
+
+                    this._teso13Service.valorCDP(new Conta71(c.marca, c.documento, anoNum, this.teso13.nit))
+                        .subscribe(resp => {
+                            total += (Number(resp) || 0);
+                            sumar(i + 1);
+                        }, _ => {
+                            Swal.fire('Error', `No fue posible validar valor del CDP: ${c.marca}-${c.documento}-${c.ano}`, 'error');
                         });
-                } else {
-                    // SIN CDP: setear defaults y continuar
-                    this.teso13.sCDPn = false;
-                    this.teso13.cdp_ano = '0';
-                    this.teso13.cdp_documento = '00';
-                    this.teso13.cdp_marca = 'OP';
-                    navegar();
-                }
-            });
+                };
+
+                sumar(0);
+
+            } else {
+                // SIN CDP: setear defaults y continuar
+                this.teso13.sCDPn = false;
+                this.teso13.cdp_ano = 0;
+                this.teso13.cdp_documento = '00';
+                this.teso13.cdp_marca = 'OP';
+                this.teso13.cdps_json = '';
+                navegar();
+            }
+        });
     }
 
     download() {
@@ -515,10 +746,11 @@ export class Teso13Component implements OnInit {
             response => {
                 this.bandera_loading = false;
                 if (response.status === 'success' && response.bandera === '1') {
-                    Swal.fire('Información', 'Este numero de factura: '+event.target.value+' con este nit: '+this.teso13.nit+ ' ya existe en un pago!');
+                    Swal.fire('Información', 'Este numero de factura: ' + event.target.value + ' con este nit: ' + this.teso13.nit + ' ya existe en un pago!');
                 }
             },
             _ => { this.bandera_loading = false; }
         );
     }
+
 }
