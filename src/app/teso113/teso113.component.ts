@@ -31,6 +31,7 @@ interface Teso13Data {
     anexos_magneticos?: string;
     centros_json?: string;
     codclas?: string;
+    cdps_json?: string;
 }
 
 @Component({
@@ -94,9 +95,9 @@ export class Teso113Component implements OnInit {
         private teso13Srv: Teso13Service,
         private pdfSrv: PdfService,
         private gener02Srv: Gener02Service
-    ) { 
+    ) {
 
-        
+
     }
 
 
@@ -227,6 +228,8 @@ export class Teso113Component implements OnInit {
             this.impreseion.detalle = this.data.detalle ?? '';
             this.impreseion.anexos_magneticos = this.data.anexos_magneticos ?? '';
             this.impreseion.centros_json = this.data.centros_json ?? '';
+            this.impreseion.cdps_json = this.data.cdps_json ?? '';
+
 
             console.log('Impresion objeto:', this.impreseion);
 
