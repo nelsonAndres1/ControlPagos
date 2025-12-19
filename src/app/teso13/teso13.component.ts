@@ -14,6 +14,7 @@ import { Conta71 } from '../models/conta71';
 import { UtilidadesService } from '../services/utilidades.service';
 import { Teso19Service } from '../services/teso19.service';
 import { Numfac } from '../models/numfac';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-teso13',
@@ -25,7 +26,7 @@ export class Teso13Component implements OnInit {
 
     bandera_loading = false;
 
-    // Usamos any para setear campos dinámicos (centros_json, cdps_json, upload_token) sin tocar el modelo
+    // any para setear campos dinámicos (centros_json, cdps_json, upload_token) sin tocar el modelo
     teso13: any;
 
     status: 'success' | 'error' | undefined;
@@ -192,10 +193,8 @@ export class Teso13Component implements OnInit {
         this.addCDP();
     }
 
-
     // ===== Sync CDPs a JSON para backend =====
     private syncCdpsJson() {
-        // Si SIN CDP, vacío
         if (this.sinCDPChecked) {
             this.teso13.cdps_json = '';
             return;
@@ -211,11 +210,10 @@ export class Teso13Component implements OnInit {
         const documento = String(this.cdp_actual_documento ?? '').trim();
         const anoStr = String(this.cdp_actual_ano ?? '').trim();
 
-        // Si no está completo, no hacemos nada
         if (!marca || !documento || !anoStr) return;
 
-        // Si está completo, lo intentamos agregar (respeta duplicados y validaciones)
-        this.addCDP(false); // false = no mostrar alertas por faltantes (ya está completo)
+        // intenta agregar sin mostrar alerta por faltantes
+        this.addCDP(false);
     }
 
     // ===== Manejo del check ¿SIN CDP? =====
@@ -234,7 +232,7 @@ export class Teso13Component implements OnInit {
             // Defaults (para backend / compatibilidad)
             this.teso13.cdp_marca = 'OP';
             this.teso13.cdp_documento = '00';
-            this.teso13.cdp_ano = 0; // si backend espera integer, mejor number aquí
+            this.teso13.cdp_ano = 0;
 
             this.siCDPno = false;
 
@@ -451,11 +449,13 @@ export class Teso13Component implements OnInit {
         }
     }
 
-    // ===== BÚSQUEDA MULTI-CDP (valida mismo NIT) =====
-    buscarT17Multiple(nit: any) {
+    // =========================================================================================
+    // 1) ROUTER de búsqueda: 1 CDP => usar función ORIGINAL; varios => iterar
+    // =========================================================================================
+    buscarPagosAsociados(nit: any) {
         if (this.sinCDPChecked) return;
 
-        // UX: si el usuario digitó el CDP pero no presionó agregar, lo auto-agregamos
+        // UX: si digitó un CDP y no lo agregó, lo auto-agregamos
         this.autoAddCDPIfComplete();
 
         const nitVal = String(nit ?? '').trim();
@@ -469,83 +469,167 @@ export class Teso13Component implements OnInit {
             return;
         }
 
-        this.bandera_loading = true;
-        this.busquedaOk = false;
-        this.bd1 = true;
+        // 1 CDP => usa tu función ORIGINAL sin modificarla
+        if (this.cdps.length === 1) {
+            const c = this.cdps[0];
+            this.buscarT17(c.marca, c.documento, c.ano, nitVal);
+            return;
+        }
 
-        const run = (idx: number, maxCuota: number, maxNumcuo: number, algunoDisponible: boolean) => {
-            if (idx >= this.cdps.length) {
-                this.bandera_loading = false;
+        // Varios CDPs => iteración
+        this.buscarT17Multiple(nitVal);
+    }
 
-                this.busquedaOk = true;
-                this.siCDPno = true;
+    // =========================================================================================
+    // 2) FUNCIÓN ORIGINAL (SIN CAMBIOS)
+    // =========================================================================================
+    buscarT17(cdp_marca: any, cdp_documento: string, cdp_ano: any, nit: any) {
+        this._teso13Service.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, nit)).subscribe(response => {
+            if (response) {
+                this.cdp_marca = cdp_marca;
+                this.cdp_documento = cdp_documento;
+                this.cdp_ano = cdp_ano;
+                this.nit = nit;
+                this._teso13Service.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, cdp_ano, '', '', 0, 0, '')).subscribe(
+                    r => {
+                        this.siCDPno = true;
+                        this.bd1 = true;
+                        if (r.numcuo == r.cuota) {
+                            if (r.numcuo == undefined) {
+                                this.teso13.numcuo = 1;
+                                this.cuota = 1;
+                            } else {
+                                Swal.fire('Información', 'Ya se han realizado la totalidad de los pagos', 'info');
+                                this.teso13.numcuo = 1; this.cuota = 1;
+                            }
+                        } else {
+                            this.datos_teso17.push(r.numcuo, r.cuota);
+                            this.teso13.numcuo = r.numcuo;
+                            this.cuota = parseInt(r.cuota) + 1;
+                        }
+                        this.busquedaOk = true; // habilita el resto
+                    },
+                    _ => { this.bd1 = false; this.busquedaOk = false; }
+                );
+            } else {
+                this.bd1 = false;
+                this.busquedaOk = false;
+                Swal.fire('¡Error!', 'No existen datos asociados a CDP Y NIT!', 'error');
+            }
+        });
+    }
 
-                if (!algunoDisponible) {
-                    Swal.fire('Información', 'Todos los CDP agregados ya tienen la totalidad de pagos realizados.', 'info');
-                    this.teso13.numcuo = 1;
-                    this.cuota = 1;
-                    return;
-                }
+    // =========================================================================================
+    // 3) MULTI-CDP: helper (promesas) para iterar sin “subscribe anidado”
+    // =========================================================================================
+    private async consultarT17PorCDP(nit: any, cdp_marca: any, cdp_documento: string, cdp_ano: any): Promise<{ numcuo: number; cuota: number; }> {
+        const relacion = await firstValueFrom(
+            this._teso13Service.getbusqueda71(new Conta71(cdp_marca, cdp_documento, cdp_ano, this.nitParam(nit)))
+        );
 
-                if (!maxNumcuo && !maxCuota) {
-                    this.teso13.numcuo = 1;
-                    this.cuota = 1;
+        if (!relacion) {
+            throw new Error('NO_RELACION');
+        }
+
+        const r = await firstValueFrom(
+            this._teso13Service.getTeso17(new Teso17(nit, cdp_marca, cdp_documento, String(cdp_ano), '', '', 0, 0, ''))
+        );
+
+        const numcuo = Number(r?.numcuo) || 0;
+        const cuota = Number(r?.cuota) || 0;
+
+        return { numcuo, cuota };
+    }
+
+    // =========================================================================================
+    // 4) MULTI-CDP: iteración
+    // =========================================================================================
+    async buscarT17Multiple(nit: any) {
+        if (this.sinCDPChecked) return;
+
+        // UX: por si digitó y no agregó
+        this.autoAddCDPIfComplete();
+
+        const nitVal = String(nit ?? '').trim();
+        if (!nitVal) {
+            Swal.fire('Faltan datos', 'Selecciona primero un NIT.', 'warning');
+            return;
+        }
+
+        if (!this.cdps || this.cdps.length === 0) {
+            Swal.fire('Faltan CDP', 'Agrega al menos un CDP antes de buscar.', 'warning');
+            return;
+        }
+
+        try {
+            this.bandera_loading = true;
+            this.busquedaOk = false;
+            this.bd1 = true;
+
+            // Compatibilidad legacy (principal = primero)
+            this.cdp_marca = this.cdps[0].marca;
+            this.cdp_documento = this.cdps[0].documento;
+            this.cdp_ano = this.cdps[0].ano;
+            this.nit = nitVal;
+
+            let maxNumcuo = 0;
+            let maxCuota = 0;
+            let algunoDisponible = false;
+
+            // opcional: reset
+            this.datos_teso17 = [];
+
+            for (let i = 0; i < this.cdps.length; i++) {
+                const c = this.cdps[i];
+
+                const { numcuo, cuota } = await this.consultarT17PorCDP(nitVal, c.marca, c.documento, c.ano);
+
+                // mimic lógica original
+                if (!numcuo && !cuota) {
+                    algunoDisponible = true;
+                    maxNumcuo = Math.max(maxNumcuo, 1);
+                    maxCuota = Math.max(maxCuota, 0);
+                } else if (numcuo === cuota) {
+                    // completo
                 } else {
-                    this.teso13.numcuo = maxNumcuo;
-                    this.cuota = maxCuota + 1;
+                    algunoDisponible = true;
+                    maxNumcuo = Math.max(maxNumcuo, numcuo);
+                    maxCuota = Math.max(maxCuota, cuota);
+                    this.datos_teso17.push(numcuo, cuota);
                 }
+            }
 
+            this.siCDPno = true;
+            this.bd1 = true;
+            this.busquedaOk = true;
+
+            if (!algunoDisponible) {
+                Swal.fire('Información', 'Todos los CDP agregados ya tienen la totalidad de pagos realizados.', 'info');
+                this.teso13.numcuo = 1;
+                this.cuota = 1;
                 return;
             }
 
-            const c = this.cdps[idx];
+            if (!maxNumcuo && !maxCuota) {
+                this.teso13.numcuo = 1;
+                this.cuota = 1;
+            } else {
+                this.teso13.numcuo = maxNumcuo;
+                this.cuota = maxCuota + 1;
+            }
 
-            // 1) validar relación CDP-NIT
-            this._teso13Service
-                .getbusqueda71(new Conta71(c.marca, c.documento, c.ano, this.nitParam(nitVal)))
-                .subscribe(respRelacion => {
+        } catch (e: any) {
+            this.bd1 = false;
+            this.busquedaOk = false;
 
-                    if (!respRelacion) {
-                        this.bandera_loading = false;
-                        this.bd1 = false;
-                        this.busquedaOk = false;
-                        Swal.fire('¡Error!', `No existen datos asociados a CDP y NIT para: ${c.marca}-${c.documento}-${c.ano}`, 'error');
-                        return;
-                    }
-
-                    // 2) obtener info de pagos (teso17)
-                    this._teso13Service
-                        .getTeso17(new Teso17(nitVal, c.marca, c.documento, String(c.ano), '', '', 0, 0, ''))
-                        .subscribe(
-                            r => {
-                                const numcuoR = Number(r?.numcuo) || 0;
-                                const cuotaR = Number(r?.cuota) || 0;
-
-                                if (!numcuoR && !cuotaR) {
-                                    algunoDisponible = true;
-                                    maxNumcuo = Math.max(maxNumcuo, 1);
-                                    maxCuota = Math.max(maxCuota, 0);
-                                } else if (numcuoR === cuotaR) {
-                                    // completo
-                                } else {
-                                    algunoDisponible = true;
-                                    maxNumcuo = Math.max(maxNumcuo, numcuoR);
-                                    maxCuota = Math.max(maxCuota, cuotaR);
-                                }
-
-                                run(idx + 1, maxCuota, maxNumcuo, algunoDisponible);
-                            },
-                            _ => {
-                                this.bandera_loading = false;
-                                this.bd1 = false;
-                                this.busquedaOk = false;
-                                Swal.fire('Error', `No fue posible consultar pagos para: ${c.marca}-${c.documento}-${c.ano}`, 'error');
-                            }
-                        );
-                });
-        };
-
-        run(0, 0, 0, false);
+            if (e?.message === 'NO_RELACION') {
+                Swal.fire('¡Error!', 'No existen datos asociados a CDP y NIT para uno de los CDP.', 'error');
+            } else {
+                Swal.fire('Error', 'No fue posible consultar pagos (Teso17).', 'error');
+            }
+        } finally {
+            this.bandera_loading = false;
+        }
     }
 
     private normalizeCurrency(value: string): number {
@@ -570,10 +654,9 @@ export class Teso13Component implements OnInit {
     }
 
     onSubmit(form: any) {
-        // UX: si el usuario digitó el CDP pero no presionó agregar, lo auto-agregamos
+        // UX: si digitó un CDP y no lo agregó, lo auto-agregamos
         this.autoAddCDPIfComplete();
 
-        // Guardia: si requiere búsqueda (NO SIN CDP) y aún no se hizo, impedir envío
         if (this.requiereBusqueda && !this.busquedaOk) {
             Swal.fire('Falta la búsqueda', 'Debes presionar "Buscar Pagos asociados a NIT y CDP(s)" antes de continuar.', 'warning');
             return;
@@ -622,6 +705,7 @@ export class Teso13Component implements OnInit {
             cancelButtonColor: '#EA1737',
             confirmButtonText: 'Iniciar'
         }).then(result => {
+
             this.teso13.fecrad = this.fechaRdicado;
 
             if ((this.teso13.numcon + '').trim() === '') this.teso13.numcon = '0';
@@ -666,13 +750,12 @@ export class Teso13Component implements OnInit {
 
             // Flujo de envío según SIN CDP o CON CDP(s)
             if (!this.sinCDPChecked) {
-                // CON CDP(s): valida sumatoria del valor disponible
                 this.teso13.sCDPn = true;
 
                 // setear primer CDP en campos clásicos (compatibilidad)
                 this.teso13.cdp_marca = this.cdps[0].marca;
                 this.teso13.cdp_documento = this.cdps[0].documento;
-                this.teso13.cdp_ano = this.cdps[0].ano; // integer
+                this.teso13.cdp_ano = this.cdps[0].ano;
 
                 // enviar todos
                 this.syncCdpsJson();
@@ -701,7 +784,7 @@ export class Teso13Component implements OnInit {
                 sumar(0);
 
             } else {
-                // SIN CDP: setear defaults y continuar
+                // SIN CDP
                 this.teso13.sCDPn = false;
                 this.teso13.cdp_ano = 0;
                 this.teso13.cdp_documento = '00';

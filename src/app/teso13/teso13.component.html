@@ -51,7 +51,6 @@
         <div class="row" *ngIf="!sinCDPChecked">
             <label id="cdp"><b>CDP</b></label>
 
-            <!-- CDP actual (para agregar a la lista) -->
             <div class="col">
                 <label><b>CDP_Marca</b></label>
                 <select class="form-select col" name="cdp_marca_actual" [(ngModel)]="cdp_actual_marca">
@@ -68,14 +67,14 @@
             <div class="col">
                 <label><b>CDP_Año</b></label>
                 <input type="number" class="form-control" name="cdp_ano_actual" [(ngModel)]="cdp_actual_ano"
-                    maxlength="4" (blur)="autoAddCDPIfComplete()" (keyup.enter)="onEnterAddCDP($event)">
+                    (blur)="autoAddCDPIfComplete()" (keyup.enter)="onEnterAddCDP($event)">
             </div>
 
-            <!-- <div class="col d-flex align-items-end">
-                <button type="button" class="btn btn-outline-primary btn-sm" (click)="addCDP()">
-                    + Agregar CDP (Enter)
-                </button>
-            </div> -->
+            <div class="col-12 mt-1">
+                <small class="text-muted">
+                    Diligencia Marca/Documento/Año y presiona Enter. También se agregará al salir del campo Año.
+                </small>
+            </div>
         </div>
 
         <!-- Tabla CDPs agregados -->
@@ -109,8 +108,7 @@
                 </div>
 
                 <small class="text-muted">
-                    CDP agregado. Para agregar otro, diligencia Marca/Documento/Año y presiona Enter (o clic en “Agregar
-                    CDP”).
+                    Para agregar otro CDP, diligencia Marca/Documento/Año y presiona Enter.
                     La búsqueda validará todos los CDP agregados contra el NIT.
                 </small>
             </div>
@@ -154,7 +152,7 @@
 
                     <!-- Botón de búsqueda visible SOLO si NO está marcado SIN CDP -->
                     <button type="button" class="btn btn-primary" *ngIf="!sinCDPChecked"
-                        (click)="buscarT17Multiple(teso13.nit)">
+                        (click)="buscarPagosAsociados(teso13.nit)">
                         <i class="fa fa-search" aria-hidden="true"></i>
                         <span class="nav-text"> Buscar Pagos asociados a NIT y CDP(s) </span>
                     </button>
