@@ -142,7 +142,8 @@ export class Teso13Component implements OnInit {
 
         // Periodos del año actual
         const currentYear = new Date().getFullYear();
-        this.periodosT(currentYear, currentYear);
+        this.periodosT(currentYear - 1, currentYear);
+
 
         // Identidad / usuario
         this.identity = this._gener02Service.getIdentity();
@@ -591,6 +592,10 @@ export class Teso13Component implements OnInit {
                     maxCuota = Math.max(maxCuota, 0);
                 } else if (numcuo === cuota) {
                     // completo
+                    algunoDisponible = true;
+                    this.teso13.numcuo = 1;
+                    this.cuota = 1;
+
                 } else {
                     algunoDisponible = true;
                     maxNumcuo = Math.max(maxNumcuo, numcuo);
