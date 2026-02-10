@@ -15,6 +15,9 @@ export class Teso15NitComponent {
   teso15All = [];
   selectedRow: number | null = null;
   datos_: any;
+  pageSize = 10;
+  currentPage = 1;
+
 
   constructor(private _teso15Service: Teso15Service) {
     this.teso15 = new Teso15Nit('', '', '');
@@ -36,6 +39,41 @@ export class Teso15NitComponent {
     }
 
     this.getAllEstadosPagos(dt);
+  }
+  get totalItems(): number {
+    return (this.teso15All?.length ?? 0);
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.totalItems / this.pageSize));
+  }
+
+  get pageStartIndex(): number {
+    return (this.currentPage - 1) * this.pageSize;
+  }
+
+  get pagedTeso15All(): any[] {
+    const start = this.pageStartIndex;
+    const end = start + this.pageSize;
+    return (this.teso15All ?? []).slice(start, end);
+  }
+
+  goToPage(page: number) {
+    const p = Math.min(Math.max(page, 1), this.totalPages);
+    this.currentPage = p;
+
+    // si tienes fila expandida y te cambias de página, opcionalmente colapsa:
+    // this.selectedRow = null;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) this.currentPage++;
+    // this.selectedRow = null; // opcional
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) this.currentPage--;
+    // this.selectedRow = null; // opcional
   }
 
   getAllPagosForNit() {

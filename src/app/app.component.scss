@@ -1,9 +1,94 @@
-/* Layout base */
-.dashboard.d-flex {
+/* =========================
+   LAYOUT RESPONSIVE SHELL
+   ========================= */
+
+.dashboard {
   display: flex;
   min-height: 100dvh;
-  /* mejor en móviles que 100vh */
+  width: 100%;
 }
+
+/* Sidebar wrapper: en desktop queda en el flujo */
+.sidebar-wrap {
+  flex: 0 0 auto;
+}
+
+/* Contenido principal */
+.app-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* clave para evitar overflow horizontal */
+  height: 100dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Topbar móvil */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.burger {
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: 600;
+}
+
+/* Backdrop móvil */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 9;
+}
+
+/* MÓVIL: sidebar tipo drawer */
+@media (max-width: 920px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar-wrap.mobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    z-index: 10;
+    width: min(320px, 85vw);
+    transform: translateX(-105%);
+    transition: transform 200ms ease;
+  }
+
+  .sidebar-wrap.mobile.open {
+    transform: translateX(0);
+  }
+
+  /* el contenido toma toda la pantalla */
+  .app-content {
+    height: auto;
+    min-height: 100dvh;
+  }
+}
+
+/* =========================
+   TUS ESTILOS EXISTENTES
+   (cards / grillas / etc.)
+   ========================= */
 
 /* Shell con sidebar fijo y contenido scrollable */
 .app-shell {
@@ -11,15 +96,7 @@
   height: 100dvh;
 }
 
-.app-content {
-  flex: 1 1 auto;
-  display: flex;
-  flex-flow: column;
-  height: 100dvh;
-  overflow-y: auto;
-}
-
-/* Tarjetas y grillas (tus estilos existentes) */
+/* Tarjetas y grillas */
 .dashboard .cards-container {
   margin: 25px auto;
   display: grid;
@@ -69,7 +146,7 @@
   color: #333;
 }
 
-/* Responsivo */
+/* Responsivo (tus breakpoints) */
 @media (max-width: 1320px) {
   .dashboard .cards-container {
     grid-gap: 15px;
