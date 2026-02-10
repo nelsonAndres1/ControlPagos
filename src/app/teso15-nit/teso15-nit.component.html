@@ -1,64 +1,184 @@
-<h2>Consultar Estado del Pago por Nit</h2>
+<h2 class="page-title">Consultar Estado del Pago por Nit</h2>
 
-<form class="col-md-5 ml-0 pl-0">
-    <div class="form-group col-md-12">
-        <div class="row">
-            <label for="name">
-                <h6>Buscar Estado del Pago</h6>
-            </label>
-            <input type="text" placeholder="Ingresar Nit" (input)="llenarNit($event)">
-            <button type="button" class="btn btn-primary" (click)="getAllPagosForNit()">Buscar</button>
-        </div>
+<form class="nit-form">
+  <!-- Buscador -->
+  <div class="card">
+    <h6 class="subtitle">Buscar Estado del Pago</h6>
+
+    <div class="search-row">
+      <input
+        class="form-control"
+        type="text"
+        placeholder="Ingresar Nit"
+        (input)="llenarNit($event)"
+      />
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="getAllPagosForNit()"
+      >
+        Buscar
+      </button>
+    </div>
+  </div>
+
+  <!-- Resultados -->
+  <div class="card mt">
+
+    <!-- Paginación (arriba) -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+      <div class="d-flex align-items-center gap-2">
+        <label class="m-0">Filas por página:</label>
+        <select
+          class="form-select form-select-sm"
+          style="width: 110px;"
+          [(ngModel)]="pageSize"
+          (ngModelChange)="goToPage(1)"
+          name="pageSize"
+        >
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+        >
+          Anterior
+        </button>
+
+        <span class="small">
+          Página {{ currentPage }} de {{ totalPages }}
+          ({{ totalItems }} registros)
+        </span>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Siguiente
+        </button>
+      </div>
     </div>
 
-    <table class="table">
+    <!-- Tabla -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
         <thead>
-            <tr>
-                <th scope="col">Numero de Pago</th>
-                <th scope="col">Fecha de Radicado</th>
-                <th scope="col">Nit</th>
-                <th scope="col">Razon Social</th>
-                <th scope="col">Tipo de Pago</th>
-                <th scope="col"># de Factura</th>
-                <th scope="col">Valor</th>
-            </tr>
+          <tr>
+            <th scope="col">Numero de Pago</th>
+            <th scope="col">Fecha de Radicado</th>
+            <th scope="col">Nit</th>
+            <th scope="col">Razon Social</th>
+            <th scope="col">Tipo de Pago</th>
+            <th scope="col"># de Factura</th>
+            <th scope="col">Valor</th>
+          </tr>
         </thead>
+
         <tbody>
-            <ng-container *ngFor="let dt of teso15All; let i = index">
-                <tr style="cursor: pointer;" (click)="consultar(i, dt)">
-                    <th scope="row">{{dt.codclas}}{{dt.numero}}</th>
-                    <th scope="row">{{dt.fecrad}}</th>
-                    <td>{{dt.nit}}</td>
-                    <td>{{dt.razon_social}}</td>
-                    <td>{{dt.codclas_detalle}}</td>
-                    <td>{{dt.numero_factura}}</td>
-                    <td>{{dt.valor}}</td>
-                </tr>
-                <tr *ngIf="selectedRow === i">
-                    <td colspan="5">
-                        <div>
-                            <table class="table table-success">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Fecha</th>
-                                        <th scope="col">Estado</th>
-                                        <th scope="col">Usuario</th>
-                                        <th scope="col">Observación</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let dt of datos_" class="table-success">
-                                        <td>{{dt.fecha}}</td>
-                                        <td>{{dt.estado}}</td>
-                                        <td>{{dt.usuario}}</td>
-                                        <td>{{dt.observacion}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </ng-container>
+          <!-- Ojo: usamos pagedTeso15All para paginar -->
+          <ng-container *ngFor="let dt of pagedTeso15All; let i = index">
+
+            <!-- Fila principal -->
+            <tr
+              class="row-click"
+              (click)="consultar(pageStartIndex + i, dt)"
+            >
+              <td><b>{{ dt.codclas }}{{ dt.numero }}</b></td>
+              <td>{{ dt.fecrad }}</td>
+              <td>{{ dt.nit }}</td>
+              <td>{{ dt.razon_social }}</td>
+              <td>{{ dt.codclas_detalle }}</td>
+              <td>{{ dt.numero_factura }}</td>
+              <td>{{ dt.valor }}</td>
+            </tr>
+
+            <!-- Fila expandida (detalle) -->
+            <tr *ngIf="selectedRow === (pageStartIndex + i)">
+              <td colspan="7" class="detail-cell">
+                <div class="detail-card">
+                  <div class="table-responsive">
+                    <table class="table table-success table-sm align-middle mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col">Fecha</th>
+                          <th scope="col">Estado</th>
+                          <th scope="col">Usuario</th>
+                          <th scope="col">Observación</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr *ngFor="let d of datos_" class="table-success">
+                          <td>{{ d.fecha }}</td>
+                          <td>{{ d.estado }}</td>
+                          <td>{{ d.usuario }}</td>
+                          <td>{{ d.observacion }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+          </ng-container>
         </tbody>
-    </table>
+      </table>
+    </div>
+
+    <!-- Paginación (abajo) -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-2">
+      <div class="d-flex align-items-center gap-2">
+        <label class="m-0">Filas por página:</label>
+        <select
+          class="form-select form-select-sm"
+          style="width: 110px;"
+          [(ngModel)]="pageSize"
+          (ngModelChange)="goToPage(1)"
+          name="pageSizeBottom"
+        >
+          <option [ngValue]="5">5</option>
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="20">20</option>
+          <option [ngValue]="50">50</option>
+        </select>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+        >
+          Anterior
+        </button>
+
+        <span class="small">
+          Página {{ currentPage }} de {{ totalPages }}
+          ({{ totalItems }} registros)
+        </span>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+  </div>
 </form>

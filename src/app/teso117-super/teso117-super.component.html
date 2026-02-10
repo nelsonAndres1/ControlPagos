@@ -1,108 +1,135 @@
 <div *ngIf="loading">
     <app-loading></app-loading>
 </div>
-<div class="worko-tabs">
-    <input class="state" type="radio" title="tab-one" name="tabs-state" id="tab-one" (click)="sop1()" checked />
-    <input class="state" type="radio" title="tab-two" name="tabs-state" id="tab-two" (click)="sop2()" />
-    <div class="tabs flex-tabs">
-        <label for="tab-one" id="tab-one-label" class="tab">Detalles del Pago</label>
-        <label for="tab-two" id="tab-two-label" class="tab">Soportes del Pago</label>
-        <div id="tab-one-panel" *ngIf="banderasop">
-            <form class="formato">
-                <h2>Estado del Pago</h2>
-                <br>
-                <br>
-                <form>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Consecutivo</th>
-                                <th scope="col">Tipo de Pago</th>
-                                <th scope="col">Detalle</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col">Usuario</th>
-                                <th scope="col">Numero de Factura</th>
-                                <th scope="col">NIT</th>
-                                <th scope="col">Valor</th>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Hora</th>
-                                <th scope="col">Observación</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let list of lista_historia_pago">
-                                <td>{{list.numero}}</td>
-                                <td>{{list.codclas_detalle}}</td>
-                                <td>{{data.detalle}}</td>
-                                <td>{{list.estado_detalle}}</td>
-                                <td><a (click)="nombreUsuario(list.usuario)" style="cursor: pointer;">{{list.usuario}}</a>
-                                </td>
-                                <td>{{item1[0].numfac}}</td>
-                                <td>
-                                    <a (click)="getConta04(data.nit)" style="cursor: pointer;">{{data.nit}}
-                                    </a>
-                                </td>
-                                <td>${{data.valor}}</td>
-                                <td>{{list.fecha}}</td>
-                                <td>{{list.hora}}</td>
-                                <td>{{list.observacion}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </form>
-            <form class="formato2" style="margin-right: 20%; margin: 2%;">
-                <div class="form-check form-check-inline" *ngFor="let dt of opciones_general">
-                    <input class="form-check-input" type="radio" name="exampleRadios" id="inlineexampleRadios1"
-                        value={{dt.target}} (click)="cambio_estado($event)">
-                    <label class="form-check-label" for="exampleRadios1">
-                        {{dt.target_detalle}}
-                    </label>
+
+<div class="page">
+    <div class="worko-tabs tabs-container">
+        <input class="state" type="radio" title="tab-one" name="tabs-state" id="tab-one" (click)="sop1()" checked />
+        <input class="state" type="radio" title="tab-two" name="tabs-state" id="tab-two" (click)="sop2()" />
+
+        <div class="tabs flex-tabs">
+            <label for="tab-one" id="tab-one-label" class="tab">Detalles del Pago</label>
+            <label for="tab-two" id="tab-two-label" class="tab">Soportes del Pago</label>
+
+            <!-- TAB 1 -->
+            <div id="tab-one-panel" class="panel" *ngIf="banderasop">
+                <div class="panel-card">
+                    <h2 class="title">Estado del Pago</h2>
+
+                    <div class="table-wrap">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Consecutivo</th>
+                                    <th scope="col">Tipo de Pago</th>
+                                    <th scope="col">Detalle</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Usuario</th>
+                                    <th scope="col">Numero de Factura</th>
+                                    <th scope="col">NIT</th>
+                                    <th scope="col">Valor</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Hora</th>
+                                    <th scope="col">Observación</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr *ngFor="let list of lista_historia_pago">
+                                    <td>{{ list.numero }}</td>
+                                    <td>{{ list.codclas_detalle }}</td>
+                                    <td>{{ data.detalle }}</td>
+                                    <td>{{ list.estado_detalle }}</td>
+                                    <td>
+                                        <a (click)="nombreUsuario(list.usuario)" class="link">
+                                            {{ list.usuario }}
+                                        </a>
+                                    </td>
+                                    <td>{{ item1[0].numfac }}</td>
+                                    <td>
+                                        <a (click)="getConta04(data.nit)" class="link">
+                                            {{ data.nit }}
+                                        </a>
+                                    </td>
+                                    <td>${{ data.valor }}</td>
+                                    <td>{{ list.fecha }}</td>
+                                    <td>{{ list.hora }}</td>
+                                    <td>{{ list.observacion }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="row mt-12">
-                    <div class="input-group col-sm-6 pb-3" *ngIf="opcion_seleccionada.observacion == 'SI'">
-                        <div class="input-group-prepend">
+
+                <!-- FORM ESTADO / SOPORTE -->
+                <div class="panel-card mt">
+                    <div class="radio-grid">
+                        <div class="form-check form-check-inline" *ngFor="let dt of opciones_general">
+                            <input class="form-check-input" type="radio" name="exampleRadios" value="{{ dt.target }}"
+                                (click)="cambio_estado($event)" />
+                            <label class="form-check-label">
+                                {{ dt.target_detalle }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="actions-grid">
+                        <div class="input-group" *ngIf="opcion_seleccionada.observacion == 'SI'">
                             <span class="input-group-text">Ingrese Observación</span>
+                            <textarea class="form-control" aria-label="With textarea"
+                                (input)="ingrese_observacion($event)" maxlength="799" rows="3"></textarea>
                         </div>
-                        <textarea class="form-control" aria-label="With textarea" (input)="ingrese_observacion($event)"   maxlength="799" ></textarea>
-                    </div>
-                    <div class="input-group col-sm-6 pb-3" *ngIf="opcion_seleccionada.archivo == 'SI'">
-                        <div class="input-group-prepend">
+
+                        <div class="input-group" *ngIf="opcion_seleccionada.archivo == 'SI'">
                             <span class="input-group-text">Subir soporte</span>
+                            <input class="form-control" type="file" id="formFile"
+                                (change)="onFileSelected($event, nombre_archivo, item1[0])" />
                         </div>
-                        <input style="margin-left: 5%; margin-right: 5%;" class="form-control" type="file" id="formFile"
-                        (change)="onFileSelected($event, nombre_archivo, item1[0])">
+
+                        <div class="status">
+                            <div *ngIf="uploading">Subiendo archivos...</div>
+                            <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary w-100-sm" (click)="uploadFiles()">
+                            Guardar
+                        </button>
                     </div>
-                    <div *ngIf="uploading">Subiendo archivos...</div>
-                    <div *ngIf="errorMessage">{{ errorMessage }}</div>
                 </div>
-                <button type="submit" class="btn btn-primary" (click)="uploadFiles()">Guardar</button>
-            </form>
-        </div>
-        <div id="tab-two-panel" *ngIf="!banderasop">
-            <form class="formato2">
-                <h3>Visualizar Soportes</h3>
-                <div *ngFor="let so of soportes">
-                    <div id="divPadre">
-                        <div id="divHijo">
-                            <button class="btn"><span>{{so.detsop}}</span><i class="icons">+</i>
+            </div>
+
+            <!-- TAB 2 -->
+            <div id="tab-two-panel" class="panel" *ngIf="!banderasop">
+                <div class="panel-card">
+                    <h3 class="title">Visualizar Soportes</h3>
+
+                    <div class="soportes-list">
+                        <div class="soporte-item" *ngFor="let so of soportes">
+                            <button class="soporte-btn" type="button">
+                                <span class="soporte-title">{{ so.detsop }}</span>
+                                <i class="icons">+</i>
+
                                 <ul class="dropdown">
-                                    <pdf-viewer [src]="global_url+'teso12/getDocumento/'+so.archivo" [rotation]="0"
-                                        [original-size]="false" [show-all]="true" [fit-to-page]="false" [zoom]="1"
-                                        [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true"
-                                        [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                                        style="width: 100%; height: 300px;"></pdf-viewer>
-                                    <button type="button" class="btn btn-primary" (click)="downloadPDF(so)">
-                                        <i class="fas fa-download"></i> Descargar
-                                    </button>
+                                    <li class="dropdown-body">
+                                        <pdf-viewer [src]="global_url + 'teso12/getDocumento/' + so.archivo"
+                                            [rotation]="0" [original-size]="false" [show-all]="true"
+                                            [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
+                                            [stick-to-page]="false" [render-text]="true"
+                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
+                                            style="width: 100%; height: 300px;"></pdf-viewer>
+
+                                        <button type="button" class="btn btn-primary mt-2" (click)="downloadPDF(so)">
+                                            <i class="fas fa-download"></i> Descargar
+                                        </button>
+                                    </li>
                                 </ul>
                             </button>
                         </div>
                     </div>
-                    <br>
-                    <br>
+
                 </div>
-            </form>
+            </div>
+
         </div>
     </div>
 </div>

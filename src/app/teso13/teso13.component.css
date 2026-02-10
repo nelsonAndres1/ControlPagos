@@ -1,32 +1,168 @@
-form{
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* =========================
+   CONTENEDOR GENERAL
+   ========================= */
+
+.page-title {
+  text-align: center;
+  margin: 12px 0 16px;
 }
-label {
+
+.alerts {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto 12px;
+  padding: 0 12px;
+}
+
+/* =========================
+   FORM
+   ========================= */
+
+.teso13-form {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 12px 24px;
+}
+
+.teso13-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* =========================
+   GRID RESPONSIVE
+   ========================= */
+
+.form-grid {
+  display: grid;
+  gap: 12px;
+  align-items: start;
+}
+
+.grid-1 {
+  grid-template-columns: 1fr;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field {
+  min-width: 0;
+}
+
+.field label {
   display: block;
+  margin: 0 0 6px;
   font: 1rem 'Fira Sans', sans-serif;
 }
 
-input,
-label {
-  margin: .4rem 0;
-}
-h2{
-  text-align: center;
+.muted {
+  margin-bottom: 6px;
 }
 
-.cdp{
-  text-align: center;
+.block {
+  display: block;
+  margin-top: 6px;
 }
-div.cons{
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+.mt {
+  margin-top: 12px;
+}
+
+.section {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #f2f2f2;
+}
+
+.section-title {
+  margin-bottom: 10px;
+}
+
+/* Resultados tipo "cards" (autocomplete) */
+.results {
+  margin-top: 8px;
+}
+
+/* Acciones */
+.actions {
+  max-width: 980px;
+  margin: 14px auto 0;
+  padding: 0 12px;
+}
+
+/* Utilidad: botones al 100% en móvil */
+.w-100-sm {
+  width: auto;
+}
+
+/* Ajustes en inputs */
+input,
+select,
+textarea {
+  margin: 0;
+}
+
+/* =========================
+   BREAKPOINTS
+   ========================= */
+
+/* Tablet hacia abajo: 3 columnas -> 2 */
+@media (max-width: 992px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Móvil: todo a 1 columna */
+@media (max-width: 576px) {
+  .teso13-card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .w-100-sm {
+    width: 100%;
+  }
+
+  /* Bootstrap input-group apilado */
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .input-group .input-group-text {
+    width: 100%;
+    border-radius: 0.375rem 0.375rem 0 0;
+  }
+
+  /* FIX CRÍTICO:
+     Bootstrap pone width: 1% en .input-group > .form-control,
+     y al ponerlo en columna queda angosto. */
+  .input-group>.form-control,
+  .input-group>textarea.form-control,
+  .input-group>.form-select {
+    width: 100% !important;
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .input-group .form-control,
+  .input-group .form-select {
+    border-radius: 0 0 0.375rem 0.375rem;
+  }
 }

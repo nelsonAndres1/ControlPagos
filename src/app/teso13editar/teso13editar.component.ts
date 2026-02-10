@@ -113,7 +113,7 @@ export class Teso13editarComponent {
 
     // Periodos (año actual)
     const y = new Date().getFullYear();
-    this.periodosT(y, y);
+    this.periodosT(y-1, y);
 
     // Cargar listado para editar (si aplica)
     this._teso13Service.getTeso13Editar(this.editarteso13).subscribe(

@@ -1,32 +1,71 @@
-form{
+/* Título */
+.page-title {
+  text-align: center;
+  margin: 12px 0 16px;
+}
+
+/* Form contenedor */
+.nit-form {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 12px 24px;
+}
+
+/* Tarjetas */
+.card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.mt {
+  margin-top: 12px;
+}
+
+.subtitle {
+  margin: 0 0 10px;
+  font: 1rem 'Fira Sans', sans-serif;
+}
+
+/* Barra de búsqueda: input + botón */
+.search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+/* fila clickeable */
+.row-click {
+  cursor: pointer;
+}
+
+/* celda de detalle expandido */
+.detail-cell {
+  padding: 10px;
+}
+
+.detail-card {
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+}
+
+/* En móvil: apila input y botón y vuelve el botón full width */
+@media (max-width: 576px) {
+  .card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-row .btn {
     width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
-  
-  div{
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  label {
-    display: block;
-    font: 1rem 'Fira Sans', sans-serif;
-  }
-  
-  input,
-  label {
-    margin: .4rem 0;
-  }
-  h2{
-    text-align: center;
-  }
+}
