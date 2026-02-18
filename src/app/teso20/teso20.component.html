@@ -1,53 +1,172 @@
-<br><br>
-<meta charset="utf-8">
+<br /><br />
+
 <div class="container py-1">
     <div class="row">
         <div class="col-md-12">
             <h2 class="text-center mb-3">Agregar Proceso</h2>
-            <hr class="mb-4">
+            <hr class="mb-4" />
         </div>
     </div>
+
     <div class="col-md-10 offset-md-1">
         <span class="anchor" id="formComplex"></span>
+
         <div class="card card-outline-secondary">
             <div class="card-header">
                 <h3 class="mb-0">Ingrese la información requerida</h3>
             </div>
+
             <div class="card-body">
+
+                <!-- =======================
+             FORM CREAR
+        ======================== -->
                 <div class="row mt-12">
-                    <form class="col-md-12 ml-0 pl-0">
+                    <form class="col-md-12 ml-0 pl-0" (ngSubmit)="$event.preventDefault()">
+
                         <div class="form-group col-md-5">
+                            <label class="form-label"><b>Proceso</b></label>
                             <input type="text" class="form-control" placeholder="Ingresar Proceso"
-                                (input)="addProceso($event)">
+                                [(ngModel)]="teso20.proceso" name="procesoNew" />
                         </div>
-                        <div style="margin-top: 2%;" class="form-group col-md-2">
-                            <button type="button" class="btn btn-success" (click)="guardar()">Agregar</button>
+
+                        <div class="form-group col-md-3">
+                            <label class="form-label"><b>Detalle</b></label>
+                            <select class="form-control" [(ngModel)]="teso20.detalle" name="detalleNew">
+                                <option value="" disabled>Seleccione Detalle</option>
+                                <option value="S">SI</option>
+                                <option value="N">NO</option>
+                            </select>
                         </div>
+
+                        <div class="form-group col-md-2" style="margin-top: 2%;">
+                            <label class="form-label d-block">&nbsp;</label>
+                            <button type="button" class="btn btn-success" (click)="guardar()">
+                                Agregar
+                            </button>
+                        </div>
+
                     </form>
                 </div>
-                <div class="row mt-12">
+
+                <!-- =======================
+             FORM EDITAR
+        ======================== -->
+                <div class="row mt-3" *ngIf="modoEdicion && teso20Edit">
+
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <b>Editando ID:</b> {{ teso20Edit.id }}
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-5">
+                        <label class="form-label"><b>Proceso (editar)</b></label>
+                        <input type="text" class="form-control" placeholder="Proceso (editar)"
+                            [(ngModel)]="teso20Edit.proceso" name="procesoEdit" />
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="form-label"><b>Detalle (editar)</b></label>
+                        <select class="form-control" [(ngModel)]="teso20Edit.detalle" name="detalleEdit">
+                            <option value="S">SI</option>
+                            <option value="N">NO</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 mt-2">
+                        <button type="button" class="btn btn-primary me-2" (click)="actualizar()">
+                            Guardar cambios
+                        </button>
+                        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- =======================
+             TABLA + PAGINACIÓN (sin librerías)
+             Usa $any() para evitar "unknown"
+        ======================== -->
+                <div class="row mt-4">
+
+                    <div class="col-12 d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <b>Total:</b> {{ data_teso20?.length || 0 }}
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <span class="me-2"><b>Filas:</b></span>
+                            <select class="form-control form-control-sm" style="width: 90px;" [(ngModel)]="pageSize"
+                                name="pageSize" (ngModelChange)="page = 1">
+                                <option [ngValue]="5">5</option>
+                                <option [ngValue]="10">10</option>
+                                <option [ngValue]="20">20</option>
+                                <option [ngValue]="50">50</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <table class="table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Proceso</th>
+                                <th scope="col">Detalle</th>
                                 <th scope="col">Usuario</th>
                                 <th scope="col">Opciones</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <tr *ngFor="let dt of data_teso20">
-                                <th scope="row">{{dt.id}}</th>
-                                <td>{{dt.proceso}}</td>
-                                <td>{{dt.usuario_detalle}}</td>
+                            <tr
+                                *ngFor="let dt of (data_teso20 | slice: (page-1)*pageSize : (page-1)*pageSize + pageSize)">
+                                <th scope="row">{{ $any(dt).id }}</th>
+                                <td>{{ $any(dt).proceso }}</td>
+
                                 <td>
-                                    <button type="submit" class="btn btn-primary" (click)="eliminar(dt)">Eliminar</button>
+                                    {{
+                                    $any(dt).detalle === 'S'
+                                    ? 'SI'
+                                    : ($any(dt).detalle === 'N' ? 'NO' : $any(dt).detalle)
+                                    }}
+                                </td>
+
+                                <td>{{ $any(dt).usuario_detalle }}</td>
+
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-warning me-2"
+                                        (click)="editar($any(dt))">
+                                        Editar
+                                    </button>
+
+                                    <button type="button" class="btn btn-sm btn-danger" (click)="eliminar($any(dt))">
+                                        Eliminar
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <!-- Controles de paginación -->
+                    <div class="col-12 d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-outline-secondary" (click)="page = page - 1"
+                            [disabled]="page <= 1">
+                            Anterior
+                        </button>
+
+                        <div>
+                            Página <b>{{ page }}</b> de <b>{{ totalPages }}</b>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-secondary" (click)="page = page + 1"
+                            [disabled]="page >= totalPages">
+                            Siguiente
+                        </button>
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </div>
