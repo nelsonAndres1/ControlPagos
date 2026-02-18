@@ -65,8 +65,13 @@
                 <div class="panel-card mt">
                     <div class="radio-grid">
                         <div class="form-check form-check-inline" *ngFor="let dt of opciones_general">
-                            <input class="form-check-input" type="radio" name="exampleRadios" value="{{ dt.target }}"
-                                (click)="cambio_estado($event)" />
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="exampleRadios"
+                                [value]="dt.target"
+                                (change)="cambio_estado(dt, $event)"
+                            />
                             <label class="form-check-label">
                                 {{ dt.target_detalle }}
                             </label>
@@ -74,16 +79,47 @@
                     </div>
 
                     <div class="actions-grid">
-                        <div class="input-group" *ngIf="opcion_seleccionada.observacion == 'SI'">
-                            <span class="input-group-text">Ingrese Observación</span>
-                            <textarea class="form-control" aria-label="With textarea"
-                                (input)="ingrese_observacion($event)" maxlength="799" rows="3"></textarea>
+
+                        <!-- OBSERVACIÓN -->
+                        <div class="input-group" *ngIf="opcion_seleccionada?.observacion == 'SI'">
+                            <span class="input-group-text">
+                                Ingrese Observación
+                                <span *ngIf="opcion_seleccionada?.detalle === 'S'" class="text-danger"> *</span>
+                            </span>
+
+                            <textarea
+                                class="form-control"
+                                aria-label="With textarea"
+                                maxlength="799"
+                                rows="3"
+                                (input)="ingrese_observacion($event)"
+                                [(ngModel)]="observacion_texto"
+                                name="observacion_texto"
+                                [required]="opcion_seleccionada?.detalle === 'S'"
+                            ></textarea>
                         </div>
 
-                        <div class="input-group" *ngIf="opcion_seleccionada.archivo == 'SI'">
+                        <!-- MENSAJE ERROR -->
+                        <small
+                            class="text-danger d-block mt-1"
+                            *ngIf="
+                                opcion_seleccionada?.observacion == 'SI'
+                                && opcion_seleccionada?.detalle === 'S'
+                                && (!observacion_texto || !observacion_texto.trim())
+                            "
+                        >
+                            La observación es obligatoria para esta opción.
+                        </small>
+
+                        <!-- ARCHIVO -->
+                        <div class="input-group" *ngIf="opcion_seleccionada?.archivo == 'SI'">
                             <span class="input-group-text">Subir soporte</span>
-                            <input class="form-control" type="file" id="formFile"
-                                (change)="onFileSelected($event, nombre_archivo, item1[0])" />
+                            <input
+                                class="form-control"
+                                type="file"
+                                id="formFile"
+                                (change)="onFileSelected($event, nombre_archivo, item1[0])"
+                            />
                         </div>
 
                         <div class="status">
@@ -91,7 +127,18 @@
                             <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
                         </div>
 
-                        <button type="button" class="btn btn-primary w-100-sm" (click)="uploadFiles()">
+                        <!-- BOTÓN GUARDAR BLOQUEADO -->
+                        <button
+                            type="button"
+                            class="btn btn-primary w-100-sm"
+                            (click)="uploadFiles()"
+                            [disabled]="
+                                uploading ||
+                                (opcion_seleccionada?.observacion == 'SI'
+                                  && opcion_seleccionada?.detalle === 'S'
+                                  && (!observacion_texto || !observacion_texto.trim()))
+                            "
+                        >
                             Guardar
                         </button>
                     </div>
