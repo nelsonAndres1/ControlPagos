@@ -82,11 +82,13 @@ export class Teso113Component implements OnInit {
         '', // usucau
         '', // detalle
         '', // anexos_magneticos
-        ''  // centros_json (opcional)
+        '',  // centros_json (opcional)
+        '' 
     );
 
     // Reqs auxiliares
     teso10Req: teso10 = new teso10('', '', '', '', '', '');
+    impresion:string = 'I';
 
     constructor(
         private route: ActivatedRoute,
@@ -229,7 +231,7 @@ export class Teso113Component implements OnInit {
             this.impreseion.anexos_magneticos = this.data.anexos_magneticos ?? '';
             this.impreseion.centros_json = this.data.centros_json ?? '';
             this.impreseion.cdps_json = this.data.cdps_json ?? '';
-
+            this.impreseion.impresion = this.impresion;
 
             console.log('Impresion objeto:', this.impreseion);
 

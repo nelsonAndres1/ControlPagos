@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Teso15Service } from '../services/teso15.service';
 import { Teso117Service } from '../services/teso117.service';
@@ -84,6 +84,7 @@ export class Teso117SuperComponent implements OnInit {
   public teso13teso15: any;
   public permisos: any;
   public arrayPermisos: any;
+
   pdfSource = '0090000053136comprobante_de_pago.pdf';
   documento: Documento;
   soportes: any;
@@ -107,8 +108,17 @@ export class Teso117SuperComponent implements OnInit {
   estado_actual_actual: any = '';
   texto_observacion: string = '';
 
-  // ✅ NUEVO: para validar/mostrar observación obligatoria
+  // ✅ para validar/mostrar observación obligatoria
   observacion_texto: string = '';
+
+  // =========================================================
+  // ✅ VISOR PDF MODAL (ZOOM / ROTAR / DESCARGAR)
+  // =========================================================
+  showModal: boolean = false;
+  selectedPdf: string = '';
+  zoom: number = 1;
+  rotation: number = 0;
+  selectedSoporte: any = null;
 
   constructor(
     private uploadService: UploadService,
@@ -157,6 +167,50 @@ export class Teso117SuperComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  // ✅ Cerrar modal con ESC
+  @HostListener('document:keydown.escape', ['$event'])
+  onEsc(event: KeyboardEvent) {
+    if (this.showModal) this.cerrarModal();
+  }
+
+  // ✅ Abrir soporte en modal (sin preview en lista)
+  abrirSoporte(url: string, so: any) {
+    this.selectedPdf = url;
+    this.selectedSoporte = so;
+    this.zoom = 1;
+    this.rotation = 0;
+    this.showModal = true;
+  }
+
+  cerrarModal() {
+    this.showModal = false;
+    this.selectedPdf = '';
+    this.selectedSoporte = null;
+  }
+
+  zoomIn() {
+    this.zoom = +(this.zoom + 0.25).toFixed(2);
+  }
+
+  zoomOut() {
+    const next = this.zoom - 0.25;
+    this.zoom = next < 0.5 ? 0.5 : +next.toFixed(2);
+  }
+
+  rotar() {
+    this.rotation = (this.rotation + 90) % 360;
+  }
+
+  resetViewer() {
+    this.zoom = 1;
+    this.rotation = 0;
+  }
+
+  descargarSoporteSeleccionado() {
+    if (!this.selectedSoporte) return;
+    this.downloadPDF(this.selectedSoporte);
+  }
+
   actualizarContadorTexto() {
     if (this.texto_observacion.length > 800) {
       this.texto_observacion = this.texto_observacion.substring(0, 800);
@@ -179,31 +233,6 @@ export class Teso117SuperComponent implements OnInit {
       .catch(error => console.error('Error al descargar el archivo:', error));
   }
 
-  toggleFullScreen() {
-    const pdfViewer: any = document.querySelector('pdf-viewer');
-    const pdfContainer = pdfViewer?.shadowRoot?.querySelector('.pdfViewer');
-
-    if (pdfContainer) {
-      if (pdfContainer.requestFullscreen) {
-        if (!document.fullscreenElement) {
-          pdfContainer.requestFullscreen().then(() => {
-            console.log('PDF en pantalla completa');
-          }).catch((err: any) => {
-            console.error('Error al activar pantalla completa:', err);
-          });
-        } else {
-          document.exitFullscreen().then(() => {
-            console.log('Saliendo de pantalla completa');
-          }).catch((err: any) => {
-            console.error('Error al salir de pantalla completa:', err);
-          });
-        }
-      }
-    } else {
-      console.error('El contenedor del PDF no se encontró');
-    }
-  }
-
   onFileSelected(event: any, filename: string, dt: any) {
     const file = event.target.files[0];
     if (file) {
@@ -213,7 +242,6 @@ export class Teso117SuperComponent implements OnInit {
     this.datos_pago = dt;
   }
 
-  // ✅ NUEVO: validación observación obligatoria cuando dt.detalle === 'S'
   private validarObservacionObligatoria(): boolean {
     const requiereObservacion =
       this.opcion_seleccionada?.observacion === 'SI' &&
@@ -234,10 +262,7 @@ export class Teso117SuperComponent implements OnInit {
   }
 
   uploadFiles() {
-    // ✅ NO avanza si observación es obligatoria y está vacía
-    if (!this.validarObservacionObligatoria()) {
-      return;
-    }
+    if (!this.validarObservacionObligatoria()) return;
 
     this.loading = true;
 
@@ -256,7 +281,6 @@ export class Teso117SuperComponent implements OnInit {
           }).then(result => {
             if (result.value) {
               if (this.bandera_archivo) {
-                // ✅ si se va a subir archivo
                 this.uploading = true;
 
                 let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
@@ -272,9 +296,8 @@ export class Teso117SuperComponent implements OnInit {
                   response => {
                     this.uploading = false;
                     if (response.success) {
-                      Swal.fire('info', 'Archivos subidos exitosamente: ' + response.files, 'info').then(() => {
-                        this.enviar();
-                      });
+                      Swal.fire('info', 'Archivos subidos exitosamente: ' + response.files, 'info')
+                        .then(() => this.enviar());
                     } else {
                       this.errorMessage = response.message;
                       Swal.fire('Error!', 'Error al subir archivos: ' + this.errorMessage, 'error');
@@ -283,13 +306,10 @@ export class Teso117SuperComponent implements OnInit {
                   error => {
                     this.uploading = false;
                     this.errorMessage = 'Error al subir archivos. Por favor, inténtalo de nuevo.';
-                    Swal.fire('Error!', 'Error al subir archivos: ' + (error?.error?.message || ''), 'error').then(() => {
-                      Swal.fire('error!', this.errorMessage as string, 'error');
-                    });
+                    Swal.fire('Error!', 'Error al subir archivos: ' + (error?.error?.message || ''), 'error');
                   }
                 );
               } else {
-                // ✅ sin archivo
                 this.enviar();
               }
             } else {
@@ -301,35 +321,16 @@ export class Teso117SuperComponent implements OnInit {
             title: "Información!",
             text: "No tiene permisos para realizar este proceso!",
             icon: "info"
-          }).then(() => {
-            window.location.reload();
-          });
+          }).then(() => window.location.reload());
         }
       },
-      error => {
-        this.loading = false;
-      }
+      () => { this.loading = false; }
     );
-  }
-
-  afterLoadComplete(pdfData: any) {
-    this.totalPages = pdfData.numPages;
-    this.isLoaded = true;
-  }
-
-  nextPage() {
-    this.page++;
-  }
-
-  prevPage() {
-    this.page--;
   }
 
   getHistoriaPago() {
     this._teso22Service.getHistoriaPago(this.teso15).subscribe(
-      response => {
-        this.lista_historia_pago = response;
-      }
+      response => { this.lista_historia_pago = response; }
     );
   }
 
@@ -344,15 +345,15 @@ export class Teso117SuperComponent implements OnInit {
             this.estado_actual_actual = response.estado;
 
             if (this.estado_actual_actual == 'RA') {
-              for (let index = 0; index < this.arbol_proceso.length; index++) {
-                if (this.arbol_proceso[index]['source'] == this.opcion1) {
-                  this.opciones_general.push(this.arbol_proceso[index]);
+              for (let i = 0; i < this.arbol_proceso.length; i++) {
+                if (this.arbol_proceso[i]['source'] == this.opcion1) {
+                  this.opciones_general.push(this.arbol_proceso[i]);
                 }
               }
             } else {
-              for (let index = 0; index < this.arbol_proceso.length; index++) {
-                if (this.arbol_proceso[index]['source'].trim() == this.estado_actual_actual.trim()) {
-                  this.opciones_general.push(this.arbol_proceso[index]);
+              for (let i = 0; i < this.arbol_proceso.length; i++) {
+                if (this.arbol_proceso[i]['source'].trim() == this.estado_actual_actual.trim()) {
+                  this.opciones_general.push(this.arbol_proceso[i]);
                 }
               }
             }
@@ -360,19 +361,6 @@ export class Teso117SuperComponent implements OnInit {
         );
       }
     );
-  }
-
-  manageExcel(response: any, fileName: string): void {
-    const dataType = response.type;
-    const binaryData = [];
-    binaryData.push(response);
-
-    const filePath = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
-    const downloadLink = document.createElement('a');
-    downloadLink.href = filePath;
-    downloadLink.setAttribute('download', fileName);
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
   }
 
   getAllTeso13(codclas: any, numero: any) {
@@ -383,18 +371,13 @@ export class Teso117SuperComponent implements OnInit {
     return this.data;
   }
 
-  sop1() {
-    this.banderasop = true;
-  }
-
-  sop2() {
-    this.banderasop = false;
-  }
+  sop1() { this.banderasop = true; }
+  sop2() { this.banderasop = false; }
 
   nombreUsuario(user: any) {
-    for (let index = 0; index < this.arrayN.length; index++) {
-      if (this.arrayN[index] == user) {
-        Swal.fire('Usuario encontrado', this.arrayN[index + 1], 'info');
+    for (let i = 0; i < this.arrayN.length; i++) {
+      if (this.arrayN[i] == user) {
+        Swal.fire('Usuario encontrado', this.arrayN[i + 1], 'info');
         break;
       }
     }
@@ -404,7 +387,6 @@ export class Teso117SuperComponent implements OnInit {
     this._teso15Service.getUsuario(new Gener02(user, '')).subscribe(
       response => {
         if (response.status != 'error') {
-          this.status != 'success';
           this.token = response;
 
           this._teso15Service.getUsuario(new Gener02(user, ''), this.v).subscribe(
@@ -413,183 +395,31 @@ export class Teso117SuperComponent implements OnInit {
               this.identity1 = this.identity[0]['nombre'];
               this.identity12 = this.identity[0]['usuario'];
               this.arrayN.push(this.identity[0]['usuario'], this.identity[0]['nombre']);
-            },
-            error => {
-              this.status = 'error';
-              console.log(<any>error);
             }
           );
-        } else {
-          this.status = 'error';
         }
-      },
-      error => {
-        this.status = 'error';
-        console.log(<any>error);
       }
     );
   }
 
   traerSoportes() {
     this._teso117Service.traerSoportes(this.data).subscribe(
-      response => {
-        this.soportes = response;
-      }
+      response => { this.soportes = response; }
     );
-  }
-
-  cambioEstadoNombre(estado: any) {
-    var estadoEscr;
-
-    if (estado == 'RV') estadoEscr = 'Revisión';
-    if (estado == 'RA') estadoEscr = 'Radicado';
-    if (estado == 'AN') estadoEscr = 'Anulado';
-    if (estado == 'AU') estadoEscr = 'Autorizado';
-    if (estado == 'FI') estadoEscr = 'Financiera';
-    if (estado == 'CT') estadoEscr = 'Causación de Cuenta';
-    if (estado == 'PC') estadoEscr = 'Causación Pago';
-    if (estado == 'DR') estadoEscr = 'Devuelto Radicado';
-    if (estado == 'RT') estadoEscr = 'Autorización Pago';
-    if (estado == 'DC') estadoEscr = 'Devuelto Causación';
-    if (estado == 'PB') estadoEscr = 'Pago Banco';
-    if (estado == 'PP') estadoEscr = 'Pago Portal';
-    if (estado == 'RP') estadoEscr = 'Preparación Transferencia';
-    if (estado == 'LC') estadoEscr = 'Legalización de Cheque';
-    if (estado == 'CF') estadoEscr = 'Cheque en Firmas';
-    if (estado == 'CE') estadoEscr = 'Cheque Entregado';
-    if (estado == 'VF') estadoEscr = 'Aprobación de transferencia';
-    if (estado == 'PE') estadoEscr = 'Pago Exitoso';
-    if (estado == 'CA') estadoEscr = 'Causación de Pago';
-    if (estado == 'RC') estadoEscr = 'Radicado Causación de Cuenta';
-    if (estado == 'CP') estadoEscr = 'Radicado Causación Pago';
-
-    return estadoEscr;
-  }
-
-  evento(event: any) {
-    this.observacion = event.target.value;
-  }
-
-  submit() {
-    var datoU = JSON.parse(localStorage.getItem('identityControlPagos') as any);
-    datoU['sub'];
-
-    this.itemF['numfac']; // actual
-
-    this.teso13teso15 = new Teso13Teso15(
-      this.itemF['codclas'],
-      this.itemF['numero'],
-      this.itemF['numfac'],
-      this.estadoActual,
-      this.estadoA,
-      datoU['sub'],
-      '',
-      '',
-      this.observacion
-    );
-
-    if (this.estadoA == 'RA') {
-      this._teso117Service.updateTeso13RegisterTeso15(this.teso13teso15).subscribe(
-        response => {
-          if (response.status == "success") {
-            this.status = response.status;
-          } else {
-            this.status = 'error';
-          }
-        },
-        error => {
-          this.status = 'error';
-          console.log(<any>error);
-        }
-      );
-
-      Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-      this._router.navigate(['teso17']);
-
-    } else if (this.estadoA == 'RV') {
-
-      this._teso117Service.updateTeso13RegisterTeso15AU(
-        new Teso13Teso15(
-          this.itemF['codclas'],
-          this.itemF['numero'],
-          this.itemF['numfac'],
-          this.estadoActual,
-          this.estadoA,
-          '',
-          datoU['sub'],
-          '',
-          this.observacion
-        )
-      ).subscribe(
-        response => {
-          if (response.status == "success") {
-            this.status = response.status;
-          } else {
-            this.status = 'error';
-          }
-        },
-        error => {
-          this.status = 'error';
-          console.log(<any>error);
-        }
-      );
-
-      Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-      this._router.navigate(['teso17']);
-
-    } else {
-
-      this._teso117Service.updateTeso13(
-        new Teso13Teso15(
-          this.itemF['codclas'],
-          this.itemF['numero'],
-          this.itemF['numfac'],
-          this.estadoActual,
-          this.estadoA,
-          '',
-          '',
-          datoU['sub'],
-          this.observacion
-        )
-      ).subscribe(
-        response => {
-          if (response.status == "success") {
-            this.status = response.status;
-          } else {
-            this.status = 'error';
-          }
-        },
-        error => {
-          this.status = 'error';
-          console.log(<any>error);
-        }
-      );
-
-      Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-      this._router.navigate(['teso17']);
-    }
   }
 
   getConta04(nit: any) {
     this.conta04.nit = nit;
     this._teso117Service.getConta04(this.conta04).subscribe(
-      response => {
-        Swal.fire('Razon Social:', response.razsoc, 'info');
-      }
+      response => Swal.fire('Razon Social:', response.razsoc, 'info')
     );
   }
 
-  /**
-   * ✅ Compatible con 2 HTMLs:
-   * 1) (change)="cambio_estado(dt, $event)"
-   * 2) (click)="cambio_estado($event)"  (tu versión vieja)
-   */
   cambio_estado(arg1: any, arg2?: any) {
     this.opcion_seleccionada = [];
     this.observacion_texto = '';
     this.teso15.observacion = '';
 
-    // Caso A: me pasaron dt directamente
     if (arg1 && arg1.target !== undefined && arg1.target_detalle !== undefined) {
       const dt = arg1;
       this.opcion_seleccionada = dt;
@@ -597,13 +427,12 @@ export class Teso117SuperComponent implements OnInit {
       return;
     }
 
-    // Caso B: me pasaron el evento (viejo)
     const event = arg1;
     const selectedValue = event?.target?.value;
 
-    for (let index = 0; index < this.opciones_general.length; index++) {
-      if (this.opciones_general[index]['target'] == selectedValue) {
-        this.opcion_seleccionada = this.opciones_general[index];
+    for (let i = 0; i < this.opciones_general.length; i++) {
+      if (this.opciones_general[i]['target'] == selectedValue) {
+        this.opcion_seleccionada = this.opciones_general[i];
         this.teso15.estado = selectedValue;
         break;
       }
@@ -617,17 +446,12 @@ export class Teso117SuperComponent implements OnInit {
 
   getEstadoPago() {
     this._teso22Service.getEstadoPago(this.teso15).subscribe(
-      response => {
-        this.estado_actual_actual = response.estado;
-      }
+      response => { this.estado_actual_actual = response.estado; }
     );
   }
 
   enviar() {
-    // ✅ Validación extra antes de guardar (por si llaman enviar directo)
-    if (!this.validarObservacionObligatoria()) {
-      return;
-    }
+    if (!this.validarObservacionObligatoria()) return;
 
     Swal.fire({
       title: "¿Esta seguro de guardar?",
@@ -645,16 +469,13 @@ export class Teso117SuperComponent implements OnInit {
           response => {
             this.loading = false;
             if (response.status == 'success') {
-              Swal.fire('Información', 'Cambios guardados!', 'success').then(() => {
-                this._router.navigate(['teso17']);
-              });
+              Swal.fire('Información', 'Cambios guardados!', 'success')
+                .then(() => this._router.navigate(['teso17']));
             } else {
               Swal.fire('Información', 'Cambios NO guardados!', 'error');
             }
           },
-          error => {
-            this.loading = false;
-          }
+          () => { this.loading = false; }
         );
       } else if (result.isDenied) {
         Swal.fire("Cambios no guardados", "", "info");

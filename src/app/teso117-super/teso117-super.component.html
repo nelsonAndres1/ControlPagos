@@ -11,7 +11,7 @@
             <label for="tab-one" id="tab-one-label" class="tab">Detalles del Pago</label>
             <label for="tab-two" id="tab-two-label" class="tab">Soportes del Pago</label>
 
-            <!-- TAB 1 -->
+            <!-- ===================== TAB 1 ===================== -->
             <div id="tab-one-panel" class="panel" *ngIf="banderasop">
                 <div class="panel-card">
                     <h2 class="title">Estado del Pago</h2>
@@ -38,20 +38,16 @@
                                 <tr *ngFor="let list of lista_historia_pago">
                                     <td>{{ list.numero }}</td>
                                     <td>{{ list.codclas_detalle }}</td>
-                                    <td>{{ data.detalle }}</td>
+                                    <td>{{ data?.detalle }}</td>
                                     <td>{{ list.estado_detalle }}</td>
                                     <td>
-                                        <a (click)="nombreUsuario(list.usuario)" class="link">
-                                            {{ list.usuario }}
-                                        </a>
+                                        <a (click)="nombreUsuario(list.usuario)" class="link">{{ list.usuario }}</a>
                                     </td>
-                                    <td>{{ item1[0].numfac }}</td>
+                                    <td>{{ item1?.[0]?.numfac }}</td>
                                     <td>
-                                        <a (click)="getConta04(data.nit)" class="link">
-                                            {{ data.nit }}
-                                        </a>
+                                        <a (click)="getConta04(data?.nit)" class="link">{{ data?.nit }}</a>
                                     </td>
-                                    <td>${{ data.valor }}</td>
+                                    <td>${{ data?.valor }}</td>
                                     <td>{{ list.fecha }}</td>
                                     <td>{{ list.hora }}</td>
                                     <td>{{ list.observacion }}</td>
@@ -65,21 +61,13 @@
                 <div class="panel-card mt">
                     <div class="radio-grid">
                         <div class="form-check form-check-inline" *ngFor="let dt of opciones_general">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="exampleRadios"
-                                [value]="dt.target"
-                                (change)="cambio_estado(dt, $event)"
-                            />
-                            <label class="form-check-label">
-                                {{ dt.target_detalle }}
-                            </label>
+                            <input class="form-check-input" type="radio" name="exampleRadios" [value]="dt.target"
+                                (change)="cambio_estado(dt, $event)" />
+                            <label class="form-check-label">{{ dt.target_detalle }}</label>
                         </div>
                     </div>
 
                     <div class="actions-grid">
-
                         <!-- OBSERVACIÓN -->
                         <div class="input-group" *ngIf="opcion_seleccionada?.observacion == 'SI'">
                             <span class="input-group-text">
@@ -87,39 +75,25 @@
                                 <span *ngIf="opcion_seleccionada?.detalle === 'S'" class="text-danger"> *</span>
                             </span>
 
-                            <textarea
-                                class="form-control"
-                                aria-label="With textarea"
-                                maxlength="799"
-                                rows="3"
-                                (input)="ingrese_observacion($event)"
-                                [(ngModel)]="observacion_texto"
-                                name="observacion_texto"
-                                [required]="opcion_seleccionada?.detalle === 'S'"
-                            ></textarea>
+                            <textarea class="form-control" aria-label="With textarea" maxlength="799" rows="3"
+                                (input)="ingrese_observacion($event)" [(ngModel)]="observacion_texto"
+                                name="observacion_texto" [required]="opcion_seleccionada?.detalle === 'S'"></textarea>
                         </div>
 
                         <!-- MENSAJE ERROR -->
-                        <small
-                            class="text-danger d-block mt-1"
-                            *ngIf="
-                                opcion_seleccionada?.observacion == 'SI'
-                                && opcion_seleccionada?.detalle === 'S'
-                                && (!observacion_texto || !observacion_texto.trim())
-                            "
-                        >
+                        <small class="text-danger d-block mt-1" *ngIf="
+                opcion_seleccionada?.observacion == 'SI'
+                && opcion_seleccionada?.detalle === 'S'
+                && (!observacion_texto || !observacion_texto.trim())
+              ">
                             La observación es obligatoria para esta opción.
                         </small>
 
                         <!-- ARCHIVO -->
                         <div class="input-group" *ngIf="opcion_seleccionada?.archivo == 'SI'">
                             <span class="input-group-text">Subir soporte</span>
-                            <input
-                                class="form-control"
-                                type="file"
-                                id="formFile"
-                                (change)="onFileSelected($event, nombre_archivo, item1[0])"
-                            />
+                            <input class="form-control" type="file" id="formFile"
+                                (change)="onFileSelected($event, nombre_archivo, item1[0])" />
                         </div>
 
                         <div class="status">
@@ -127,56 +101,67 @@
                             <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
                         </div>
 
-                        <!-- BOTÓN GUARDAR BLOQUEADO -->
-                        <button
-                            type="button"
-                            class="btn btn-primary w-100-sm"
-                            (click)="uploadFiles()"
-                            [disabled]="
-                                uploading ||
-                                (opcion_seleccionada?.observacion == 'SI'
-                                  && opcion_seleccionada?.detalle === 'S'
-                                  && (!observacion_texto || !observacion_texto.trim()))
-                            "
-                        >
+                        <button type="button" class="btn btn-primary w-100-sm" (click)="uploadFiles()" [disabled]="
+                uploading ||
+                (opcion_seleccionada?.observacion == 'SI'
+                  && opcion_seleccionada?.detalle === 'S'
+                  && (!observacion_texto || !observacion_texto.trim()))
+              ">
                             Guardar
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2 -->
+            <!-- ===================== TAB 2 ===================== -->
             <div id="tab-two-panel" class="panel" *ngIf="!banderasop">
                 <div class="panel-card">
                     <h3 class="title">Visualizar Soportes</h3>
 
+                    <!-- ✅ LISTA SOLO BOTONES (sin preview pdf) -->
                     <div class="soportes-list">
                         <div class="soporte-item" *ngFor="let so of soportes">
-                            <button class="soporte-btn" type="button">
+                            <button class="soporte-btn" type="button"
+                                (click)="abrirSoporte(global_url + 'teso12/getDocumento/' + so.archivo, so)"
+                                title="Ver soporte">
                                 <span class="soporte-title">{{ so.detsop }}</span>
                                 <i class="icons">+</i>
-
-                                <ul class="dropdown">
-                                    <li class="dropdown-body">
-                                        <pdf-viewer [src]="global_url + 'teso12/getDocumento/' + so.archivo"
-                                            [rotation]="0" [original-size]="false" [show-all]="true"
-                                            [fit-to-page]="false" [zoom]="1" [zoom-scale]="'page-width'"
-                                            [stick-to-page]="false" [render-text]="true"
-                                            [external-link-target]="'blank'" [autoresize]="true" [show-borders]="false"
-                                            style="width: 100%; height: 300px;"></pdf-viewer>
-
-                                        <button type="button" class="btn btn-primary mt-2" (click)="downloadPDF(so)">
-                                            <i class="fas fa-download"></i> Descargar
-                                        </button>
-                                    </li>
-                                </ul>
                             </button>
                         </div>
                     </div>
+                </div>
 
+                <!-- ✅ MODAL VISOR PDF -->
+                <div class="modal-backdrop" *ngIf="showModal">
+                    <div class="modal-container" role="dialog" aria-modal="true">
+                        <div class="modal-header">
+                            <h5 class="m-0">Visualizador de Soporte</h5>
+                            <button type="button" class="btn btn-danger btn-sm" (click)="cerrarModal()">X</button>
+                        </div>
+
+                        <div class="modal-toolbar">
+                            <div class="toolbar-left">
+                                <button type="button" class="btn btn-secondary btn-sm" (click)="zoomIn()">+</button>
+                                <button type="button" class="btn btn-secondary btn-sm" (click)="zoomOut()">-</button>
+                                <button type="button" class="btn btn-secondary btn-sm" (click)="rotar()">Rotar</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                    (click)="resetViewer()">Reset</button>
+                            </div>
+
+                            <div class="toolbar-right">
+                                <button type="button" class="btn btn-primary btn-sm"
+                                    (click)="descargarSoporteSeleccionado()" [disabled]="!selectedSoporte">
+                                    <i class="fas fa-download"></i> Descargar
+                                </button>
+                            </div>
+                        </div>
+
+                        <pdf-viewer [src]="selectedPdf" [rotation]="rotation" [zoom]="zoom" [show-all]="true"
+                            [original-size]="false" style="width: 100%; height: 80vh;"></pdf-viewer>
+                    </div>
                 </div>
             </div>
-
+            <!-- /TAB 2 -->
         </div>
     </div>
 </div>

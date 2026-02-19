@@ -28,7 +28,8 @@ export class Impresion {
         public anexos_magneticos: string,
         public centros_json?: string,
         public documento_elaborado?: string,
-        public cdps_json?:string
+        public cdps_json?:string,
+        public impresion?:string
     ) {
 
 

@@ -1,3 +1,4 @@
+import { HostListener } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Teso15Service } from '../services/teso15.service';
@@ -119,6 +120,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     totalPages: number = 0;
     isLoaded: boolean = false;
     nombre_archivo: any;
+    showModal: boolean = false;
+    selectedPdf: string = '';
+    zoom: number = 1;
+    rotation: number = 0;
 
 
     constructor(private uploadService: UploadService,
@@ -133,7 +138,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
             console.log("params data!!!")
-            
+
             this.itemDetail = paramsData;
             this.item1 = this.itemDetail[0];
             this.data = this.getAllTeso13(this.item1[0]['codclas'], this.item1[0]['numero']);
@@ -147,6 +152,42 @@ export class Teso117Component implements OnInit { /* RA - Radicado
             }
             this.estados(this.estadoA);
         });
+    }
+
+
+    abrirSoporte(url: string) {
+        this.selectedPdf = url;
+        this.zoom = 1;        // reset zoom
+        this.rotation = 0;    // reset rotación
+        this.showModal = true;
+    }
+
+    // Cerrar modal
+    cerrarModal() {
+        this.showModal = false;
+        this.selectedPdf = '';
+    }
+
+    // Zoom +
+    zoomIn() {
+        this.zoom = +(this.zoom + 0.25).toFixed(2);
+    }
+
+    // Zoom -
+    zoomOut() {
+        const next = this.zoom - 0.25;
+        this.zoom = next < 0.5 ? 0.5 : +next.toFixed(2);
+    }
+
+    // Rotar 90°
+    rotar() {
+        this.rotation = (this.rotation + 90) % 360;
+    }
+
+    // (Opcional) Reset rápido
+    resetViewer() {
+        this.zoom = 1;
+        this.rotation = 0;
     }
 
     downloadPDF(so: any) {

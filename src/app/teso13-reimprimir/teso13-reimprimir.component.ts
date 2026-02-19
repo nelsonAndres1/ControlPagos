@@ -174,6 +174,7 @@ export class Teso13ReimprimirComponent {
       this.impreseion.dependencia = `${dt.coddep ?? ''}${detalle_dependencia ? ' - ' + detalle_dependencia : ''}`;
       this.impreseion.clase_pago = detalle_pago || this.impreseion.clase_pago;
       this.impreseion.nombre_elaborado = detalle_gener02 || this.impreseion.nombre_elaborado;
+      this.impreseion.impresion = 'R';
 
       // 5) Generar y abrir PDF
       await this.descargarPDF();
