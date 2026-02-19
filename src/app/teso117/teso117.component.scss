@@ -36,7 +36,6 @@ div {
   margin: 0px auto;
 }
 
-
 label {
   display: block;
   font: 1rem 'Fira Sans', sans-serif;
@@ -58,7 +57,6 @@ h2 {
   filter: drop-shadow(5px 5px 5px #222222);
 } */
 
-
 .pdf-viewer {
   height: 100vh;
   width: 80vw;
@@ -73,7 +71,6 @@ textarea {
   margin-right: auto;
   width: 100%;
 }
-
 
 /* Android 2.3 :checked fix */
 @keyframes fake {
@@ -175,13 +172,9 @@ body {
       order: 5;
     }
 
-    ;
-
     #tab-four-label {
       order: 7;
     }
-
-    ;
 
     #tab-one-panel {
       order: 2;
@@ -213,15 +206,9 @@ body {
   #tab-four:checked~.tabs #tab-four-panel {
     border-bottom: 1px solid #ccc;
   }
-
-
-
 }
 
-
-
 ///
-
 
 // Fonts
 $body-font: "Roboto";
@@ -239,8 +226,16 @@ $black: #000000;
 $white: #FFFFFF;
 
 // Icon Colors
-$dark-theme: (primary: rgba($black, .87), secondary: rgba($black, .54), disabled: rgba($black, .26));
-$light-theme: (primary: rgba($white, 1), secondary: rgba($white, .7), disabled: rgba($white, .3));
+$dark-theme: (
+  primary: rgba($black, .87),
+  secondary: rgba($black, .54),
+  disabled: rgba($black, .26)
+);
+$light-theme: (
+  primary: rgba($white, 1),
+  secondary: rgba($white, .7),
+  disabled: rgba($white, .3)
+);
 
 // Pen Colors
 $accent: #30CD75;
@@ -252,7 +247,6 @@ $base-font-size: 14px;
 $base-font-weight: $regular;
 $base-line-height: 1.5em;
 
-
 // Layout Settings
 $max-width: null;
 $columns: null;
@@ -260,23 +254,23 @@ $gutters: null;
 
 // Elevation
 @mixin elevation($level) {
-  @if $level == 1 {
+  @if $level ==1 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   }
 
-  @else if $level == 2 {
+  @else if $level ==2 {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  @else if $level == 3 {
+  @else if $level ==3 {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   }
 
-  @else if $level == 4 {
+  @else if $level ==4 {
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
   }
 
-  @else if $level == 5 {
+  @else if $level ==5 {
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   }
 }
@@ -320,7 +314,7 @@ body {
   text-transform: uppercase;
   overflow: hidden;
   cursor: pointer;
-  
+
   &:focus,
   &:active {
     .dropdown {
@@ -329,15 +323,15 @@ body {
       visibility: visible;
     }
   }
-  
+
   .icons {
     border-radius: 100%;
     animation: ripple 0.6s linear infinite;
-    font-style:normal;
-    width:15px;
-    height:15px
+    font-style: normal;
+    width: 15px;
+    height: 15px
   }
-  
+
   .dropdown {
     position: absolute;
     top: 30%;
@@ -350,7 +344,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: 0.3s ease;
-    
+
     &:before {
       content: '';
       position: absolute;
@@ -362,26 +356,26 @@ body {
       border-top: 6px solid $white;
       border-right: 6px solid $white;
       border-bottom: 6px solid transparent;
-      border-left: 6px solid transparent; 
-      transform: rotate(-45deg);   
+      border-left: 6px solid transparent;
+      transform: rotate(-45deg);
       mix-blend-mode: multiple;
     }
-    
+
     li {
       z-index: 1;
       position: relative;
       background: $white;
       padding: 0 20px;
       color: #666;
-      
+
       &.active {
         color: $accent;
       }
-      
+
       &:first-child {
         border-radius: 4px 4px 0 0;
       }
-      
+
       &:last-child {
         border-radius: 0 0 4px 4px;
 
@@ -390,7 +384,7 @@ body {
         }
       }
     }
-    
+
     a {
       display: block;
       border-bottom: 1px solid rgba($black, .05);
@@ -405,14 +399,143 @@ body {
 @keyframes ripple {
   0% {
     box-shadow: 0 0 0 0 rgba($white, 0.1),
-                0 0 0 20px rgba($white, 0.1),
-                0 0 0 40px rgba($white, 0.1),
-                0 0 0 60px rgba($white, 0.1);
+      0 0 0 20px rgba($white, 0.1),
+      0 0 0 40px rgba($white, 0.1),
+      0 0 0 60px rgba($white, 0.1);
   }
+
   100% {
     box-shadow: 0 0 0 20px rgba($white, 0.1),
-                0 0 0 40px rgba($white, 0.1),
-                0 0 0 60px rgba($white, 0.1),
-                0 0 0 80px rgba($white, 0);
+      0 0 0 40px rgba($white, 0.1),
+      0 0 0 60px rgba($white, 0.1),
+      0 0 0 80px rgba($white, 0);
+  }
+}
+
+/* =========================================================
+   ✅ AGREGADO: MODAL + TOOLBAR PARA AMPLIAR/ROTAR/ZOOM PDF
+   ========================================================= */
+
+/* Backdrop del modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+  padding: 10px;
+}
+
+/* Contenedor del modal */
+.modal-container {
+  background: #fff;
+  width: 95%;
+  height: 92%;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px;
+
+  @include elevation(3);
+}
+
+/* Header del modal */
+.modal-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba($black, .08);
+
+  h5 {
+    margin: 0;
+    font-weight: $semibold;
+  }
+
+  button {
+    min-width: auto;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+/* Toolbar (zoom/rotar) */
+.modal-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 0;
+
+  button {
+    min-width: auto;
+    /* evita el min-width:260px de tu .btn global */
+    padding: 8px 12px;
+    border-radius: 6px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+/* Ajuste del pdf dentro del modal */
+.modal-container pdf-viewer {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* (Opcional) tarjeta de soportes */
+.card {
+  width: 100%;
+}
+
+/* Importante:
+   Tu CSS tiene: div { display:flex; ... }
+   Eso puede romper el modal y muchas cosas.
+   Aquí forzamos que dentro del modal NO aplique ese flex a todo.
+*/
+.modal-container,
+.modal-container * {
+  box-sizing: border-box;
+}
+
+/* Corrección del selector global de div que tienes */
+.modal-container div {
+  width: auto;
+  margin: 0;
+  display: block;
+}
+
+/* Responsive: en pantallas pequeñas */
+@media (max-width: 600px) {
+  .modal-container {
+    width: 100%;
+    height: 95%;
+    padding: 10px;
+  }
+
+  .modal-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
   }
 }
