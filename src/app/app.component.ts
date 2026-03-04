@@ -201,6 +201,10 @@ export class AppComponent implements OnInit, DoCheck {
         this.router.navigate(['soportes_administrador']);
     }
 
+    ChatList() {
+        this.router.navigate(['ChatList']);
+    }
+
     onSubmit() {
         this._teso10Service.signup(this.teso10).subscribe(
             (response) => {

@@ -45,6 +45,8 @@ import { PasosGeneralesComponent } from './pasos-generales/pasos-generales.compo
 import { ReportesDinamicosComponent } from './reportes-dinamicos/reportes-dinamicos.component';
 import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.component';
 import { MsoportesComponent } from './msoportes/msoportes.component';
+import { ChatRoomComponent } from './chat-room/chat-room.component';
+import { ChatListComponent } from './chat-list/chat-list.component';
 
 const routes: Routes = [
 
@@ -91,6 +93,8 @@ const routes: Routes = [
   { path: 'PasosGenerales', component: PasosGeneralesComponent, canActivate: [IdentityGuard] },
   { path: 'tablero', component: TableroTeso13Component, canActivate: [IdentityGuard] },
   { path: 'soportes_administrador', component: MsoportesComponent, canActivate: [IdentityGuard] },
+  { path: 'ChatList', component: ChatListComponent, canActivate: [IdentityGuard] },
+  { path: 'ChatRoom/:id', component: ChatRoomComponent, canActivate: [IdentityGuard] },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 
 ];

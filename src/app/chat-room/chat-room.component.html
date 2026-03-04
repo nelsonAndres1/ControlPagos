@@ -1,0 +1,40 @@
+<div class="chat-container">
+
+    <div class="chat-header">
+        <div class="title">
+            Conversación: <strong>{{ id_conversacion }}</strong>
+        </div>
+        <div class="info">
+            <span class="chip">sub: {{ mySub }}</span>
+            <span class="chip">lastId: {{ lastId }}</span>
+        </div>
+    </div>
+
+    <!-- ✅ Overlay loading -->
+    <div class="loading-overlay" *ngIf="loading">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <div class="loading-text">Espere...</div>
+            <div class="loading-subtext">{{ loadingText }}</div>
+        </div>
+    </div>
+
+    <div class="chat-messages" #msgContainer>
+        <div class="msg-row" *ngFor="let m of mensajes; trackBy: trackByMsgId" [class.mine]="isMine(m)">
+            <div class="bubble">
+                <div class="meta">
+                    <strong class="user">{{ m.usu_envia }}</strong>
+                    <span class="time">{{ m.fec_envio }}</span>
+                </div>
+                <div class="body">{{ m.txt_mensaje }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" [(ngModel)]="txt_mensaje" placeholder="Escribe un mensaje..." (keyup.enter)="enviar()"
+            [disabled]="loading" />
+        <button (click)="enviar()" [disabled]="loading">Enviar</button>
+    </div>
+
+</div>

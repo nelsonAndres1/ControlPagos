@@ -1,0 +1,104 @@
+<div class="chat-list-page">
+
+    <!-- Crear conversación -->
+    <div class="card create-card">
+        <div class="card-header">
+            <h3>Crear conversación</h3>
+            <span class="hint">Crea un chat direct o group</span>
+        </div>
+
+        <div class="card-body">
+            <div class="form-grid">
+                <div class="field">
+                    <label>Título</label>
+                    <input [(ngModel)]="newTitulo" placeholder="Ej: Seguimiento solicitud #123" />
+                    <small>Opcional. Si lo dejas vacío, se puede autogenerar.</small>
+                </div>
+
+                <div class="field">
+                    <label>Tipo</label>
+                    <select [(ngModel)]="newTipo">
+                        <option value="direct">Directo (1 a 1)</option>
+                        <option value="group">Grupo (equipo)</option>
+                    </select>
+                    <small>Define el estilo de conversación.</small>
+                </div>
+
+                <!-- ✅ PARTICIPANTES CON BÚSQUEDA -->
+                <div class="field full">
+                    <label>Participantes</label>
+
+                    <!-- Chips seleccionados -->
+                    <div class="chips" *ngIf="selectedParticipants.length > 0">
+                        <div class="chipUser" *ngFor="let u of selectedParticipants">
+                            <span class="name">{{ u.nombre }}</span>
+                            <span class="meta">({{ u.usuario }} · {{ u.cedtra }})</span>
+                            <button type="button" (click)="removeParticipant(u)">✕</button>
+                        </div>
+                    </div>
+
+                    <!-- Buscador -->
+                    <div class="searchBox">
+                        <input [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                            placeholder="Buscar por usuario, cédula o nombre..." />
+
+                        <div class="searchState" *ngIf="searching">Buscando...</div>
+
+                        <div class="results" *ngIf="!searching && searchResults.length > 0">
+                            <div class="result" *ngFor="let r of searchResults" (click)="addParticipant(r)">
+                                <div class="r-name">{{ r.nombre }}</div>
+                                <div class="r-meta">{{ r.usuario }} · {{ r.cedtra }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <small>Escribe mínimo 2 caracteres. Click en un resultado para agregar.</small>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn secondary" (click)="loadConversations()">Refrescar</button>
+                <button class="btn primary" (click)="createConversation()">Crear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico -->
+    <div class="card history-card">
+        <div class="card-header">
+            <h3>Histórico de conversaciones</h3>
+            <span class="hint" *ngIf="!loading">{{ conversations.length }} total</span>
+        </div>
+
+        <div class="card-body">
+            <div *ngIf="loading" class="state loading">Cargando...</div>
+
+            <div *ngIf="!loading && conversations.length === 0" class="state empty">
+                No tienes conversaciones aún.
+            </div>
+
+            <div class="items" *ngIf="!loading && conversations.length > 0">
+                <div class="item" *ngFor="let c of conversations" (click)="openConversation(c)">
+                    <div class="left">
+                        <div class="title-row">
+                            <div class="title">
+                                {{ c.titulo || ('Conversación ' + c.id_conversacion) }}
+                            </div>
+                            <span class="chip" [ngClass]="c.tip_conversacion">{{ c.tip_conversacion }}</span>
+                        </div>
+
+                        <div class="subtitle">
+                            {{ c.ult_mensaje || '(sin mensajes)' }}
+                        </div>
+                    </div>
+
+                    <div class="right">
+                        <div class="date">{{ c.fec_ult_mensaje || c.fec_crea }}</div>
+                        <div class="open">Abrir ›</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
