@@ -2,6 +2,7 @@ import { Component, OnInit, DoCheck } from '@angular/core';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso13Service } from '../services/teso13.service';
 import { Teso22Service } from '../services/teso22.service';
+import { TesoChatService } from '../services/tesochat.service';
 import { PagoPendiente } from '../models/pago-pendiente.model';
 import Swal from 'sweetalert2';
 
@@ -21,7 +22,7 @@ type PaginationState = { pageSize: number; currentPage: number; window: number }
     selector: 'app-principal',
     templateUrl: './principal.component.html',
     styleUrls: ['./principal.component.css'],
-    providers: [Gener02Service, Teso13Service, Teso22Service]
+    providers: [Gener02Service, Teso13Service, Teso22Service, TesoChatService]
 })
 
 export class PrincipalComponent implements OnInit {
@@ -42,12 +43,19 @@ export class PrincipalComponent implements OnInit {
     errorMsg = '';
     identity: any;
     token: any;
-    constructor(public _gener02Service: Gener02Service, public _teso13Service: Teso13Service, public _teso22Service: Teso22Service) {
+    constructor(public _gener02Service: Gener02Service, public _teso13Service: Teso13Service, public _teso22Service: Teso22Service, public _tesoChatService: TesoChatService) {
         this.identity = this._gener02Service.getIdentity();
         this.token = this._gener02Service.getToken();
+        this._tesoChatService.getMessages(2).subscribe({
+            next: (resp) => console.log(resp),
+            error: (err) => console.error(err)
+        });
 
         this.getPagosPendientes();
     }
+
+
+
 
     ngOnInit(): void {
         this.getPagosPendientes();

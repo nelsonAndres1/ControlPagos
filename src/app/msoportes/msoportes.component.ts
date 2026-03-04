@@ -47,7 +47,8 @@ export class MsoportesComponent {
 
     const usuariosPermitidos = [
       '1180',
-      '1750'
+      '1750',
+      '1957'
     ];
 
     if (usuariosPermitidos.includes(this.identity.sub)) {

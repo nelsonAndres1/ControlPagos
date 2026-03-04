@@ -127,9 +127,11 @@
                             (click)="pasosgenerales(); onNavItemClick()">
                             Pasos Generales
                         </CDBSidebarMenuItem>
-
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="asopotes(); onNavItemClick()">
+<!--                         <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="asopotes(); onNavItemClick()">
                             Administrador Soportes
+                        </CDBSidebarMenuItem> -->
+                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="ChatList(); onNavItemClick()">
+                            Chat
                         </CDBSidebarMenuItem>
 
                         <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]"
