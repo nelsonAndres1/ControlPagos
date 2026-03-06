@@ -5,7 +5,6 @@ import { Teso117Service } from '../services/teso117.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Gener02 } from '../models/gener02';
 import { Teso113 } from '../models/teso113';
-import { Teso13Teso15 } from '../models/teso13teso15';
 import { global } from '../services/global';
 import { Teso12Service } from '../services/teso12.service';
 import { Documento } from '../models/documento';
@@ -17,6 +16,7 @@ import { Teso117 } from '../models/teso117';
 import { Teso15new } from '../models/teso15new';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso23Service } from '../services/teso23.service';
+import { TesoChatService } from '../services/tesochat.service';
 
 @Component({
   selector: 'app-teso117-super',
@@ -128,6 +128,7 @@ export class Teso117SuperComponent implements OnInit {
     private _teso22Service: Teso22Service,
     private _gener02Service: Gener02Service,
     private _teso23Service: Teso23Service,
+    private _chatService: TesoChatService,
     private _router: Router
   ) {
     this.teso15 = new Teso15new('', '', '', '', '', '', 0, '', '', '', '');
@@ -466,9 +467,13 @@ export class Teso117SuperComponent implements OnInit {
         this.loading = true;
 
         this._teso15Service.save(this.teso15).subscribe(
-          response => {
+          async (response) => {
             this.loading = false;
+
             if (response.status == 'success') {
+              // ✅ Pregunta y (si elige) envía chat. Pase lo que pase, continúa.
+              await this.enviarMensaje();
+
               Swal.fire('Información', 'Cambios guardados!', 'success')
                 .then(() => this._router.navigate(['teso17']));
             } else {
@@ -480,6 +485,89 @@ export class Teso117SuperComponent implements OnInit {
       } else if (result.isDenied) {
         Swal.fire("Cambios no guardados", "", "info");
       }
+    });
+  }
+
+  enviarMensaje(): Promise<void> {
+    return new Promise((resolve) => {
+
+      const obs = (this.teso15?.observacion || this.observacion_texto || '').trim();
+      if (!obs) {
+        // no hay observación -> no preguntar, no enviar
+        return resolve();
+      }
+
+      const destinatario = (this.lista_historia_pago?.[0]?.usuario || '').toString().trim();
+      if (!destinatario) {
+        Swal.fire('Error', 'No se pudo identificar el usuario destinatario (historial vacío).', 'error')
+          .then(() => resolve());
+        return;
+      }
+
+      const consecutivo = (this.lista_historia_pago?.[0]?.numero || '').toString().trim();
+      const tipoPago = (this.lista_historia_pago?.[0]?.codclas_detalle || '').toString().trim();
+      const titulo = `Pago ${consecutivo || 'N/A'} - ${tipoPago || 'N/A'}`;
+
+      Swal.fire({
+        title: "¿Desea enviar la observación al usuario como mensaje?",
+        text: `Se enviará al usuario: ${destinatario}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: "Sí, enviar",
+        cancelButtonText: "No enviar"
+      }).then((result) => {
+        if (!result.isConfirmed) return resolve(); // el usuario no quiso
+
+        this.loading = true;
+
+        this._chatService.createConversation(titulo, 'direct', [destinatario]).subscribe({
+          next: (resp) => {
+            const idConv = parseInt(resp?.data?.id_conversacion, 10);
+
+            if (!resp || resp.status !== 'success' || isNaN(idConv)) {
+              this.loading = false;
+              Swal.fire('Error', 'No se pudo crear la conversación.', 'error')
+                .then(() => resolve());
+              return;
+            }
+
+            this._chatService.sendMessage(idConv, obs).subscribe({
+              next: (resp2) => {
+                this.loading = false;
+
+                if (resp2?.status === 'success') {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Mensaje enviado',
+                    text: 'La observación se envió al chat correctamente.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abrir chat',
+                    cancelButtonText: 'Cerrar'
+                  }).then(r => {
+                    if (r.isConfirmed) this._router.navigate(['/ChatRoom', idConv]);
+                    resolve();
+                  });
+                } else {
+                  Swal.fire('Error', 'La conversación se creó, pero no se pudo enviar el mensaje.', 'error')
+                    .then(() => resolve());
+                }
+              },
+              error: (err) => {
+                this.loading = false;
+                console.error(err);
+                Swal.fire('Error', 'Error enviando el mensaje de chat.', 'error')
+                  .then(() => resolve());
+              }
+            });
+          },
+          error: (err) => {
+            this.loading = false;
+            console.error(err);
+            Swal.fire('Error', 'Error creando la conversación de chat.', 'error')
+              .then(() => resolve());
+          }
+        });
+      });
     });
   }
 }

@@ -356,7 +356,7 @@
                 <div class="field">
                     <label><b>Persona quien revisa</b></label>
                     <select class="form-select" name="perrev" placeholder="perrev" #perrev="ngModel"
-                        [(ngModel)]="teso13.perrev">
+                        [(ngModel)]="teso13.perrev" required>
                         <option *ngFor="let pr of personas_revisa" [value]="pr.nombre + '-' + pr.docemp">
                             {{ pr.docemp }} - {{ pr.nombre }}
                         </option>
@@ -369,7 +369,7 @@
                 <div class="field">
                     <label><b>Persona quien Autoriza</b></label>
                     <select class="form-select" name="peraut" placeholder="peraut" #peraut="ngModel"
-                        [(ngModel)]="teso13.peraut">
+                        [(ngModel)]="teso13.peraut" required>
                         <option *ngFor="let pa of personas_autoriza" [value]="pa.nombre + '-' + pa.docemp">
                             {{ pa.docemp }} - {{ pa.nombre }}
                         </option>

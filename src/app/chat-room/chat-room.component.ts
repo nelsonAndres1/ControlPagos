@@ -17,8 +17,8 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
   lastId: number = 0;
   pollingRef: any = null;
 
-  loading: boolean = true;        // ✅ NUEVO
-  loadingText: string = 'Cargando conversación...'; // ✅ NUEVO
+  loading: boolean = true;
+  loadingText: string = 'Cargando conversación...';
 
   private ids = new Set<number>();
 
@@ -95,6 +95,17 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
     }
   }
 
+  // ✅ NUEVO: marcar como leído (si hay lastId válido)
+  private markRead(): void {
+    if (!this.id_conversacion || this.id_conversacion <= 0) return;
+    if (!this.lastId || this.lastId <= 0) return;
+
+    this.chatService.markAsRead(this.id_conversacion, this.lastId).subscribe({
+      next: () => { },
+      error: () => { }
+    });
+  }
+
   cargarHistorico(): void {
     this.loading = true;
     this.loadingText = 'Cargando mensajes...';
@@ -108,8 +119,12 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
           for (const m of arr) this.addMessage(m);
           this.rebuildIdsAndLastId();
 
-          this.loading = false; // ✅ NUEVO
+          this.loading = false;
           this.scrollToBottom();
+
+          // ✅ Marcar leído al abrir conversación
+          this.markRead();
+
           this.iniciarPolling();
         } else {
           this.loading = false;
@@ -134,6 +149,9 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
           if (resp?.status === 'success' && Array.isArray(resp.data) && resp.data.length > 0) {
             for (const m of resp.data) this.addMessage(m);
             this.scrollToBottom();
+
+            // ✅ Si llegaron mensajes y estás viendo la conversación, marcar leído
+            this.markRead();
           }
         },
         error: (err) => console.error('getNewMessages error:', err)
@@ -160,6 +178,7 @@ export class ChatRoomComponent implements OnInit, OnDestroy {
         if (resp?.status === 'success' && resp.data) {
           this.addMessage(resp.data);
           this.scrollToBottom();
+          this.markRead();
         } else {
           console.log('sendMessage no success:', resp);
           this.txt_mensaje = localText;
