@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck, HostListener } from '@angular/core';
+import { Component, OnInit, DoCheck, HostListener, OnDestroy } from '@angular/core';
 import { teso10 } from './models/teso10';
 import { Gener02Service } from './services/gener02.service';
 import { Teso10Service } from './services/teso10.service';
@@ -6,6 +6,7 @@ import { PrincipalService } from './services/principal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AppVersionService } from './services/app-version.service';
+import { TesoChatService } from './services/tesochat.service'; // Asegúrate de tener este servicio
 
 @Component({
     selector: 'app-root',
@@ -13,9 +14,10 @@ import { AppVersionService } from './services/app-version.service';
     styleUrls: ['./app.component.scss'],
     providers: [Gener02Service, Teso10Service, PrincipalService, AppVersionService],
 })
-export class AppComponent implements OnInit, DoCheck {
+export class AppComponent implements OnInit, DoCheck, OnDestroy {
     title = 'ControlPagos';
-
+    public chatUnread: number = 0;
+    private chatTimer: any = null;
     public identity: any;
     public token: any;
 
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit, DoCheck {
         private _principalService: PrincipalService,
         private _gener02Service: Gener02Service,
         private _teso10Service: Teso10Service,
+        private _chatService: TesoChatService, // Inyecta el servicio de chat
         private router: Router
     ) {
         this.identity = this._gener02Service.getIdentity();
@@ -64,6 +67,11 @@ export class AppComponent implements OnInit, DoCheck {
         console.log('Web cargada correctamente');
         this.refreshPermisosFromStorage();
         this.setResponsiveFlags();
+        this.startChatUnreadPolling();
+    }
+
+    ngOnDestroy(): void {
+        if (this.chatTimer) clearInterval(this.chatTimer);
     }
 
     /** Recalcula flags al redimensionar */
@@ -115,6 +123,21 @@ export class AppComponent implements OnInit, DoCheck {
             this.permisosRaw = currentRaw;
             this.arrayPermisos = this.parseCsvPermisos(currentRaw);
             this.updatePermFlagsFromArray();
+        }
+
+        const hasIdentity = !!this.identity;
+
+        if (!hasIdentity) {
+            this.chatUnread = 0;
+            if (this.chatTimer) {
+                clearInterval(this.chatTimer);
+                this.chatTimer = null;
+            }
+        } else {
+            // si está logueado y aún no hay timer, inícialo
+            if (!this.chatTimer) {
+                this.startChatUnreadPolling();
+            }
         }
     }
 
@@ -233,5 +256,32 @@ export class AppComponent implements OnInit, DoCheck {
                 console.log(err);
             }
         );
+    }
+    startChatUnreadPolling() {
+        if (this.chatTimer) clearInterval(this.chatTimer);
+
+        // si no hay login, no consultes
+        if (!this.identity) return;
+
+        // primera carga
+        this.refreshChatUnread();
+
+        this.chatTimer = setInterval(() => {
+            // si no hay identity, para
+            if (!this.identity) return;
+            this.refreshChatUnread();
+        }, 15000);
+    }
+
+    refreshChatUnread() {
+        // necesitas inyectar TesoChatService en AppComponent
+        this._chatService.getUnreadSummary().subscribe({
+            next: (resp) => {
+                if (resp?.status === 'success') {
+                    this.chatUnread = Number(resp.data?.total_unread || 0);
+                }
+            },
+            error: () => { }
+        });
     }
 }

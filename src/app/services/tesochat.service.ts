@@ -61,11 +61,26 @@ export class TesoChatService {
 
   searchUsuario(term: string): Observable<any> {
     const token = localStorage.getItem('token');
-    const payload = {token: token, usuper: (term || '').trim()};
+    const payload = { token: token, usuper: (term || '').trim() };
     let json = JSON.stringify(payload);
     let params = 'json=' + json;
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
 
     return this.http.post(this.url + 'chat/getSearchUsuario', params, { headers: headers });
+  }
+  getUnreadSummary(): Observable<any> {
+    const token = localStorage.getItem('token');
+    let json = JSON.stringify({ token });
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'chat/getUnreadSummary', params, { headers });
+  }
+
+  markAsRead(id_conversacion: number, last_read_id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    let json = JSON.stringify({ token, id_conversacion, last_read_id });
+    let params = 'json=' + json;
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.post(this.url + 'chat/markAsRead', params, { headers });
   }
 }

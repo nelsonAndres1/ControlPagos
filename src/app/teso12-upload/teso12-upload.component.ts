@@ -181,7 +181,9 @@ export class Teso12UploadComponent {
               const detail0: ItemDetail0 = { ...(this.itemDetail?.[0] ?? {}) };
               detail0.upload_token = this.uploadToken;
               if ('numero' in detail0) delete (detail0 as any).numero;
-  
+
+              console.log('Detalle 0 antes de registrar:', detail0);
+
               this._userService.register(detail0).subscribe(
                 (r: any) => {
                   this.uploading = false; // 🔓 seguridad extra por si acaso

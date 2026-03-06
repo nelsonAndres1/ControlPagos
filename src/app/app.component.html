@@ -130,10 +130,10 @@
                         <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="asopotes(); onNavItemClick()">
                             Administrador Soportes
                         </CDBSidebarMenuItem>
-<!--                         <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="ChatList(); onNavItemClick()">
+                        <CDBSidebarMenuItem  icon="comments" (click)="ChatList(); onNavItemClick()">
                             Chat
-                        </CDBSidebarMenuItem> -->
-
+                            <span *ngIf="chatUnread > 0" class="chat-badge">{{ chatUnread }}</span>
+                        </CDBSidebarMenuItem>
                         <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]"
                             (click)="onNavItemClick()">
                             Salir
