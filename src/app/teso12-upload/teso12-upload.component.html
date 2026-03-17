@@ -14,8 +14,15 @@
         <th scope="row">{{dt.codsop}}</th>
         <td>{{dt.detsop}}</td>
         <td>
-          <input #fileInput class="form-control" type="file" [id]="'formFile_' + dt.codsop"
-            (change)="onFileSelected($event, dt.detsop, dt, fileInput)">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input #fileInput class="form-control" type="file" [id]="'formFile_' + dt.codsop"
+              (change)="onFileSelected($event, dt.detsop, dt, fileInput)">
+
+            <button *ngIf="previewFiles[dt.detsop]" type="button" class="btn btn-primary btn-sm"
+              (click)="abrirPreview(dt.detsop)">
+              Visualizar
+            </button>
+          </div>
         </td>
         <td>
           {{obligatorio(dt.per)}}
@@ -35,4 +42,27 @@
   </div>
   <div *ngIf="uploading">Subiendo archivos...</div>
   <div *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>
+<div class="preview-modal-backdrop" *ngIf="modalPreviewUrl">
+  <div class="preview-modal">
+    <div class="preview-modal-header">
+      <h5>{{ modalPreviewName }}</h5>
+      <button type="button" class="btn btn-danger btn-sm" (click)="cerrarPreview()">X</button>
+    </div>
+
+    <div class="preview-modal-body">
+      <!-- Imagen -->
+      <img *ngIf="modalPreviewType?.startsWith('image/')" [src]="modalPreviewUrl" alt="Vista previa"
+        class="preview-img">
+
+      <!-- PDF -->
+      <iframe *ngIf="modalPreviewType === 'application/pdf'" [src]="modalPreviewUrl" class="preview-frame">
+      </iframe>
+
+      <!-- Otros -->
+      <div *ngIf="modalPreviewType !== 'application/pdf' && !modalPreviewType?.startsWith('image/')">
+        No se puede previsualizar este tipo de archivo en el modal.
+      </div>
+    </div>
+  </div>
 </div>

@@ -84,7 +84,14 @@
                             <div class="title">
                                 {{ c.titulo || ('Conversación ' + c.id_conversacion) }}
                             </div>
-                            <span class="chip" [ngClass]="c.tip_conversacion">{{ c.tip_conversacion }}</span>
+
+                            <div class="right-badges">
+                                <span class="chip" [ngClass]="c.tip_conversacion">{{ c.tip_conversacion }}</span>
+
+                                <span class="unread" *ngIf="(+c.unread_cnt || 0) > 0">
+                                    {{ c.unread_cnt }}
+                                </span>
+                            </div>
                         </div>
 
                         <div class="subtitle">

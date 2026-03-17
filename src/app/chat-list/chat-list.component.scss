@@ -309,3 +309,25 @@
     grid-template-columns: 1fr;
   }
 }
+
+.right-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unread {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #e53935;
+  color: #fff;
+  border: 1px solid #e53935;
+  min-width: 22px;
+  text-align: center;
+}
+
+.item.has-unread {
+  border-color: #ffd8b0;
+  background: #fffaf2;
+}
