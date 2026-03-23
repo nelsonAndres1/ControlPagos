@@ -78,6 +78,8 @@ import { MsoportesComponent } from './msoportes/msoportes.component';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { ChatListComponent } from './chat-list/chat-list.component';
 import { AuthInterceptor } from './services/auth.interceptor';
+import { MenuPermissionGuard } from './services/menu-permission.guard';
+import { RolesMenuComponent } from './roles-menu/roles-menu.component';
 
 
 @NgModule({
@@ -128,7 +130,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
     LoadingComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
-    EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component, MsoportesComponent, ChatRoomComponent, ChatListComponent
+    EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component, MsoportesComponent, ChatRoomComponent, ChatListComponent, RolesMenuComponent
   ],
 
   imports: [
@@ -156,6 +158,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
   providers: [
     IdentityGuard,
     LoginGuard,
+    MenuPermissionGuard,
     Gener02Service,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy }

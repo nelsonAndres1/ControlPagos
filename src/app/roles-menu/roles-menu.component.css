@@ -1,0 +1,35 @@
+.role-list,
+.search-results,
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.role-item,
+.search-item {
+  text-align: left;
+}
+
+.role-item.active {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #d8dee6;
+  border-radius: 8px;
+}
+
+.option-item input {
+  margin-bottom: 6px;
+}
+
+.option-item small {
+  color: #6c757d;
+}

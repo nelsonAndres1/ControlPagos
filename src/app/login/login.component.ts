@@ -4,6 +4,7 @@ import { Gener02Service } from '../services/gener02.service';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PrincipalService } from '../services/principal.service';
+import { MenuAccessService } from '../services/menu-access.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
     private _gener02Service: Gener02Service,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _principalService: PrincipalService
+    private _principalService: PrincipalService,
+    private _menuAccessService: MenuAccessService
   ) {
     this.page_title = 'Identificate';
     this.gener02 = new Gener02('', '');
@@ -112,7 +114,13 @@ export class LoginComponent implements OnInit {
                   permisos = this.permisos();
 
                   //Redirección a principal
-                  this._router.navigate(['principal']);
+                  this._menuAccessService.loadProfile(this.identity.sub).subscribe({
+                    next: () => this._router.navigate(['principal']),
+                    error: () => {
+                      this._menuAccessService.setFallbackProfile(this.identity.sub);
+                      this._router.navigate(['principal']);
+                    }
+                  });
 
                 }
               })
@@ -156,6 +164,7 @@ export class LoginComponent implements OnInit {
           localStorage.removeItem('identity2');
           localStorage.removeItem('identity1');
           localStorage.removeItem('permisos');
+          localStorage.removeItem('menuAccessControlPagos');
 
           this.identity = null;
           this.token = null;
