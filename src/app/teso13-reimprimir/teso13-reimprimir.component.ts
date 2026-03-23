@@ -26,6 +26,7 @@ export class Teso13ReimprimirComponent {
 
   // helpers de UI
   cargando: boolean = false;
+  generandoPdf: boolean = false;
 
   constructor(
     private _PdfService: PdfService,
@@ -191,12 +192,15 @@ export class Teso13ReimprimirComponent {
   // ==============================
   async descargarPDF(): Promise<void> {
     try {
+      this.generandoPdf = true;
       const pdfBlob: any = await firstValueFrom(this._PdfService.generarPDF(this.impreseion));
       const blob = new Blob([pdfBlob], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       window.open(url);
     } catch (e) {
       console.error('Error al generar PDF:', e);
+    } finally {
+      this.generandoPdf = false;
     }
   }
 

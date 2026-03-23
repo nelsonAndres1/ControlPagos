@@ -5,6 +5,7 @@ import { Gener02Service } from '../services/gener02.service';
 import { Teso13Service } from '../services/teso13.service';
 import { UploadService } from '../services/upload.service';
 import { global } from '../services/global';
+import { DocumentUrlService } from '../services/document-url.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -31,10 +32,14 @@ export class EditarSoportesComponent {
   uploading: boolean = false; // Bandera para indicar si se está subiendo archivos
   errorMessage: string | null = null;
 
-  constructor(private _editarSoportesService: EditarSoportesService, private uploadService: UploadService, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service) {
+  constructor(private _editarSoportesService: EditarSoportesService, private uploadService: UploadService, private _teso13Service: Teso13Service, private _gener02Service: Gener02Service, private documentUrlService: DocumentUrlService) {
     this.editarSoportes = new EditarSoportes('');
     this.identity = this._gener02Service.getIdentity();
 
+  }
+
+  getDocumentoUrl(filename: string) {
+    return this.documentUrlService.build(filename);
   }
 
   getTeso13_all(codclas, numero) {

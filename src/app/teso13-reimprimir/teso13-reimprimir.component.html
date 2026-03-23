@@ -1,3 +1,7 @@
+<div *ngIf="cargando || generandoPdf">
+    <app-loading [message]="generandoPdf ? 'Espere, estamos generando el documento...' : 'Espere, estamos cargando la información del pago...'"></app-loading>
+</div>
+
 <div style="margin: 50px;">
     <h2>Reimprimir Pago</h2>
     <br />

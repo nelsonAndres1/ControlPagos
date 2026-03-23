@@ -2,3 +2,49 @@
 @import "cytoscape-context-menus/cytoscape-context-menus.css";
 /* si no lo encuentra, usa la ruta explícita: */
 /* @import "../node_modules/cytoscape-context-menus/cytoscape-context-menus.css"; */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+iframe,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+.table-responsive,
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.92rem;
+  }
+
+  .btn {
+    max-width: 100%;
+  }
+
+  .form-control,
+  .form-select,
+  textarea,
+  select,
+  input {
+    max-width: 100%;
+  }
+}

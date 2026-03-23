@@ -13,6 +13,7 @@ import { Documento } from '../models/documento';
 import { Conta04 } from '../models/conta04';
 import { Teso13Service } from '../services/teso13.service';
 import { UploadService } from '../services/upload.service';
+import { DocumentUrlService } from '../services/document-url.service';
 
 @Component({
     selector: 'app-teso117',
@@ -115,6 +116,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     src: string = 'assets/pspdfkit-web-demo.pdf';
     errorMessage: string | null = null;
     uploading: boolean = false; // Bandera para indicar si se está subiendo archivos
+    loading: boolean = false;
 
     page: number = 1;
     totalPages: number = 0;
@@ -130,10 +132,11 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         private route: ActivatedRoute,
         private _teso15Service: Teso15Service,
         private _teso117Service: Teso117Service,
-        private _router: Router) {
+        private _router: Router,
+        private documentUrlService: DocumentUrlService) {
 
         this.conta04 = new Conta04('', '');
-        this.pdfSource = global.url + 'teso12/getDocumento/' + '009000004085Javeriana001.pdf'
+        this.pdfSource = this.getDocumentoUrl('009000004085Javeriana001.pdf');
 
         this.route.queryParams.subscribe(response => {
             const paramsData = JSON.parse(response['res2']);
@@ -160,6 +163,10 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         this.zoom = 1;        // reset zoom
         this.rotation = 0;    // reset rotación
         this.showModal = true;
+    }
+
+    getDocumentoUrl(filename: string) {
+        return this.documentUrlService.build(filename);
     }
 
     // Cerrar modal
@@ -191,7 +198,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
     }
 
     downloadPDF(so: any) {
-        const url = this.global_url + 'teso12/getDocumento/' + so.archivo;
+        const url = this.getDocumentoUrl(so.archivo);
         fetch(url)
             .then(response => response.blob())
             .then(blob => {
@@ -255,6 +262,7 @@ export class Teso117Component implements OnInit { /* RA - Radicado
 
 
                 if (this.bandera_archivo) {
+                    this.uploading = true;
                     let data = new Teso113(this.datos_pago.codclas, this.datos_pago.numero);
 
                     if (this.estadoActual == 'PC') {
@@ -742,58 +750,63 @@ export class Teso117Component implements OnInit { /* RA - Radicado
         this.teso13teso15 = new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, datoU['sub'], '', '', this.observacion);
 
         if (this.estadoA == 'RA') {
+            this.loading = true;
 
             this._teso117Service.updateTeso13RegisterTeso15(this.teso13teso15).subscribe(response => {
+                this.loading = false;
                 if (response.status == "success") {
                     this.status = response.status;
-
+                    Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
+                    this._router.navigate(['teso17']);
                 } else {
-                    this.status = 'error'
+                    this.status = 'error';
+                    Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
                 }
             }, error => {
+                this.loading = false;
                 this.status = 'error';
                 console.log(<any>error);
+                Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
             });
-
-            Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-
-
-            this._router.navigate(['teso17']);
         } else if (this.estadoA == 'RV') {
+            this.loading = true;
 
             this._teso117Service.updateTeso13RegisterTeso15AU(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', datoU['sub'], '', this.observacion)).subscribe(response => {
+                this.loading = false;
                 if (response.status == "success") {
                     this.status = response.status;
-
+                    Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
+                    this._router.navigate(['teso17']);
                 } else {
-                    this.status = 'error'
+                    this.status = 'error';
+                    Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
                 }
             }, error => {
+                this.loading = false;
                 this.status = 'error';
                 console.log(<any>error);
+                Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
             });
-
-            Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-            this._router.navigate(['teso17']);
         } else {
+            this.loading = true;
 
 
             this._teso117Service.updateTeso13(new Teso13Teso15(this.itemF['codclas'], this.itemF['numero'], this.itemF['numfac'], this.estadoActual, this.estadoA, '', '', datoU['sub'], this.observacion)).subscribe(response => {
+                this.loading = false;
                 if (response.status == "success") {
                     this.status = response.status;
-
-
+                    Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
+                    this._router.navigate(['teso17']);
                 } else {
-                    this.status = 'error'
+                    this.status = 'error';
+                    Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
                 }
             }, error => {
+                this.loading = false;
                 this.status = 'error';
                 console.log(<any>error);
+                Swal.fire('Error', 'No fue posible actualizar el estado del pago.', 'error');
             });
-
-            Swal.fire('Listo!', 'Estado de Pago actualizado Satisfactoriamente', 'success');
-
-            this._router.navigate(['teso17']);
         }
     }
 

@@ -17,6 +17,7 @@ import { Teso15new } from '../models/teso15new';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso23Service } from '../services/teso23.service';
 import { TesoChatService } from '../services/tesochat.service';
+import { DocumentUrlService } from '../services/document-url.service';
 
 @Component({
   selector: 'app-teso117-super',
@@ -129,14 +130,15 @@ export class Teso117SuperComponent implements OnInit {
     private _gener02Service: Gener02Service,
     private _teso23Service: Teso23Service,
     private _chatService: TesoChatService,
-    private _router: Router
+    private _router: Router,
+    private documentUrlService: DocumentUrlService
   ) {
     this.teso15 = new Teso15new('', '', '', '', '', '', 0, '', '', '', '');
     this.identity_real = this._gener02Service.getIdentity();
     this.teso15.usuario = this.identity_real.sub;
 
     this.conta04 = new Conta04('', '');
-    this.pdfSource = global.url + 'teso12/getDocumento/' + '009000004085Javeriana001.pdf';
+    this.pdfSource = this.getDocumentoUrl('009000004085Javeriana001.pdf');
     this.teso117 = new Teso117('');
 
     this.route.queryParams.subscribe(response => {
@@ -183,6 +185,10 @@ export class Teso117SuperComponent implements OnInit {
     this.showModal = true;
   }
 
+  getDocumentoUrl(filename: string) {
+    return this.documentUrlService.build(filename);
+  }
+
   cerrarModal() {
     this.showModal = false;
     this.selectedPdf = '';
@@ -219,7 +225,7 @@ export class Teso117SuperComponent implements OnInit {
   }
 
   downloadPDF(so: any) {
-    const url = this.global_url + 'teso12/getDocumento/' + so.archivo;
+    const url = this.getDocumentoUrl(so.archivo);
     fetch(url)
       .then(response => response.blob())
       .then(blob => {

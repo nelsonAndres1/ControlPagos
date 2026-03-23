@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { Teso10Component } from './teso10/teso10.component';
 import { PrincipalComponent } from './principal/principal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AngularFileUploaderModule } from "angular-file-uploader";
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
@@ -77,6 +77,7 @@ import { TableroTeso13Component } from './tablero-teso13/tablero-teso13.componen
 import { MsoportesComponent } from './msoportes/msoportes.component';
 import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { ChatListComponent } from './chat-list/chat-list.component';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 
 @NgModule({
@@ -156,6 +157,7 @@ import { ChatListComponent } from './chat-list/chat-list.component';
     IdentityGuard,
     LoginGuard,
     Gener02Service,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent],

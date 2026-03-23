@@ -10,6 +10,7 @@ import { Teso20Service } from '../services/teso20.service';
 // >>> idéntico a tu otro componente:
 import { Teso117Service } from '../services/teso117.service';
 import { global } from '../services/global';
+import { DocumentUrlService } from '../services/document-url.service';
 
 import { Gener02 } from '../models/gener02';
 import { Teso113 } from '../models/teso113';
@@ -63,7 +64,8 @@ export class Teso16Component implements OnInit {
     private _teso20Service: Teso20Service,
 
     // <<< mismo servicio que usas donde ya funciona:
-    private _teso117Service: Teso117Service
+    private _teso117Service: Teso117Service,
+    private documentUrlService: DocumentUrlService
   ) {
     this.estado = new Estado('', '');
 
@@ -123,8 +125,12 @@ export class Teso16Component implements OnInit {
     this.visorAbierto = true;
   }
 
+  getDocumentoUrl(filename: string) {
+    return this.documentUrlService.build(filename);
+  }
+
   downloadPDF(so: any) {
-    const url = this.global_url + 'teso12/getDocumento/' + so.archivo;
+    const url = this.getDocumentoUrl(so.archivo);
 
     fetch(url)
       .then(response => response.blob())
