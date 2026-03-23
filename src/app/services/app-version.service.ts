@@ -1,12 +1,14 @@
+import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { timer, switchMap, catchError, of, map } from 'rxjs';
+import { timer, switchMap, catchError, of } from 'rxjs';
 
 type AppVersion = { builtAt: string; commit?: string };
 
 @Injectable({ providedIn: 'root' })
 export class AppVersionService {
   private http = inject(HttpClient);
+  private document = inject(DOCUMENT);
   private current?: AppVersion;
 
   init(pollMs = 60_000) { // cada 60s; ajústalo
@@ -26,7 +28,8 @@ export class AppVersionService {
   }
 
   private fetchVersion() {
-    const url = `/assets/version.json?t=${Date.now()}`; // cache-busting
+    const baseUrl = this.document?.baseURI || window.location.href;
+    const url = new URL(`assets/version.json?t=${Date.now()}`, baseUrl).toString();
     return this.http.get<AppVersion>(url).pipe(
       catchError(() => of(undefined as unknown as AppVersion))
     );
