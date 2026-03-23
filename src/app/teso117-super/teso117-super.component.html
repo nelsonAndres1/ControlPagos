@@ -1,5 +1,5 @@
-<div *ngIf="loading">
-    <app-loading></app-loading>
+<div *ngIf="loading || uploading">
+    <app-loading [message]="uploading ? 'Espere, estamos subiendo archivos...' : 'Espere, estamos procesando la solicitud...'"></app-loading>
 </div>
 
 <div class="page">
@@ -122,7 +122,7 @@
                     <div class="soportes-list">
                         <div class="soporte-item" *ngFor="let so of soportes">
                             <button class="soporte-btn" type="button"
-                                (click)="abrirSoporte(global_url + 'teso12/getDocumento/' + so.archivo, so)"
+                                (click)="abrirSoporte(getDocumentoUrl(so.archivo), so)"
                                 title="Ver soporte">
                                 <span class="soporte-title">{{ so.detsop }}</span>
                                 <i class="icons">+</i>

@@ -16,6 +16,22 @@
   align-items: center;
 }
 
+.estado-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.estado-table-wrap table {
+  min-width: 940px;
+}
+
+.t117-input {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 div {
   width: 100%;
   margin: auto;
@@ -148,6 +164,24 @@ body {
 }
 
 @media (max-width: 600px) {
+  .formato,
+  .formato2 {
+    padding: 0 10px;
+  }
+
+  .estado-table-wrap table {
+    min-width: 860px;
+  }
+
+  .t117-input {
+    width: 100%;
+  }
+
+  .btn {
+    min-width: 0;
+    width: 100%;
+  }
+
   .flex-tabs {
     flex-direction: column;
 

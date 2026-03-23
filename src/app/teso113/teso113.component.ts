@@ -43,6 +43,7 @@ interface Teso13Data {
 export class Teso113Component implements OnInit {
     // ====== Parámetros / estado ======
     itemDetail: any[] = [];
+    generandoPdf = false;
 
     numero!: string;          // SIEMPRE como string (con padding)
     codclas!: string;
@@ -251,22 +252,7 @@ export class Teso113Component implements OnInit {
     // =========================================
     async descargarPDF(): Promise<void> {
         try {
-            // Loader breve
-            let timer: any;
-            await Swal.fire({
-                title: 'Generando PDF…',
-                html: 'El proceso terminará en <b></b> ms.',
-                timer: 1500,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading();
-                    const b = Swal.getHtmlContainer()?.querySelector('b');
-                    timer = setInterval(() => {
-                        if (b) b.textContent = String(Swal.getTimerLeft());
-                    }, 100);
-                },
-                willClose: () => clearInterval(timer),
-            });
+            this.generandoPdf = true;
 
             // Llamar backend PDF
             const pdfBlob: any = await firstValueFrom(this.pdfSrv.generarPDF(this.impreseion));
@@ -283,6 +269,8 @@ export class Teso113Component implements OnInit {
                 title: 'No se pudo generar el PDF',
                 text: error?.message || 'Ocurrió un error inesperado.',
             });
+        } finally {
+            this.generandoPdf = false;
         }
     }
 

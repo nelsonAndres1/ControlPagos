@@ -5,6 +5,7 @@ import { Gener02Service } from '../services/gener02.service';
 import { Teso13Service } from '../services/teso13.service';
 import { UploadService } from '../services/upload.service';
 import { global } from '../services/global';
+import { DocumentUrlService } from '../services/document-url.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 
@@ -39,7 +40,8 @@ export class MsoportesComponent {
     private uploadService: UploadService,
     private _teso13Service: Teso13Service,
     private _gener02Service: Gener02Service,
-    private router: Router
+    private router: Router,
+    private documentUrlService: DocumentUrlService
 
   ) {
     this.editarSoportes = new EditarSoportes('');
@@ -110,6 +112,10 @@ export class MsoportesComponent {
       this.bandera = false;
       this.link = '';
     }
+  }
+
+  getDocumentoUrl(filename: string) {
+    return this.documentUrlService.build(filename);
   }
 
   // Selección de archivo para reemplazo
