@@ -93,5 +93,6 @@ export class Gener02Service {
         localStorage.removeItem('identity2');
         localStorage.removeItem('identity1');
         localStorage.removeItem('permisos');
+        localStorage.removeItem('menuAccessControlPagos');
     }
 }

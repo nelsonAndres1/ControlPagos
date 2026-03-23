@@ -1,14 +1,11 @@
 <div class="dashboard">
-    <!-- Backdrop móvil -->
-    <div class="backdrop" *ngIf="isMobile && sidebarOpen" (click)="closeSidebar()"></div>
+    <div class="backdrop" *ngIf="!isAuthRoute && isMobile && sidebarOpen" (click)="closeSidebar()"></div>
 
-    <!-- Sidebar wrapper -->
-    <div class="sidebar-wrap" [class.mobile]="isMobile" [class.open]="sidebarOpen">
+    <div class="sidebar-wrap" *ngIf="!isAuthRoute" [class.mobile]="isMobile" [class.open]="sidebarOpen">
         <div *ngIf="identity" class="app app-shell">
             <CDBSidebar textColor="#000000" backgroundColor="#c6d7e4">
                 <CDBSidebarHeader [prefix]="icon">
                     <ng-template #icon>
-                        <!-- En móvil abre/cierra -->
                         <CDBIcon icon="bars" size="lg" (click)="toggleSidebar()"></CDBIcon>
                     </ng-template>
                     Control de Pagos
@@ -16,124 +13,122 @@
 
                 <CDBSidebarContent>
                     <CDBSidebarMenu>
-                        <!-- Home -->
-                        <CDBSidebarMenuItem icon="home" routerLink="/principal" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('principal')" icon="home" routerLink="/principal" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Pagina Principal
                         </CDBSidebarMenuItem>
 
-                        <!-- Bloque pagos -->
-                        <CDBSidebarMenuItem *ngIf="canPagar" icon="play" (click)="inp(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso13_create')" icon="play" (click)="inp(); onNavItemClick()">
                             Inicie el Pago
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canPagar" icon="pen" (click)="inp_editar(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso13_edit')" icon="pen" (click)="inp_editar(); onNavItemClick()">
                             Editar sus pagos
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canPagar" icon="pen"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso13_supports_edit')" icon="pen"
                             (click)="inp_editar_soportes(); onNavItemClick()">
                             Editar soportes de pago
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canPagar" icon="print" (click)="inp_reimprimir(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso13_reprint')" icon="print" (click)="inp_reimprimir(); onNavItemClick()">
                             Reimprimir pago
                         </CDBSidebarMenuItem>
 
-                        <!-- Consultas -->
-                        <CDBSidebarMenuItem icon="search" routerLink="/teso15" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso15_status')" icon="search" routerLink="/teso15" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Consultar estado del Pago
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem icon="search" routerLink="/teso15Nit" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso15_nit')" icon="search" routerLink="/teso15Nit" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Consultar por Nit
                         </CDBSidebarMenuItem>
 
-                        <!-- Modificar estado -->
-                        <CDBSidebarMenuItem icon="cogs" routerLink="/teso17" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso17_status_change')" icon="cogs" routerLink="/teso17" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Modificar estado del Pago
                         </CDBSidebarMenuItem>
 
-                        <!-- Admin/Nuevo pago -->
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="shopping-cart" routerLink="/teso110"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('tipos_pago')" icon="shopping-cart" routerLink="/teso110"
                             routerLinkActive="active" (click)="onNavItemClick()">
                             Tipos de Pago
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="file" routerLink="/teso112" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('tipos_soporte')" icon="file" routerLink="/teso112" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Tipos de Soportes
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="cog" routerLink="/editar_teso12"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('editar_soportes_catalogo')" icon="cog" routerLink="/editar_teso12"
                             routerLinkActive="active" (click)="onNavItemClick()">
                             Editar Soportes
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="link" routerLink="/teso14" routerLinkActive="active"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('vincular_pagos_soportes')" icon="link" routerLink="/teso14" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Vincular Pagos y Soportes
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="lock" (click)="opciones(); onNavItemClick()">
-                            Administrador
+                        <CDBSidebarMenuItem *ngIf="hasMenu('roles_menu_admin')" icon="lock" (click)="opciones(); onNavItemClick()">
+                            Roles de Menu
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="users" (click)="causadores(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('causadores_admin')" icon="users" (click)="causadores(); onNavItemClick()">
                             Agregar Causadores
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="users" (click)="revisa(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('revisores_admin')" icon="users" (click)="revisa(); onNavItemClick()">
                             Revisores y Autorizadores
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="wrench" (click)="crear_opciones(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('crear_opciones')" icon="wrench" (click)="crear_opciones(); onNavItemClick()">
                             Crear Opciones
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="tree" (click)="crear_arbol(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('crear_arbol')" icon="tree" (click)="crear_arbol(); onNavItemClick()">
                             Crear Arbol
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="wrench" (click)="vincular(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('arbol_pagos')" icon="wrench" (click)="vincular(); onNavItemClick()">
                             Arbol y Pagos
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="lock" (click)="teso23(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('permisos_legacy')" icon="lock" (click)="teso23(); onNavItemClick()">
                             Permisos
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="bell" (click)="notificaciones(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('notificaciones')" icon="bell" (click)="notificaciones(); onNavItemClick()">
                             Notificaciones
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-excel" (click)="reportes(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('reportes')" icon="file-excel" (click)="reportes(); onNavItemClick()">
                             Reportes
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="file-alt"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('reportes_dinamicos')" icon="file-alt"
                             (click)="reportesDinamicos(); onNavItemClick()">
                             Reportes Dinamicos
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="chart-bar" (click)="tablero(); onNavItemClick()">
+                        <CDBSidebarMenuItem *ngIf="hasMenu('tablero')" icon="chart-bar" (click)="tablero(); onNavItemClick()">
                             Tablero
                         </CDBSidebarMenuItem>
 
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full"
+                        <CDBSidebarMenuItem *ngIf="hasMenu('pasos_generales')" icon="battery-full"
                             (click)="pasosgenerales(); onNavItemClick()">
                             Pasos Generales
                         </CDBSidebarMenuItem>
-                        <CDBSidebarMenuItem *ngIf="canAdmin" icon="battery-full" (click)="asopotes(); onNavItemClick()">
+
+                        <CDBSidebarMenuItem *ngIf="hasMenu('soportes_admin')" icon="battery-full" (click)="asopotes(); onNavItemClick()">
                             Administrador Soportes
                         </CDBSidebarMenuItem>
-                        <CDBSidebarMenuItem icon="comments" (click)="ChatList(); onNavItemClick()">
+
+                        <CDBSidebarMenuItem *ngIf="hasMenu('chat')" icon="comments" (click)="ChatList(); onNavItemClick()">
                             Chat
                             <span *ngIf="chatUnread > 0" class="chat-badge">{{ chatUnread }}</span>
                         </CDBSidebarMenuItem>
+
                         <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]"
                             (click)="onNavItemClick()">
                             Salir
@@ -144,7 +139,7 @@
                 <div class="mt-auto">
                     <CDBSidebarFooter style="text-align: center">
                         <div class="sidebar-btn-wrapper" style="padding: 20px 5px">
-                            Comfamiliar de Nariño
+                            Comfamiliar de Narino
                         </div>
                     </CDBSidebarFooter>
                 </div>
@@ -152,11 +147,9 @@
         </div>
     </div>
 
-    <!-- Contenido -->
     <div class="app-content">
-        <!-- Topbar móvil -->
-        <div class="topbar" *ngIf="isMobile">
-            <button type="button" class="burger" (click)="toggleSidebar()">☰</button>
+        <div class="topbar" *ngIf="!isAuthRoute && isMobile">
+            <button type="button" class="burger" (click)="toggleSidebar()">&#9776;</button>
             <div class="title">Control de Pagos</div>
         </div>
 
