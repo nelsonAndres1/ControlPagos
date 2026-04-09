@@ -158,7 +158,7 @@
                 <div class="field">
                     <label><b>Numero de Pagos</b></label>
                     <input type="text" class="form-control" name="numcuo" placeholder="Numero Cuotas" #numcuo="ngModel"
-                        [(ngModel)]="teso13.numcuo" maxlength="2" required />
+                        [(ngModel)]="teso13.numcuo" maxlength="3" required />
                     <small *ngIf="!numcuo.valid && numcuo.touched" class="invalid-feedback d-block">
                         Este Campo es requerido
                     </small>
