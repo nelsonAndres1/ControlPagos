@@ -1,0 +1,42 @@
+.cambios-wrap {
+    margin: 40px;
+}
+
+.search-card,
+.results-card {
+    background: #fff;
+    border: 1px solid #dfe7ef;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.row-click {
+    cursor: pointer;
+}
+
+.detail-cell {
+    background: #fbfdff;
+}
+
+.detail-card {
+    border: 1px solid #e4ebf2;
+    border-radius: 10px;
+    padding: 16px;
+    background: #ffffff;
+}
+
+.audit-header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    background: #f7fafc;
+    border: 1px solid #e4ebf2;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.break-cell {
+    white-space: pre-wrap;
+    word-break: break-word;
+}

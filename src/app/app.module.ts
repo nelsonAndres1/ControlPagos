@@ -80,6 +80,7 @@ import { ChatListComponent } from './chat-list/chat-list.component';
 import { AuthInterceptor } from './services/auth.interceptor';
 import { MenuPermissionGuard } from './services/menu-permission.guard';
 import { RolesMenuComponent } from './roles-menu/roles-menu.component';
+import { Teso13CambiosComponent } from './teso13-cambios/teso13-cambios.component';
 
 
 @NgModule({
@@ -128,6 +129,7 @@ import { RolesMenuComponent } from './roles-menu/roles-menu.component';
     Teso15NitComponent,
     EditarSoportesComponent,
     LoadingComponent,
+    Teso13CambiosComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
     EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component, MsoportesComponent, ChatRoomComponent, ChatListComponent, RolesMenuComponent

@@ -49,6 +49,7 @@ import { ChatRoomComponent } from './chat-room/chat-room.component';
 import { ChatListComponent } from './chat-list/chat-list.component';
 import { MenuPermissionGuard } from './services/menu-permission.guard';
 import { RolesMenuComponent } from './roles-menu/roles-menu.component';
+import { Teso13CambiosComponent } from './teso13-cambios/teso13-cambios.component';
 
 const routes: Routes = [
 
@@ -85,6 +86,7 @@ const routes: Routes = [
   { path: 'causadores', component: CausadoresComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'causadores_admin' } },
   { path: 'teso13_modal', component: Teso13modalComponent, canActivate: [IdentityGuard] },
   { path: 'teso13_reimprimir', component: Teso13ReimprimirComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'teso13_reprint' } },
+  { path: 'teso13_cambios', component: Teso13CambiosComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'teso13_changes_history' } },
   { path: 'revisa_autoriza', component: RevisoresAutorizacionComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'revisores_admin' } },
   { path: 'teso20', component: Teso20Component, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'crear_opciones' } },
   { path: 'teso21', component: Teso21Component, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'crear_arbol' } },

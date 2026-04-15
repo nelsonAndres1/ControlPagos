@@ -217,6 +217,20 @@ export class Teso13Service {
         return this._http.post(this.url + 'teso13/teso13update', params, { headers: headers });
     }
 
+    getHistorialCambios(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = "json=" + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/getHistorialCambios', params, { headers: headers });
+    }
+
+    getPagosConCambios(user: any): Observable<any> {
+        let json = JSON.stringify(user);
+        let params = "json=" + json;
+        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+        return this._http.post(this.url + 'teso13/getPagosConCambios', params, { headers: headers });
+    }
+
     verificarNumero(user: any): Observable<any> {
         let json = JSON.stringify(user);
         let params = "json=" + json;
