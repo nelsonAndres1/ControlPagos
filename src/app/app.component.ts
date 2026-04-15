@@ -217,6 +217,10 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
         this.router.navigate(['teso13_reimprimir']);
     }
 
+    historial_cambios() {
+        this.router.navigate(['teso13_cambios']);
+    }
+
     vincular() {
         this.router.navigate(['teso22']);
     }

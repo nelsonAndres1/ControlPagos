@@ -35,6 +35,10 @@
                             Reimprimir pago
                         </CDBSidebarMenuItem>
 
+                        <CDBSidebarMenuItem *ngIf="hasMenu('teso13_changes_history')" icon="history" (click)="historial_cambios(); onNavItemClick()">
+                            Consultar modificaciones
+                        </CDBSidebarMenuItem>
+
                         <CDBSidebarMenuItem *ngIf="hasMenu('teso15_status')" icon="search" routerLink="/teso15" routerLinkActive="active"
                             (click)="onNavItemClick()">
                             Consultar estado del Pago
