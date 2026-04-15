@@ -29,7 +29,9 @@ export class Impresion {
         public centros_json?: string,
         public documento_elaborado?: string,
         public cdps_json?:string,
-        public impresion?:string
+        public impresion?:string,
+        public codclas?: string,
+        public numero?: string
     ) {
 
 

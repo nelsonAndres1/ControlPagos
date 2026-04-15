@@ -84,7 +84,9 @@ export class Teso113Component implements OnInit {
         '', // detalle
         '', // anexos_magneticos
         '',  // centros_json (opcional)
-        '' 
+        '',
+        '',
+        ''
     );
 
     // Reqs auxiliares
@@ -233,6 +235,8 @@ export class Teso113Component implements OnInit {
             this.impreseion.centros_json = this.data.centros_json ?? '';
             this.impreseion.cdps_json = this.data.cdps_json ?? '';
             this.impreseion.impresion = this.impresion;
+            this.impreseion.codclas = this.data.codclas ?? this.codclas;
+            this.impreseion.numero = String(this.data.numero ?? this.numero);
 
             console.log('Impresion objeto:', this.impreseion);
 
