@@ -34,7 +34,7 @@ export class Teso117Service {
 
     traerSoportes(user: any): Observable<any> {
         let json = JSON.stringify(user);
-        let params = 'json=' + json;
+        let params = 'json=' + encodeURIComponent(json);
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         return this._http.post(this.url + 'teso117/traerSoportes', params, { headers: headers });
     }
