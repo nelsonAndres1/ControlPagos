@@ -54,7 +54,7 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
   // NGX Graph (compatibilidad)
   curve: any = shape.curveMonotoneY;
   layout: Layout = new DagreNodesOnlyLayout();
-  layoutSettings = { orientation: 'TB' };
+  layoutSettings = { orientation: 'LR' };
 
   observacion_: 'SI' | 'NO' = 'NO';
   archivo_: 'SI' | 'NO' = 'NO';
@@ -65,15 +65,23 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
   /* ===== Vista Cytoscape ===== */
   @ViewChild('cyContainer', { static: false }) cyContainer!: ElementRef<HTMLDivElement>;
   useCytoscape = true;
+  sidePanelOpen = true;
+  wideGraph = false;
+  layoutDirection: 'TB' | 'LR' = 'LR';
+  readingMode = true;
+  activeNodeLabel = '';
+  activeNodeResume = '';
   private cy?: Core;
   private eh?: any; // edgehandles instance
+  private activeNodeId = '';
+  private readonly minReadableZoom = 0.82;
 
   DAGRE_OPTS: any = {
     name: 'dagre',
-    rankDir: 'TB',   // 'TB' | 'BT' | 'LR' | 'RL'
-    nodeSep: 40,
-    edgeSep: 20,
-    rankSep: 80,
+    rankDir: 'LR',   // 'TB' | 'BT' | 'LR' | 'RL'
+    nodeSep: 78,
+    edgeSep: 42,
+    rankSep: 165,
     animate: false
   };
 
@@ -133,6 +141,8 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
         this.teso21_.nombre_proceso = nombre;
 
         // 3) Refrescar vista
+        this.wideGraph = true;
+        this.sidePanelOpen = false;
         if (this.useCytoscape) this.refreshCy();
       },
       error => console.error('Error cargando árbol:', error)
@@ -332,6 +342,91 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
     }
   }
 
+  toggleSidePanel(): void {
+    this.sidePanelOpen = !this.sidePanelOpen;
+    setTimeout(() => this.fitGraph(), 250);
+  }
+
+  toggleWideGraph(): void {
+    this.wideGraph = !this.wideGraph;
+    this.sidePanelOpen = !this.wideGraph;
+    setTimeout(() => this.fitGraph(), 250);
+  }
+
+  setLayoutDirection(direction: 'TB' | 'LR'): void {
+    this.layoutDirection = direction;
+    this.layoutSettings = { orientation: direction };
+    this.DAGRE_OPTS = {
+      ...this.DAGRE_OPTS,
+      rankDir: direction,
+      nodeSep: direction === 'LR' ? 78 : 66,
+      edgeSep: direction === 'LR' ? 42 : 34,
+      rankSep: direction === 'LR' ? 165 : 142
+    };
+    this.applyLayoutAndFit();
+  }
+
+  fitGraph(padding = 90, keepReadable = true): void {
+    if (!this.cy || this.cy.elements().length === 0) return;
+    this.cy.resize();
+    this.cy.fit(undefined, padding);
+    if (keepReadable) this.keepReadableZoom();
+  }
+
+  overviewGraph(): void {
+    this.fitGraph(36, false);
+  }
+
+  zoomGraph(factor: number): void {
+    if (!this.cy) return;
+
+    const current = this.cy.zoom();
+    const next = Math.max(0.18, Math.min(2.4, current * factor));
+    const rect = this.cyContainer?.nativeElement?.getBoundingClientRect();
+
+    this.cy.zoom({
+      level: next,
+      renderedPosition: {
+        x: (rect?.width || 900) / 2,
+        y: (rect?.height || 650) / 2
+      }
+    });
+  }
+
+  focusSelected(): void {
+    if (!this.cy) return;
+
+    const selected = this.cy.$(':selected');
+    if (selected.length === 0) {
+      this.fitGraph();
+      return;
+    }
+
+    const selectedNode = selected.nodes()[0] as NodeSingular | undefined;
+    if (selectedNode) {
+      this.focusNodeRoute(selectedNode);
+      return;
+    }
+
+    this.cy.fit(selected.closedNeighborhood(), 80);
+    this.keepReadableZoom();
+  }
+
+  toggleReadingMode(): void {
+    this.readingMode = !this.readingMode;
+    if (this.activeNodeId && this.cy) {
+      const node = this.cy.$id(this.activeNodeId)[0] as NodeSingular | undefined;
+      if (node) this.focusNodeRoute(node, false);
+    }
+  }
+
+  clearFocus(): void {
+    this.activeNodeId = '';
+    this.activeNodeLabel = '';
+    this.activeNodeResume = '';
+    this.clearHighlight(false);
+  }
+
   private initCy(): void {
     if (!this.cyContainer) return;
 
@@ -339,42 +434,60 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
       container: this.cyContainer.nativeElement,
       elements: this.toCyElements(),
       layout: this.DAGRE_OPTS,
+      minZoom: 0.16,
+      maxZoom: 2.8,
       wheelSensitivity: 0.2,
       style: [
         {
           selector: 'node',
           style: {
             'shape': 'round-rectangle',
-            'background-color': (ele: NodeSingular) => ele.data('color') || '#e2e8f0',
+            'background-color': (ele: NodeSingular) => ele.data('color') || '#ffffff',
             'label': 'data(label)',
-            'text-valign': 'top',
-            'text-halign': 'left',
-            'font-size': 12,
+            'text-wrap': 'wrap',
+            'text-max-width': '170px',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'font-size': 13,
+            'font-weight': 600,
             'color': '#0f172a',
-            'text-margin-x': 8,
-            'text-margin-y': -6,
-            'width': 220,
-            'height': 88,
-            'border-width': 1,
-            'border-color': '#94a3b8',
-            'padding': '6'
+            'width': 205,
+            'height': 76,
+            'border-width': 2,
+            'border-color': (ele: NodeSingular) => ele.data('borderColor') || '#94a3b8',
+            'padding': '8',
+            'text-outline-color': '#ffffff',
+            'text-outline-width': 1
           }
         },
         {
           selector: 'edge',
           style: {
-            'curve-style': 'bezier',
+            'curve-style': 'taxi',
+            'taxi-direction': 'auto',
+            'taxi-turn': 42,
+            'taxi-turn-min-distance': 14,
             'line-color': (ele: EdgeSingular) => this.edgeColor(ele),
-            'width': (ele: EdgeSingular) => ele.data('archivo') === 'SI' ? 4 : 2.5,
+            'width': (ele: EdgeSingular) => ele.data('archivo') === 'SI' ? 6 : 4,
             'target-arrow-shape': 'triangle',
             'target-arrow-color': (ele: EdgeSingular) => this.edgeColor(ele),
-            'arrow-scale': 1.2,
+            'arrow-scale': 1.35,
             'line-style': (ele: EdgeSingular) => ele.data('observacion') === 'SI' ? 'dashed' : 'solid',
-            'opacity': 0.95
+            'line-cap': 'round',
+            'source-endpoint': 'outside-to-node',
+            'target-endpoint': 'outside-to-node',
+            'opacity': 0.95,
+            'label': (ele: EdgeSingular) => ele.data('label') || '',
+            'font-size': 11,
+            'color': '#334155',
+            'text-background-color': '#ffffff',
+            'text-background-opacity': 0.92,
+            'text-background-padding': '3px'
           }
         },
-        { selector: '.highlighted', style: { 'line-color': '#2563eb', 'target-arrow-color': '#2563eb', 'opacity': 1, 'width': 4 } },
-        { selector: '.dimmed', style: { 'opacity': 0.25 } },
+        { selector: 'node.highlighted', style: { 'border-width': 4, 'border-color': '#2563eb', 'background-color': '#dbeafe' } },
+        { selector: 'edge.highlighted', style: { 'line-color': '#2563eb', 'target-arrow-color': '#2563eb', 'opacity': 1, 'width': 6 } },
+        { selector: '.dimmed', style: { 'opacity': 0.1 } },
         { selector: 'node:selected', style: { 'border-width': 3, 'border-color': '#ef4444' } },
         { selector: 'edge:selected', style: { 'line-color': '#ef4444', 'target-arrow-color': '#ef4444', 'width': 4 } },
       ]
@@ -402,29 +515,27 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
       menuItems: [
         {
           id: 'delete-node',
-          content: '🗑 Eliminar',
+          content: 'Eliminar',
           tooltipText: 'Eliminar nodo',
           selector: 'node',
           onClickFunction: (event: any) => {
             const node = event.target;
             this.eliminar_nodo({ id: node.id() });
             node.remove();
-            this.cy?.layout(this.DAGRE_OPTS).run();
-            this.cy?.fit(undefined, 20);
+            this.applyLayoutAndFit();
           },
           hasTrailingDivider: true
         },
         {
           id: 'delete-edge',
-          content: '🗑 Eliminar enlace',
+          content: 'Eliminar enlace',
           tooltipText: 'Eliminar enlace',
           selector: 'edge',
           onClickFunction: (event: any) => {
             const edge = event.target;
             this.links_ = this.links_.filter(l => String(l.id) !== String(edge.id()));
             edge.remove();
-            this.cy?.layout(this.DAGRE_OPTS).run();
-            this.cy?.fit(undefined, 20);
+            this.applyLayoutAndFit();
           }
         }
       ]
@@ -432,10 +543,13 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
 
     // Highlight/atenuación
     this.cy.on('mouseover', 'edge', (evt) => this.highlightEdge(evt.target));
-    this.cy.on('mouseout', 'edge', () => this.clearHighlight());
-    this.cy.on('tap', 'node', (evt) => this.highlightNeighborhood(evt.target));
+    this.cy.on('mouseout', 'edge', () => this.restoreNodeFocus());
+    this.cy.on('tap', 'node', (evt) => this.focusNodeRoute(evt.target));
+    this.cy.on('tap', (evt) => {
+      if (evt.target === this.cy) this.clearFocus();
+    });
 
-    setTimeout(() => this.cy && this.cy.fit(undefined, 20), 0);
+    this.applyLayoutAndFit();
   }
 
   private destroyCy(): void {
@@ -446,8 +560,16 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
   }
 
   private toCyElements(): ElementDefinition[] {
+    const incoming = new Set((this.links_ || []).map((l: any) => String(l.target)));
+    const outgoing = new Set((this.links_ || []).map((l: any) => String(l.source)));
+
     const nodes: ElementDefinition[] = (this.nodes_ || []).map((n: any) => ({
-      data: { id: String(n.id), label: n.label, color: n.data?.color }
+      data: {
+        id: String(n.id),
+        label: n.label,
+        color: n.data?.color || this.nodeColorByRole(this.nodeRole(String(n.id), incoming, outgoing)),
+        borderColor: this.nodeBorderByRole(this.nodeRole(String(n.id), incoming, outgoing))
+      }
     }));
     const edges: ElementDefinition[] = (this.links_ || []).map((l: any, i: number) => ({
       data: {
@@ -463,8 +585,9 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
   }
 
   private edgeColor(ele: EdgeSingular): string {
-    const s = ele.source();
-    return (s && s.data('color')) ? s.data('color') : '#64748b';
+    if (ele.data('archivo') === 'SI') return '#2563eb';
+    if (ele.data('observacion') === 'SI') return '#a855f7';
+    return '#475569';
   }
 
   private refreshCy(): void {
@@ -472,37 +595,138 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
     const eles = this.toCyElements();
     this.cy.elements().remove();
     this.cy.add(eles);
+    this.applyLayoutAndFit();
+  }
+
+  private applyLayoutAndFit(): void {
+    if (!this.cy) return;
+    this.cy.resize();
     this.cy.layout(this.DAGRE_OPTS).run();
-    this.cy.fit(undefined, 20);
+    setTimeout(() => this.fitGraph(), 0);
+  }
+
+  private keepReadableZoom(): void {
+    if (!this.cy || this.cy.nodes().length === 0 || this.cy.zoom() >= this.minReadableZoom) return;
+
+    const rect = this.cyContainer?.nativeElement?.getBoundingClientRect();
+    this.cy.zoom({
+      level: this.minReadableZoom,
+      renderedPosition: {
+        x: (rect?.width || 900) / 2,
+        y: (rect?.height || 650) / 2
+      }
+    });
+    this.cy.center();
+  }
+
+  private nodeRole(id: string, incoming: Set<string>, outgoing: Set<string>): 'start' | 'end' | 'isolated' | 'process' {
+    const hasIncoming = incoming.has(id);
+    const hasOutgoing = outgoing.has(id);
+
+    if (!hasIncoming && !hasOutgoing) return 'isolated';
+    if (!hasIncoming) return 'start';
+    if (!hasOutgoing) return 'end';
+    return 'process';
+  }
+
+  private nodeColorByRole(role: 'start' | 'end' | 'isolated' | 'process'): string {
+    const colors = {
+      start: '#dbeafe',
+      process: '#ffffff',
+      end: '#dcfce7',
+      isolated: '#fef3c7'
+    };
+    return colors[role];
+  }
+
+  private nodeBorderByRole(role: 'start' | 'end' | 'isolated' | 'process'): string {
+    const colors = {
+      start: '#2563eb',
+      process: '#94a3b8',
+      end: '#16a34a',
+      isolated: '#d97706'
+    };
+    return colors[role];
   }
 
   // UX highlight
   private highlightEdge(edge: EdgeSingular): void {
     if (!this.cy) return;
-    this.clearHighlight();
+    this.clearHighlight(false);
     edge.addClass('highlighted');
     edge.source().addClass('highlighted');
     edge.target().addClass('highlighted');
     this.cy.elements().difference(edge.closedNeighborhood()).addClass('dimmed');
   }
 
-  private highlightNeighborhood(node: NodeSingular): void {
+  private focusNodeRoute(node: NodeSingular, fit = true): void {
     if (!this.cy) return;
-    this.clearHighlight();
-    const nh = node.closedNeighborhood();
-    nh.addClass('highlighted');
-    this.cy.elements().difference(nh).addClass('dimmed');
+
+    this.activeNodeId = node.id();
+    this.activeNodeLabel = node.data('label') || node.id();
+
+    const incoming = node.incomers('edge').length;
+    const outgoing = node.outgoers('edge').length;
+    this.activeNodeResume = `${incoming} entradas / ${outgoing} salidas`;
+
+    this.clearHighlight(false);
+
+    const focusArea = this.readingMode
+      ? this.focusAreaByDepth(node, 2)
+      : node.closedNeighborhood();
+
+    focusArea.addClass('highlighted');
+    this.cy.elements().difference(focusArea).addClass('dimmed');
+
+    if (fit) {
+      this.cy.fit(focusArea, 110);
+      this.keepReadableZoom();
+    }
   }
 
-  private clearHighlight(): void {
+  private restoreNodeFocus(): void {
+    if (!this.cy || !this.activeNodeId) {
+      this.clearHighlight(false);
+      return;
+    }
+
+    const node = this.cy.$id(this.activeNodeId)[0] as NodeSingular | undefined;
+    if (node) this.focusNodeRoute(node, false);
+  }
+
+  private focusAreaByDepth(node: NodeSingular, depth: number): any {
+    let area = node.closedNeighborhood();
+    let frontier = node.neighborhood('node');
+
+    for (let level = 1; level < depth && frontier.length > 0; level++) {
+      const edges = frontier.connectedEdges();
+      const nodes = edges.connectedNodes();
+      const nextFrontier = nodes.difference(area);
+      area = area.union(edges).union(nodes);
+      frontier = nextFrontier;
+    }
+
+    return area;
+  }
+
+  private clearHighlight(clearActive = true): void {
     if (!this.cy) return;
     this.cy.elements().removeClass('highlighted dimmed');
+    if (clearActive) {
+      this.activeNodeId = '';
+      this.activeNodeLabel = '';
+      this.activeNodeResume = '';
+    }
   }
 
   // Util para NGX (gradiente de arista)
   getNodeColor(nodeId: string): string {
     const n = (this.nodes_ || []).find((x: any) => String(x.id) === String(nodeId));
-    return n?.data?.color || '#64748b';
+    if (n?.data?.color) return n.data.color;
+
+    const incoming = new Set((this.links_ || []).map((l: any) => String(l.target)));
+    const outgoing = new Set((this.links_ || []).map((l: any) => String(l.source)));
+    return this.nodeBorderByRole(this.nodeRole(String(nodeId), incoming, outgoing));
   }
 
   /* ==========================
@@ -531,7 +755,6 @@ export class Teso21Component implements AfterViewInit, OnDestroy {
     // Normaliza y recalcula
     this.nodes_ = Object.values(this.nodes_);
     this.links_ = Object.values(this.links_);
-    this.cy.layout(this.DAGRE_OPTS).run();
-    this.cy.fit(undefined, 20);
+    this.applyLayoutAndFit();
   }
 }

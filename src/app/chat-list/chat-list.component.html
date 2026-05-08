@@ -67,7 +67,10 @@
     <div class="card history-card">
         <div class="card-header">
             <h3>Histórico de conversaciones</h3>
-            <span class="hint" *ngIf="!loading">{{ conversations.length }} total</span>
+            <div class="history-status" *ngIf="!loading">
+                <span class="unread-summary" *ngIf="totalUnread() > 0">{{ totalUnread() }} sin leer</span>
+                <span class="hint">{{ conversations.length }} total</span>
+            </div>
         </div>
 
         <div class="card-body">
@@ -78,7 +81,8 @@
             </div>
 
             <div class="items" *ngIf="!loading && conversations.length > 0">
-                <div class="item" *ngFor="let c of conversations" (click)="openConversation(c)">
+                <div class="item" *ngFor="let c of conversations" [class.has-unread]="unreadCount(c) > 0"
+                    (click)="openConversation(c)">
                     <div class="left">
                         <div class="title-row">
                             <div class="title">

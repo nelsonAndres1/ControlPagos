@@ -36,7 +36,7 @@ export class ChatListComponent implements OnInit {
       next: (resp) => {
         this.loading = false;
         if (resp?.status === 'success') {
-          this.conversations = resp.data || [];
+          this.conversations = this.sortConversations(resp.data || []);
         } else {
           this.conversations = [];
           console.log('getConversations no success:', resp);
@@ -139,6 +139,25 @@ export class ChatListComponent implements OnInit {
         }
       },
       error: (err) => console.error('createConversation error:', err)
+    });
+  }
+
+  unreadCount(c: any): number {
+    return Number(c?.unread_cnt || 0);
+  }
+
+  totalUnread(): number {
+    return this.conversations.reduce((total, c) => total + this.unreadCount(c), 0);
+  }
+
+  private sortConversations(rows: any[]): any[] {
+    return [...rows].sort((a, b) => {
+      const unreadDiff = this.unreadCount(b) - this.unreadCount(a);
+      if (unreadDiff !== 0) return unreadDiff;
+
+      const dateA = new Date(a?.fec_ult_mensaje || a?.fec_crea || 0).getTime();
+      const dateB = new Date(b?.fec_ult_mensaje || b?.fec_crea || 0).getTime();
+      return dateB - dateA;
     });
   }
 }

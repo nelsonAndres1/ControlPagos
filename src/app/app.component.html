@@ -155,8 +155,29 @@
         <div class="topbar" *ngIf="!isAuthRoute && isMobile">
             <button type="button" class="burger" (click)="toggleSidebar()">&#9776;</button>
             <div class="title">Control de Pagos</div>
+            <button *ngIf="hasMenu('chat')" type="button" class="top-chat-btn" (click)="openChatDock()"
+                [class.has-unread]="chatUnread > 0" [attr.aria-label]="chatUnreadLabel()">
+                <CDBIcon icon="comments"></CDBIcon>
+                <span *ngIf="chatUnread > 0">{{ chatUnread }}</span>
+            </button>
         </div>
 
         <router-outlet></router-outlet>
     </div>
+
+    <button *ngIf="showChatDock()" type="button" class="chat-dock" [class.has-unread]="chatUnread > 0"
+        (click)="openChatDock()" [attr.aria-label]="chatUnreadLabel()">
+        <span class="dock-close" role="button" tabindex="0" aria-label="Cerrar aviso de chat"
+            (click)="closeChatDock($event)">
+            &times;
+        </span>
+        <span class="dock-icon">
+            <CDBIcon icon="comments"></CDBIcon>
+            <span *ngIf="chatUnread > 0" class="dock-count">{{ chatUnread }}</span>
+        </span>
+        <span class="dock-copy">
+            <strong>Chat</strong>
+            <small>{{ chatUnreadLabel() }}</small>
+        </span>
+    </button>
 </div>

@@ -1,10 +1,9 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Gener02Service } from '../services/gener02.service';
 import { Teso13Service } from '../services/teso13.service';
 import { Teso22Service } from '../services/teso22.service';
 import { TesoChatService } from '../services/tesochat.service';
 import { PagoPendiente } from '../models/pago-pendiente.model';
-import Swal from 'sweetalert2';
 
 type Pago = {
     codclas: string;
@@ -17,7 +16,15 @@ type Pago = {
 };
 
 type Prio = 'A' | 'B' | 'M';
+type PriorityFilter = Prio | 'ALL';
 type PaginationState = { pageSize: number; currentPage: number; window: number };
+type PriorityConfig = {
+    key: Prio;
+    title: string;
+    label: string;
+    state: string;
+    lightClass: string;
+};
 @Component({
     selector: 'app-principal',
     templateUrl: './principal.component.html',
@@ -32,6 +39,14 @@ export class PrincipalComponent implements OnInit {
     pagosB: PagoPendiente[] = [];
     pagosM: PagoPendiente[] = [];
 
+    priorityConfigs: PriorityConfig[] = [
+        { key: 'A', title: 'Prioridad Alta', label: 'Alta', state: 'Critico', lightClass: 'red' },
+        { key: 'M', title: 'Prioridad Media', label: 'Media', state: 'Seguimiento', lightClass: 'amber' },
+        { key: 'B', title: 'Prioridad Baja', label: 'Baja', state: 'Normal', lightClass: 'green' }
+    ];
+
+    activeFilter: PriorityFilter = 'ALL';
+    searchTerm = '';
 
     pag: Record<Prio, PaginationState> = {
         A: { pageSize: 5, currentPage: 1, window: 5 },
@@ -50,8 +65,6 @@ export class PrincipalComponent implements OnInit {
             next: (resp) => console.log(resp),
             error: (err) => console.error(err)
         });
-
-        this.getPagosPendientes();
     }
 
 
@@ -61,9 +74,20 @@ export class PrincipalComponent implements OnInit {
         this.getPagosPendientes();
     }
 
+    get visiblePriorityConfigs(): PriorityConfig[] {
+        if (this.activeFilter === 'ALL') return this.priorityConfigs;
+        return this.priorityConfigs.filter(cfg => cfg.key === this.activeFilter);
+    }
+
     getPagosPendientes(): void {
+        if (!this.identity?.sub) {
+            this.errorMsg = 'No se pudo identificar el usuario autenticado';
+            return;
+        }
+
         this.cargando = true;
-        this._teso22Service.getPagosPendientes({}).subscribe({
+        this.errorMsg = '';
+        this._teso22Service.getPagosPendientes({ usuario: this.identity.sub }).subscribe({
             next: (response: any) => {
                 // Tu backend a veces devuelve el array directo, otras {rows:[]}.
                 const data: PagoPendiente[] =
@@ -96,6 +120,7 @@ export class PrincipalComponent implements OnInit {
                 this.pagosA.sort(sortFn);
                 this.pagosB.sort(sortFn);
                 this.pagosM.sort(sortFn);
+                this.resetPages();
 
                 this.cargando = false;
             },
@@ -130,6 +155,43 @@ export class PrincipalComponent implements OnInit {
     }
 
 
+
+    setFilter(filter: PriorityFilter) {
+        this.activeFilter = filter;
+        this.resetPages();
+    }
+
+    isFilterActive(filter: PriorityFilter): boolean {
+        return this.activeFilter === filter;
+    }
+
+    onSearchChange(value: string) {
+        this.searchTerm = value || '';
+        this.resetPages();
+    }
+
+    totalAll(): number {
+        return this.baseTotalItems('A') + this.baseTotalItems('M') + this.baseTotalItems('B');
+    }
+
+    visibleTotalAll(): number {
+        if (this.activeFilter !== 'ALL') return this.totalItems(this.activeFilter);
+        return this.totalItems('A') + this.totalItems('M') + this.totalItems('B');
+    }
+
+    baseTotalItems(prio: Prio): number {
+        return this.baseListFor(prio)?.length ?? 0;
+    }
+
+    hasActiveSearch(): boolean {
+        return !!this.searchTerm.trim();
+    }
+
+    private resetPages() {
+        this.pag.A.currentPage = 1;
+        this.pag.M.currentPage = 1;
+        this.pag.B.currentPage = 1;
+    }
 
     // -------- utilidades de paginación por prioridad --------
     totalItems(prio: Prio): number {
@@ -172,6 +234,26 @@ export class PrincipalComponent implements OnInit {
 
     // helpers
     private listFor(prio: Prio): Pago[] {
+        const list = this.baseListFor(prio);
+        const term = this.searchTerm.trim().toLowerCase();
+        if (!term) return list;
+
+        return list.filter(p => {
+            const searchable = [
+                p.codclas,
+                p.numero,
+                p.estado_actual_txt,
+                p.nombre_estado_actual,
+                p.detclas,
+                p.flujo,
+                p.prioridad
+            ].join(' ').toLowerCase();
+
+            return searchable.includes(term);
+        });
+    }
+
+    private baseListFor(prio: Prio): Pago[] {
         if (prio === 'A') return this.pagosA;
         if (prio === 'B') return this.pagosB;
         return this.pagosM;
