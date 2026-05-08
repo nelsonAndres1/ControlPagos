@@ -32,6 +32,25 @@
   }
 }
 
+.history-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unread-summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, .12);
+}
+
 .card-body {
   padding: 14px;
 }
@@ -328,6 +347,19 @@
 }
 
 .item.has-unread {
-  border-color: #ffd8b0;
-  background: #fffaf2;
+  border-color: #dc2626;
+  background: #fff5f5;
+  box-shadow: 0 8px 22px rgba(220, 38, 38, .08);
+  position: relative;
+}
+
+.item.has-unread::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  border-radius: 999px;
+  background: #dc2626;
 }

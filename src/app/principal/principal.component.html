@@ -1,280 +1,176 @@
 <div class="pagos-wrapper">
 
-    <!-- Título grande principal -->
-    <h1 class="main-title">Pagos Pendientes por Prioridad</h1>
+    <header class="principal-head">
+        <div>
+            <p class="eyebrow">Semáforo de gestión</p>
+            <h1 class="main-title">Pagos pendientes por gestionar</h1>
+            <p class="subtitle">
+                {{ totalAll() }} pagos disponibles para {{ identity?.name || identity?.sub }}
+            </p>
+        </div>
+
+        <button type="button" class="refresh-btn" (click)="getPagosPendientes()" [disabled]="cargando">
+            Actualizar
+        </button>
+    </header>
+
     <div *ngIf="cargando" class="loading">
         <div class="spinner"></div>
-        Cargando pagos pendientes…
+        Cargando pagos pendientes...
     </div>
 
     <div *ngIf="!cargando && errorMsg" class="alert alert-danger">
         {{ errorMsg }}
     </div>
 
-    <div *ngIf="!cargando && !errorMsg" class="stack gap-24 cards-center">
+    <div *ngIf="!cargando && !errorMsg" class="dashboard-body">
 
-        <!-- ====== CARD PRIORIDAD A ====== -->
-        <section class="card modern centered with-margin">
-            <header class="card-head">
-                <div class="card-title">
-                    <span class="dot dot-a"></span>
-                    <h2>Prioridad Alta</h2>
-                    <span class="badge count">{{ totalItems('A') }}</span>
-                </div>
-                <span class="badge tag" [ngClass]="priorityBadge('A')">A</span>
-            </header>
+        <section class="traffic-board" aria-label="Semáforo de prioridades">
+            <button type="button" class="traffic-card all" [class.active]="isFilterActive('ALL')"
+                (click)="setFilter('ALL')">
+                <span class="traffic-stack" aria-hidden="true">
+                    <span class="traffic-light red"></span>
+                    <span class="traffic-light amber"></span>
+                    <span class="traffic-light green"></span>
+                </span>
+                <span class="traffic-copy">
+                    <span class="traffic-label">Todos</span>
+                    <strong>{{ totalAll() }}</strong>
+                </span>
+            </button>
 
-            <div *ngIf="totalItems('A'); else noA" class="card-body">
-                <div class="table-wrap">
-                    <table class="table-modern">
-                        <thead>
-                            <tr>
-                                <th style="width: 90px;">Cod.</th>
-                                <th style="width: 140px;">Número</th>
-                                <th style="width: 100px;">Estado</th>
-                                <th>Nombre estado</th>
-                                <th>Clase</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let p of pagedData('A'); trackBy: trackByClave">
-                                <td><span class="mono">{{ p.codclas }}</span></td>
-                                <td><span class="mono strong">{{ p.numero }}</span></td>
-                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
-                                        }}</span>
-                                </td>
-                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
-                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación -->
-                <div class="pager">
-                    <div class="pager-info">
-                        <small>
-                            Mostrando {{ startIndex('A') + 1 }}–{{ endIndex('A') }} de {{ totalItems('A') }} registros
-                        </small>
-                    </div>
-
-                    <div class="pager-ctrls">
-                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
-                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.A.pageSize"
-                            (ngModelChange)="setPageSize('A', $event)">
-                            <option [ngValue]="5">5</option>
-                            <option [ngValue]="10">10</option>
-                            <option [ngValue]="20">20</option>
-                            <option [ngValue]="50">50</option>
-                        </select>
-
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item" [class.disabled]="pag.A.currentPage === 1">
-                                    <button class="page-link" (click)="goToPage('A', 1)"
-                                        aria-label="Primera página">&laquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.A.currentPage === 1">
-                                    <button class="page-link" (click)="prev('A')"
-                                        aria-label="Anterior">&lsaquo;</button>
-                                </li>
-
-                                <li class="page-item" *ngFor="let p of pagesToShow('A')"
-                                    [class.active]="p === pag.A.currentPage">
-                                    <button class="page-link" (click)="goToPage('A', p)">{{ p }}</button>
-                                </li>
-
-                                <li class="page-item" [class.disabled]="pag.A.currentPage === totalPages('A')">
-                                    <button class="page-link" (click)="next('A')"
-                                        aria-label="Siguiente">&rsaquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.A.currentPage === totalPages('A')">
-                                    <button class="page-link" (click)="goToPage('A', totalPages('A'))"
-                                        aria-label="Última página">&raquo;</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-
-            <ng-template #noA>
-                <div class="card-empty">No hay pagos con prioridad A.</div>
-            </ng-template>
+            <button type="button" class="traffic-card" *ngFor="let cfg of priorityConfigs"
+                [class.active]="isFilterActive(cfg.key)" [ngClass]="'tone-' + cfg.lightClass"
+                (click)="setFilter(cfg.key)">
+                <span class="traffic-light" [ngClass]="cfg.lightClass" aria-hidden="true"></span>
+                <span class="traffic-copy">
+                    <span class="traffic-label">{{ cfg.label }}</span>
+                    <strong>{{ baseTotalItems(cfg.key) }}</strong>
+                    <small>{{ cfg.state }}</small>
+                </span>
+            </button>
         </section>
 
-        <!-- ====== CARD PRIORIDAD M ====== -->
-        <section class="card modern centered with-margin">
-            <header class="card-head">
-                <div class="card-title">
-                    <span class="dot dot-m"></span>
-                    <h2>Prioridad Media</h2>
-                    <span class="badge count">{{ totalItems('M') }}</span>
-                </div>
-                <span class="badge tag" [ngClass]="priorityBadge('M')">M</span>
-            </header>
-
-            <div *ngIf="totalItems('M'); else noM" class="card-body">
-                <div class="table-wrap">
-                    <table class="table-modern">
-                        <thead>
-                            <tr>
-                                <th style="width: 90px;">Cod.</th>
-                                <th style="width: 140px;">Número</th>
-                                <th style="width: 100px;">Estado</th>
-                                <th>Nombre estado</th>
-                                <th>Clase</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let p of pagedData('M'); trackBy: trackByClave">
-                                <td><span class="mono">{{ p.codclas }}</span></td>
-                                <td><span class="mono strong">{{ p.numero }}</span></td>
-                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
-                                        }}</span>
-                                </td>
-                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
-                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación M -->
-                <div class="pager">
-                    <div class="pager-info">
-                        <small>Mostrando {{ startIndex('M') + 1 }}–{{ endIndex('M') }} de {{ totalItems('M') }}
-                            registros</small>
-                    </div>
-                    <div class="pager-ctrls">
-                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
-                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.M.pageSize"
-                            (ngModelChange)="setPageSize('M', $event)">
-                            <option [ngValue]="5">5</option>
-                            <option [ngValue]="10">10</option>
-                            <option [ngValue]="20">20</option>
-                            <option [ngValue]="50">50</option>
-                        </select>
-
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item" [class.disabled]="pag.M.currentPage === 1">
-                                    <button class="page-link" (click)="goToPage('M', 1)">&laquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.M.currentPage === 1">
-                                    <button class="page-link" (click)="prev('M')">&lsaquo;</button>
-                                </li>
-                                <li class="page-item" *ngFor="let p of pagesToShow('M')"
-                                    [class.active]="p === pag.M.currentPage">
-                                    <button class="page-link" (click)="goToPage('M', p)">{{ p }}</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.M.currentPage === totalPages('M')">
-                                    <button class="page-link" (click)="next('M')">&rsaquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.M.currentPage === totalPages('M')">
-                                    <button class="page-link" (click)="goToPage('M', totalPages('M'))">&raquo;</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+        <section class="toolbar-panel">
+            <div class="search-box">
+                <label for="principal-search">Buscar</label>
+                <input id="principal-search" type="text" class="form-control"
+                    placeholder="Código, número, estado o clase" [ngModel]="searchTerm"
+                    (ngModelChange)="onSearchChange($event)" />
             </div>
 
-            <ng-template #noM>
-                <div class="card-empty">No hay pagos con prioridad M.</div>
-            </ng-template>
-        </section>
-
-
-        <!-- ====== CARD PRIORIDAD B ====== -->
-        <section class="card modern centered with-margin">
-            <header class="card-head">
-                <div class="card-title">
-                    <span class="dot dot-b"></span>
-                    <h2>Prioridad Baja</h2>
-                    <span class="badge count">{{ totalItems('B') }}</span>
-                </div>
-                <span class="badge tag" [ngClass]="priorityBadge('B')">B</span>
-            </header>
-
-            <div *ngIf="totalItems('B'); else noB" class="card-body">
-                <div class="table-wrap">
-                    <table class="table-modern">
-                        <thead>
-                            <tr>
-                                <th style="width: 90px;">Cod.</th>
-                                <th style="width: 140px;">Número</th>
-                                <th style="width: 100px;">Estado</th>
-                                <th>Nombre estado</th>
-                                <th>Clase</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let p of pagedData('B'); trackBy: trackByClave">
-                                <td><span class="mono">{{ p.codclas }}</span></td>
-                                <td><span class="mono strong">{{ p.numero }}</span></td>
-                                <td><span [class]="estadoChip(p.estado_actual_txt)">{{ p.estado_actual_txt.trim()
-                                        }}</span>
-                                </td>
-                                <td class="ellipsis" [title]="p.nombre_estado_actual">{{ p.nombre_estado_actual }}</td>
-                                <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación B (mismo bloque que A) -->
-                <div class="pager">
-                    <div class="pager-info">
-                        <small>Mostrando {{ startIndex('B') + 1 }}–{{ endIndex('B') }} de {{ totalItems('B') }}
-                            registros</small>
-                    </div>
-                    <div class="pager-ctrls">
-                        <label class="mb-0 me-1"><small>Filas por página:</small></label>
-                        <select class="form-select form-select-sm" style="width:auto" [ngModel]="pag.B.pageSize"
-                            (ngModelChange)="setPageSize('B', $event)">
-                            <option [ngValue]="5">5</option>
-                            <option [ngValue]="10">10</option>
-                            <option [ngValue]="20">20</option>
-                            <option [ngValue]="50">50</option>
-                        </select>
-
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <li class="page-item" [class.disabled]="pag.B.currentPage === 1">
-                                    <button class="page-link" (click)="goToPage('B', 1)">&laquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.B.currentPage === 1">
-                                    <button class="page-link" (click)="prev('B')">&lsaquo;</button>
-                                </li>
-                                <li class="page-item" *ngFor="let p of pagesToShow('B')"
-                                    [class.active]="p === pag.B.currentPage">
-                                    <button class="page-link" (click)="goToPage('B', p)">{{ p }}</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.B.currentPage === totalPages('B')">
-                                    <button class="page-link" (click)="next('B')">&rsaquo;</button>
-                                </li>
-                                <li class="page-item" [class.disabled]="pag.B.currentPage === totalPages('B')">
-                                    <button class="page-link" (click)="goToPage('B', totalPages('B'))">&raquo;</button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+            <div class="toolbar-meta">
+                <span class="metric-number">{{ visibleTotalAll() }}</span>
+                <span class="metric-label">visibles</span>
+                <button type="button" class="clear-btn" *ngIf="hasActiveSearch()" (click)="onSearchChange('')">
+                    Limpiar
+                </button>
             </div>
-
-            <ng-template #noB>
-                <div class="card-empty">No hay pagos con prioridad B.</div>
-            </ng-template>
         </section>
 
+        <div class="cards-stack">
+            <section class="card modern priority-card" *ngFor="let cfg of visiblePriorityConfigs"
+                [ngClass]="'priority-' + cfg.lightClass">
+                <header class="card-head">
+                    <div class="card-title">
+                        <span class="traffic-light small" [ngClass]="cfg.lightClass" aria-hidden="true"></span>
+                        <div>
+                            <h2>{{ cfg.title }}</h2>
+                            <small>{{ cfg.state }}</small>
+                        </div>
+                    </div>
+                    <span class="badge count">
+                        {{ totalItems(cfg.key) }}
+                        <small *ngIf="hasActiveSearch()">/ {{ baseTotalItems(cfg.key) }}</small>
+                    </span>
+                </header>
 
+                <div *ngIf="totalItems(cfg.key); else emptyPriority" class="card-body">
+                    <div class="table-wrap">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th style="width: 90px;">Cod.</th>
+                                    <th style="width: 140px;">Número</th>
+                                    <th style="width: 110px;">Estado</th>
+                                    <th>Nombre estado</th>
+                                    <th>Clase</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let p of pagedData(cfg.key); trackBy: trackByClave">
+                                    <td><span class="mono">{{ p.codclas }}</span></td>
+                                    <td><span class="mono strong">{{ p.numero }}</span></td>
+                                    <td>
+                                        <span [class]="estadoChip(p.estado_actual_txt)">
+                                            {{ p.estado_actual_txt.trim() }}
+                                        </span>
+                                    </td>
+                                    <td class="ellipsis" [title]="p.nombre_estado_actual">
+                                        {{ p.nombre_estado_actual }}
+                                    </td>
+                                    <td class="ellipsis" [title]="p.detclas">{{ p.detclas }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
+                    <div class="pager">
+                        <div class="pager-info">
+                            <small>
+                                Mostrando {{ startIndex(cfg.key) + 1 }}-{{ endIndex(cfg.key) }}
+                                de {{ totalItems(cfg.key) }} registros
+                            </small>
+                        </div>
+
+                        <div class="pager-ctrls">
+                            <label class="mb-0 me-1"><small>Filas por página:</small></label>
+                            <select class="form-select form-select-sm" style="width:auto"
+                                [ngModel]="pag[cfg.key].pageSize" (ngModelChange)="setPageSize(cfg.key, $event)">
+                                <option [ngValue]="5">5</option>
+                                <option [ngValue]="10">10</option>
+                                <option [ngValue]="20">20</option>
+                                <option [ngValue]="50">50</option>
+                            </select>
+
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item" [class.disabled]="pag[cfg.key].currentPage === 1">
+                                        <button class="page-link" (click)="goToPage(cfg.key, 1)"
+                                            aria-label="Primera página">&laquo;</button>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="pag[cfg.key].currentPage === 1">
+                                        <button class="page-link" (click)="prev(cfg.key)"
+                                            aria-label="Anterior">&lsaquo;</button>
+                                    </li>
+
+                                    <li class="page-item" *ngFor="let p of pagesToShow(cfg.key)"
+                                        [class.active]="p === pag[cfg.key].currentPage">
+                                        <button class="page-link" (click)="goToPage(cfg.key, p)">{{ p }}</button>
+                                    </li>
+
+                                    <li class="page-item"
+                                        [class.disabled]="pag[cfg.key].currentPage === totalPages(cfg.key)">
+                                        <button class="page-link" (click)="next(cfg.key)"
+                                            aria-label="Siguiente">&rsaquo;</button>
+                                    </li>
+                                    <li class="page-item"
+                                        [class.disabled]="pag[cfg.key].currentPage === totalPages(cfg.key)">
+                                        <button class="page-link" (click)="goToPage(cfg.key, totalPages(cfg.key))"
+                                            aria-label="Última página">&raquo;</button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template #emptyPriority>
+                    <div class="card-empty">
+                        {{ hasActiveSearch() ? 'No hay coincidencias para esta prioridad.' : 'No hay pagos para esta prioridad.' }}
+                    </div>
+                </ng-template>
+            </section>
+        </div>
     </div>
 </div>

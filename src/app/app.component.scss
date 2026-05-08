@@ -47,6 +47,43 @@
 
 .title {
   font-weight: 600;
+  flex: 1;
+}
+
+.top-chat-btn {
+  position: relative;
+  border: 1px solid #d6e4f2;
+  background: #ffffff;
+  color: #1f3b57;
+  border-radius: 10px;
+  min-width: 42px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.top-chat-btn span {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 21px;
+  text-align: center;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.top-chat-btn.has-unread {
+  border-color: #dc2626;
+  color: #dc2626;
 }
 
 /* Backdrop móvil */
@@ -55,6 +92,150 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.35);
   z-index: 9;
+}
+
+.chat-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .85);
+}
+
+.chat-dock {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 12px 16px 12px 12px;
+  border: 1px solid #c7d8ea;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #18324a;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, .18);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.chat-dock:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, .23);
+}
+
+.chat-dock.has-unread {
+  border-color: #dc2626;
+}
+
+.chat-dock.has-unread::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid rgba(220, 38, 38, .24);
+  border-radius: 18px;
+  animation: chatPulse 1.7s ease-out infinite;
+  pointer-events: none;
+}
+
+.dock-icon {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 13px;
+  background: #1f3b57;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.dock-close {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #c7d8ea;
+  color: #60758a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, .16);
+}
+
+.dock-close:hover {
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.chat-dock.has-unread .dock-icon {
+  background: #dc2626;
+}
+
+.dock-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #fff;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 20px;
+  text-align: center;
+}
+
+.dock-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dock-copy strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.dock-copy small {
+  color: #60758a;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@keyframes chatPulse {
+  from {
+    opacity: .9;
+    transform: scale(.98);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.08);
+  }
 }
 
 /* MÓVIL: sidebar tipo drawer */
@@ -82,6 +263,16 @@
   .app-content {
     height: auto;
     min-height: 100dvh;
+  }
+
+  .chat-dock {
+    right: 14px;
+    bottom: 14px;
+    padding: 10px;
+  }
+
+  .dock-copy {
+    display: none;
   }
 }
 

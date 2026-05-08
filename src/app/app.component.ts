@@ -43,6 +43,9 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     public isMobile = false;
     public sidebarOpen = false;
     public isAuthRoute = false;
+    public currentUrl = '';
+    public chatDockDismissed = false;
+    private lastUnreadCount = 0;
 
     constructor(
         private ver: AppVersionService,
@@ -141,8 +144,8 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     }
 
     private updateRouteFlags() {
-        const currentUrl = this.router.url || '';
-        this.isAuthRoute = currentUrl.startsWith('/login') || currentUrl.startsWith('/logout') || currentUrl === '/';
+        this.currentUrl = this.router.url || '';
+        this.isAuthRoute = this.currentUrl.startsWith('/login') || this.currentUrl.startsWith('/logout') || this.currentUrl === '/';
     }
 
     loadUser() {
@@ -249,6 +252,29 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
         this.router.navigate(['ChatList']);
     }
 
+    showChatDock(): boolean {
+        if (this.isAuthRoute || !this.identity || !this.hasMenu('chat')) return false;
+        if (this.chatDockDismissed && this.chatUnread <= 0) return false;
+        return !this.currentUrl.startsWith('/ChatList') && !this.currentUrl.startsWith('/ChatRoom');
+    }
+
+    openChatDock() {
+        this.chatDockDismissed = false;
+        this.ChatList();
+        this.onNavItemClick();
+    }
+
+    closeChatDock(event: Event) {
+        event.stopPropagation();
+        this.chatDockDismissed = true;
+    }
+
+    chatUnreadLabel(): string {
+        if (this.chatUnread <= 0) return 'Sin mensajes pendientes';
+        if (this.chatUnread === 1) return '1 mensaje sin leer';
+        return `${this.chatUnread} mensajes sin leer`;
+    }
+
     onSubmit() {
         this._teso10Service.signup(this.teso10).subscribe(
             (response) => {
@@ -293,7 +319,12 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
         this._chatService.getUnreadSummary().subscribe({
             next: (resp) => {
                 if (resp?.status === 'success') {
-                    this.chatUnread = Number(resp.data?.total_unread || 0);
+                    const nextUnread = Number(resp.data?.total_unread || 0);
+                    if (nextUnread > this.lastUnreadCount) {
+                        this.chatDockDismissed = false;
+                    }
+                    this.lastUnreadCount = nextUnread;
+                    this.chatUnread = nextUnread;
                 }
             },
             error: () => { }

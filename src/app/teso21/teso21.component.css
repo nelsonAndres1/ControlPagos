@@ -1,30 +1,248 @@
+:host {
+    display: block;
+    min-height: calc(100vh - 112px);
+    background: #f4f7fb;
+}
+
+.tree-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 12px;
+    width: 100%;
+    min-height: calc(100vh - 112px);
+    padding: 10px 12px 14px;
+    box-sizing: border-box;
+}
+
+.tree-page.panel-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.tree-workspace {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.graph-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-height: 48px;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #d7dee8;
+    border-radius: 8px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+}
+
+.toolbar-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.toolbar-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+    min-width: 16px;
+}
+
+.toolbar-button {
+    min-height: 32px;
+    padding: 6px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+.toolbar-button:hover {
+    border-color: #2563eb;
+    color: #1d4ed8;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.14);
+}
+
+.toolbar-button.is-active {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.toolbar-button:disabled,
+.toolbar-button[disabled] {
+    cursor: not-allowed;
+    opacity: .55;
+}
+
+.icon-button {
+    width: 34px;
+    min-width: 34px;
+    padding: 6px 0;
+    text-align: center;
+}
+
+.compact-button {
+    min-height: 28px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+
+.panel-button {
+    border-color: #475569;
+}
+
+.graph-stats span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 5px 9px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.focus-status {
+    max-width: 420px;
+    padding: 4px 6px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: #eff6ff;
+}
+
+.focus-status span {
+    max-width: 230px;
+    overflow: hidden;
+    color: #1e3a8a;
+    font-size: 12px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.focus-status small {
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.graph-frame {
+    position: relative;
+    min-height: 640px;
+    border: 1px solid #d7dee8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.07);
+}
+
 /* ===== Canvas Cytoscape ===== */
 .cyto-container {
     width: 100%;
-    height: 1000px;
-    /* ajusta según tu layout */
+    height: calc(100vh - 190px);
+    min-height: 640px;
     background:
-        linear-gradient(0deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-    background-size: 24px 24px, 24px 24px;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
+        linear-gradient(0deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px, 28px 28px;
+    background-color: #fbfdff;
+}
+
+.graph-legend {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: calc(100% - 180px);
+    padding: 7px 10px;
+    border: 1px solid rgba(148, 163, 184, .55);
     border-radius: 8px;
+    background: rgba(255, 255, 255, .92);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+.graph-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #2563eb;
+    border-radius: 4px;
+    background: #dbeafe;
+}
+
+.legend-dot.end {
+    border-color: #16a34a;
+    background: #dcfce7;
+}
+
+.legend-line {
+    display: inline-block;
+    width: 18px;
+    height: 0;
+    border-top: 4px solid #2563eb;
+    border-radius: 999px;
+}
+
+.legend-line.obs {
+    border-top-color: #a855f7;
+    border-top-style: dashed;
+}
+
+.wide-graph .cyto-container {
+    height: calc(100vh - 145px);
+    min-height: 760px;
 }
 
 /* ===== Fondo NGX Graph ===== */
 :host ::ng-deep .chart-container {
+    display: block;
+    width: 100%;
+    height: calc(100vh - 190px);
+    min-height: 640px;
     background:
-        linear-gradient(0deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
-    background-size: 24px 24px, 24px 24px;
-    background-color: #f8fafc;
+        linear-gradient(0deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px, 28px 28px;
+    background-color: #fbfdff;
+}
+
+.wide-graph .chart-container {
+    height: calc(100vh - 145px);
+    min-height: 760px;
 }
 
 /* ===== NGX Graph: nodos y aristas ===== */
 :host ::ng-deep .node rect {
-    stroke: rgba(0, 0, 0, .15);
-    stroke-width: 1;
+    stroke: rgba(15, 23, 42, .22);
+    stroke-width: 1.5;
 }
 
 :host ::ng-deep .edge .line,
@@ -36,7 +254,7 @@
 
 :host ::ng-deep .edge .line-casing {
     stroke: #ffffff;
-    opacity: .95;
+    opacity: .98;
     stroke-linecap: round;
 }
 
@@ -59,33 +277,118 @@
     stroke-width: 3px;
 }
 
-/* ===== Panel lateral opcional ===== */
-.card.card-outline-secondary {
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 2px rgba(2, 6, 23, 0.04);
+/* ===== Panel lateral ===== */
+.tree-side-panel {
+    position: sticky;
+    top: 10px;
+    align-self: start;
+    max-height: calc(100vh - 124px);
+    overflow: auto;
+    padding: 0 4px 96px 0;
 }
 
-.card.card-outline-secondary .card-header {
-    background: #f1f5f9;
-    border-bottom: 1px solid #e2e8f0;
+.panel-card {
+    overflow: hidden;
+    border: 1px solid #d7dee8;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
 
-.card.card-outline-secondary .card-header h6 {
+.panel-card + .panel-card {
+    margin-top: 10px;
+}
+
+.panel-card-header {
+    padding: 10px 14px;
+    background: #e9eef5;
+    border-bottom: 1px solid #d7dee8;
+}
+
+.panel-card-header h6 {
     margin: 0;
-    font-weight: 600;
+    font-weight: 800;
     color: #0f172a;
 }
 
-.card.card-outline-secondary .card-body label {
+.panel-card-body {
+    padding: 12px 14px;
+}
+
+.panel-form {
+    display: grid;
+    gap: 9px;
+}
+
+.panel-form label {
+    margin: 0;
     font-size: 12px;
+    font-weight: 700;
     color: #334155;
 }
 
-/* Botón pequeño dentro de foreignObject */
+.panel-form .form-control {
+    min-height: 38px;
+    border-color: #cbd5e1;
+    border-radius: 6px;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.panel-form .btn {
+    width: 100%;
+    min-height: 38px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+/* Boton pequeno dentro de foreignObject */
 .btn.btn-primary.btn-sm {
     background-color: #0f172a !important;
     border-color: #0f172a !important;
     padding: 2px 6px;
     font-size: 12px;
     line-height: 1;
+}
+
+@media (max-width: 1200px) {
+    .tree-page {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tree-side-panel {
+        position: static;
+        max-height: none;
+        padding-bottom: 96px;
+    }
+}
+
+@media (max-width: 720px) {
+    .tree-page {
+        padding: 8px;
+    }
+
+    .graph-toolbar {
+        align-items: stretch;
+    }
+
+    .toolbar-group {
+        width: 100%;
+    }
+
+    .toolbar-button {
+        flex: 1 1 auto;
+    }
+
+    .cyto-container,
+    :host ::ng-deep .chart-container {
+        height: 68vh;
+        min-height: 520px;
+    }
 }
