@@ -145,8 +145,14 @@ export class Teso117SuperComponent implements OnInit {
     this.pdfSource = this.getDocumentoUrl('009000004085Javeriana001.pdf');
     this.teso117 = new Teso117('');
 
+    const navigationState = history.state?.res2;
     this.route.queryParams.subscribe(response => {
-      const paramsData = JSON.parse(response['res2']);
+      const paramsData = navigationState ?? (response['res2'] ? JSON.parse(response['res2']) : null);
+      if (!paramsData) {
+        Swal.fire('Error', 'No se pudo cargar el pago. Intenta desde la búsqueda nuevamente.', 'error');
+        return;
+      }
+
       this.itemDetail = paramsData;
       this.item1 = this.itemDetail[0];
 
