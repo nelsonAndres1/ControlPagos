@@ -23,15 +23,17 @@ export class AuthInterceptor implements HttpInterceptor {
 
     let requestToSend = req;
 
-    if (isApiRequest && !isPublicEndpoint) {
+    if (isApiRequest) {
+      const headersToSet: { [name: string]: string | string[] } = {
+        'X-Client-Route': this.router.url || window.location.hash || window.location.pathname
+      };
+
       const token = localStorage.getItem('token');
-      if (token) {
-        requestToSend = req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+      if (token && !isPublicEndpoint) {
+        headersToSet['Authorization'] = `Bearer ${token}`;
       }
+
+      requestToSend = req.clone({ setHeaders: headersToSet });
     }
 
     return next.handle(requestToSend).pipe(

@@ -50,6 +50,7 @@ import { ChatListComponent } from './chat-list/chat-list.component';
 import { MenuPermissionGuard } from './services/menu-permission.guard';
 import { RolesMenuComponent } from './roles-menu/roles-menu.component';
 import { Teso13CambiosComponent } from './teso13-cambios/teso13-cambios.component';
+import { ManualUsuarioComponent } from './manual-usuario/manual-usuario.component';
 
 const routes: Routes = [
 
@@ -99,6 +100,7 @@ const routes: Routes = [
   { path: 'soportes_administrador', component: MsoportesComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'soportes_admin' } },
   { path: 'ChatList', component: ChatListComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'chat' } },
   { path: 'ChatRoom/:id', component: ChatRoomComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'chat' } },
+  { path: 'manual', component: ManualUsuarioComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'manual_usuario' } },
   { path: 'menu-roles', component: RolesMenuComponent, canActivate: [IdentityGuard, MenuPermissionGuard], data: { menuKey: 'roles_menu_admin' } },
   { path: '**', component: ErrorComponent, canActivate: [IdentityGuard] }
 

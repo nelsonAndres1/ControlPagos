@@ -1,0 +1,70 @@
+.manual-page {
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.manual-header {
+  margin-bottom: 20px;
+}
+
+.manual-header h1 {
+  margin-bottom: 8px;
+}
+
+.manual-summary {
+  margin-bottom: 24px;
+  background: #f8fbff;
+  border: 1px solid #dce9fb;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  background: #e8f2ff;
+  border: 1px solid #c1d8f4;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.badge.empty {
+  color: #6b7280;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.manual-section {
+  margin-bottom: 24px;
+  padding: 18px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.manual-section h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.manual-section ul {
+  padding-left: 18px;
+}
+
+.manual-notice {
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: #fff7c2;
+  border: 1px solid #f0df7a;
+  border-radius: 8px;
+}
