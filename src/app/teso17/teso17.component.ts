@@ -102,8 +102,8 @@ export class Teso17Component implements OnInit {
 
   getDetailPage(result: any, data: any): void {
     const navigationExtras: NavigationExtras = {
-      queryParams: {
-        res2: JSON.stringify(data)
+      state: {
+        res2: data
       }
     };
     this.router.navigate(['teso117/super'], navigationExtras);
