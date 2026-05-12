@@ -133,6 +133,10 @@
                             <span *ngIf="chatUnread > 0" class="chat-badge">{{ chatUnread }}</span>
                         </CDBSidebarMenuItem>
 
+                        <CDBSidebarMenuItem *ngIf="hasMenu('manual_usuario')" icon="book" routerLink="/manual" routerLinkActive="active" (click)="onNavItemClick()">
+                            Manual de Usuario
+                        </CDBSidebarMenuItem>
+
                         <CDBSidebarMenuItem icon="times-circle" [routerLink]="['/logout', 1]"
                             (click)="onNavItemClick()">
                             Salir

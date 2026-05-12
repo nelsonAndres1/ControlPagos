@@ -81,6 +81,7 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { MenuPermissionGuard } from './services/menu-permission.guard';
 import { RolesMenuComponent } from './roles-menu/roles-menu.component';
 import { Teso13CambiosComponent } from './teso13-cambios/teso13-cambios.component';
+import { ManualUsuarioComponent } from './manual-usuario/manual-usuario.component';
 
 
 @NgModule({
@@ -132,6 +133,7 @@ import { Teso13CambiosComponent } from './teso13-cambios/teso13-cambios.componen
     Teso13CambiosComponent,
     NotificacionesComponent,
     PasosGeneralesComponent, 
+    ManualUsuarioComponent,
     EstadoFiltroPipe, ReportesDinamicosComponent, TableroTeso13Component, MsoportesComponent, ChatRoomComponent, ChatListComponent, RolesMenuComponent
   ],
 

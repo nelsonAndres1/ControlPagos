@@ -3,10 +3,12 @@ import { teso10 } from './models/teso10';
 import { Gener02Service } from './services/gener02.service';
 import { Teso10Service } from './services/teso10.service';
 import { PrincipalService } from './services/principal.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AppVersionService } from './services/app-version.service';
 import { TesoChatService } from './services/tesochat.service';
 import { MenuAccessService } from './services/menu-access.service';
+import { AuditService } from './services/audit.service';
 
 @Component({
     selector: 'app-root',
@@ -46,6 +48,8 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
     public currentUrl = '';
     public chatDockDismissed = false;
     private lastUnreadCount = 0;
+    private routeEventsSubscription?: Subscription;
+    private lastRouteUrl = '';
 
     constructor(
         private ver: AppVersionService,
@@ -54,6 +58,7 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
         private _teso10Service: Teso10Service,
         private _chatService: TesoChatService,
         private _menuAccessService: MenuAccessService,
+        private _auditService: AuditService,
         private router: Router
     ) {
         this.identity = this._gener02Service.getIdentity();
@@ -77,11 +82,107 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
             });
         }
         this.setResponsiveFlags();
+        this.startAuditTracking();
         this.startChatUnreadPolling();
     }
 
     ngOnDestroy(): void {
         if (this.chatTimer) clearInterval(this.chatTimer);
+        if (this.routeEventsSubscription) this.routeEventsSubscription.unsubscribe();
+    }
+
+    private startAuditTracking(): void {
+        this.lastRouteUrl = this.router.url || '';
+        this.routeEventsSubscription = this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                const nextRoute = event.urlAfterRedirects || event.url || '';
+                this._auditService.track('navegacion', {
+                    desde: this.lastRouteUrl,
+                    hacia: nextRoute,
+                    ruta_front: nextRoute
+                });
+                this.lastRouteUrl = nextRoute;
+            }
+        });
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: MouseEvent): void {
+        const element = this.closestTrackableElement(event.target as HTMLElement | null);
+        if (!element) return;
+
+        this._auditService.track('click', {
+            ruta_front: this.router.url,
+            elemento: this.describeElement(element),
+            posicion: {
+                x: event.clientX,
+                y: event.clientY
+            }
+        });
+    }
+
+    @HostListener('document:change', ['$event'])
+    onDocumentChange(event: Event): void {
+        const element = event.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
+        if (!element || !['INPUT', 'SELECT', 'TEXTAREA'].includes(element.tagName)) return;
+
+        this._auditService.track('cambio_campo', {
+            ruta_front: this.router.url,
+            elemento: this.describeElement(element),
+            valor: this.safeElementValue(element)
+        });
+    }
+
+    @HostListener('document:submit', ['$event'])
+    onDocumentSubmit(event: Event): void {
+        const form = event.target as HTMLFormElement | null;
+        if (!form || form.tagName !== 'FORM') return;
+
+        this._auditService.track('submit_formulario', {
+            ruta_front: this.router.url,
+            formulario: this.describeElement(form)
+        });
+    }
+
+    private closestTrackableElement(target: HTMLElement | null): HTMLElement | null {
+        if (!target || !target.closest) return null;
+        return target.closest('button, a, input, select, textarea, [role="button"], [data-audit]') as HTMLElement | null;
+    }
+
+    private describeElement(element: HTMLElement): any {
+        const input = element as HTMLInputElement;
+        const inputType = (input.type || '').toLowerCase();
+        const valueAsLabel = ['button', 'submit', 'reset'].includes(inputType) ? input.value : '';
+        const text = (element.innerText || element.getAttribute('aria-label') || element.getAttribute('title') || element.getAttribute('placeholder') || valueAsLabel || '').trim();
+
+        return {
+            tag: element.tagName,
+            tipo: input.type || null,
+            id: element.id || null,
+            nombre: input.name || element.getAttribute('name') || null,
+            texto: text ? text.substring(0, 120) : null,
+            clases: element.className ? String(element.className).substring(0, 180) : null,
+            href: element.getAttribute('href') || null,
+        };
+    }
+
+    private safeElementValue(element: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): any {
+        const type = ((element as HTMLInputElement).type || '').toLowerCase();
+        const key = `${element.id || ''} ${element.getAttribute('name') || ''} ${type}`.toLowerCase();
+
+        if (['password', 'file'].includes(type) || key.includes('clave') || key.includes('password') || key.includes('token')) {
+            return '[OCULTO]';
+        }
+
+        if (type === 'checkbox' || type === 'radio') {
+            return {
+                checked: (element as HTMLInputElement).checked,
+                value: (element as HTMLInputElement).value
+            };
+        }
+
+        const value = (element as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement).value || '';
+        return value.length > 180 ? value.substring(0, 180) : value;
     }
 
     @HostListener('window:resize')
@@ -186,6 +287,10 @@ export class AppComponent implements OnInit, DoCheck, OnDestroy {
 
     reportesDinamicos() {
         this.router.navigate(['reportes_dinamicos']);
+    }
+
+    manual() {
+        this.router.navigate(['manual']);
     }
 
     causadores() {

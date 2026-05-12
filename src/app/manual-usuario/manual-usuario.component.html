@@ -1,0 +1,26 @@
+<div class="manual-page">
+  <header class="manual-header">
+    <h1>Manual de Usuario</h1>
+    <p>Este manual se ajusta a las funciones que tu usuario puede utilizar actualmente.</p>
+  </header>
+
+  <div class="manual-summary">
+    <p>Opciones habilitadas para ti:</p>
+    <div class="badges">
+      <span *ngFor="let key of optionKeys" class="badge">{{ key }}</span>
+      <span *ngIf="optionKeys.length === 0" class="badge empty">No hay permisos cargados</span>
+    </div>
+  </div>
+
+  <section class="manual-section" *ngFor="let section of visibleSections">
+    <h2>{{ section.title }}</h2>
+    <p>{{ section.description }}</p>
+    <ul>
+      <li *ngFor="let item of section.bullets">{{ item }}</li>
+    </ul>
+  </section>
+
+  <section *ngIf="showLimitedAccessNotice" class="manual-notice">
+    <p>Veo que tu perfil tiene acceso limitado. Actualmente solo se muestran las instrucciones que corresponden a tus permisos.</p>
+  </section>
+</div>

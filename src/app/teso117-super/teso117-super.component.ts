@@ -12,6 +12,7 @@ import { Conta04 } from '../models/conta04';
 import { Teso13Service } from '../services/teso13.service';
 import { UploadService } from '../services/upload.service';
 import { Teso22Service } from '../services/teso22.service';
+import { MenuAccessService } from '../services/menu-access.service';
 import { Teso117 } from '../models/teso117';
 import { Teso15new } from '../models/teso15new';
 import { Gener02Service } from '../services/gener02.service';
@@ -108,7 +109,7 @@ export class Teso117SuperComponent implements OnInit {
   seleccion_selected: any = '';
   estado_actual_actual: any = '';
   texto_observacion: string = '';
-
+  public esAdministrador: boolean = false;
   // ✅ para validar/mostrar observación obligatoria
   observacion_texto: string = '';
 
@@ -129,6 +130,7 @@ export class Teso117SuperComponent implements OnInit {
     private _teso22Service: Teso22Service,
     private _gener02Service: Gener02Service,
     private _teso23Service: Teso23Service,
+    private _menuAccessService: MenuAccessService,
     private _chatService: TesoChatService,
     private _router: Router,
     private documentUrlService: DocumentUrlService
@@ -136,6 +138,8 @@ export class Teso117SuperComponent implements OnInit {
     this.teso15 = new Teso15new('', '', '', '', '', '', 0, '', '', '', '');
     this.identity_real = this._gener02Service.getIdentity();
     this.teso15.usuario = this.identity_real.sub;
+    this.esAdministrador = this._menuAccessService.getRoleCodes()?.includes('roles_menu_admin')
+      || this._menuAccessService.hasAccess('roles_menu_admin');
 
     this.conta04 = new Conta04('', '');
     this.pdfSource = this.getDocumentoUrl('009000004085Javeriana001.pdf');
@@ -337,8 +341,43 @@ export class Teso117SuperComponent implements OnInit {
 
   getHistoriaPago() {
     this._teso22Service.getHistoriaPago(this.teso15).subscribe(
-      response => { this.lista_historia_pago = response; }
+      response => {
+        this.lista_historia_pago = response;
+        this.agregarOpcionRetrocederAdmin();
+      }
     );
+  }
+
+  private agregarOpcionRetrocederAdmin() {
+    if (!this.esAdministrador || !this.opciones_general.length || !this.lista_historia_pago.length) {
+      return;
+    }
+
+    const historiaEstados = this.lista_historia_pago.filter((item: any) => item.estado !== 'ED');
+    if (historiaEstados.length < 2) {
+      return;
+    }
+
+    const previousEntry = historiaEstados[historiaEstados.length - 2];
+    if (!previousEntry || !previousEntry.estado) {
+      return;
+    }
+
+    const target = String(previousEntry.estado).trim();
+    const label = previousEntry.estado_detalle ? String(previousEntry.estado_detalle).trim() : 'Estado anterior';
+    const alreadyExists = this.opciones_general.some((opt: any) => String(opt.target).trim() === target);
+    if (alreadyExists) {
+      return;
+    }
+
+    this.opciones_general.push({
+      target,
+      target_detalle: `Retroceder a ${label}`,
+      observacion: 'SI',
+      detalle: 'S',
+      archivo: 'NO',
+      retroceder_estado: true
+    });
   }
 
   getTeso22First() {
@@ -364,6 +403,7 @@ export class Teso117SuperComponent implements OnInit {
                 }
               }
             }
+            this.agregarOpcionRetrocederAdmin();
           }
         );
       }
